@@ -14,6 +14,8 @@ internal class Sector : ISector
 
     public required bool IsKnown { get; init; }
 
+    public required IEnumerable<ILockbox> Lockboxes { get; init; }
+
     public required int NameId { get; init; }
 
     public required string Owner { get; init; }

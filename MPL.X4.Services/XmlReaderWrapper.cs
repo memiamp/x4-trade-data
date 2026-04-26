@@ -75,6 +75,19 @@ internal sealed class XmlReaderWrapper(
     bool IXmlReaderWrapper.TryGetAttribute(string name, Func<string, bool> predicate)
         => ((IXmlReaderWrapper)this).TryGetAttribute(name, predicate, out _);
 
+    bool IXmlReaderWrapper.TryGetAttribute(string name, [NotNullWhen(true)] out double? value)
+    {
+        value = null;
+
+        var attributeValue = xmlReader.GetAttribute(name);
+        if (double.TryParse(attributeValue, out var outValue))
+        {
+            value = outValue;
+        }
+
+        return value is not null;
+    }
+
     bool IXmlReaderWrapper.TryGetAttribute(string name, [NotNullWhen(true)] out int? value)
     {
         value = null;

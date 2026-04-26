@@ -8,9 +8,9 @@ public class SectorPosition : ISectorPosition
     public override string ToString()
         => $"{X},{Y},{Z}";
 
-    public required int X { get; init; }
+    public required int X { get; set; }
 
-    public required int Y { get; init; }
+    public required int Y { get; set; }
 
-    public required int Z { get; init; }
+    public required int Z { get; set; }
 }

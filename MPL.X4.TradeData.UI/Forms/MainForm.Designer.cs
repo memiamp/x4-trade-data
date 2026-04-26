@@ -28,11 +28,13 @@
         /// </summary>
         private void InitializeComponent()
         {
-            AbandonedShipsListView = new ListView();
-            AbandonedShipsListView_Class = new ColumnHeader();
-            AbandonedShipsListView_Type = new ColumnHeader();
-            AbandonedShipsListView_Sector = new ColumnHeader();
-            AbandonedShipsListView_PositionX = new ColumnHeader();
+            SpecialItemListView = new ListView();
+            SpecialItemListView_ItemType = new ColumnHeader();
+            SpecialItemListView_Description = new ColumnHeader();
+            SpecialItemListView_Sector = new ColumnHeader();
+            SpecialItemListView_PositionX = new ColumnHeader();
+            SpecialItemListView_PositionY = new ColumnHeader();
+            SpecialItemListView_PositionZ = new ColumnHeader();
             TradesListViewBuy = new ListView();
             TradesListViewBuy_Sector = new ColumnHeader();
             TradesListViewBuy_Station = new ColumnHeader();
@@ -49,43 +51,53 @@
             lblTradeListSell = new Label();
             lblAverageBuyPrice = new Label();
             lblAverageSellPrice = new Label();
-            lblAbandonedShips = new Label();
-            AbandonedShipsListView_PositionY = new ColumnHeader();
-            AbandonedShipsListView_PositionZ = new ColumnHeader();
+            lblSpecialItems = new Label();
             SuspendLayout();
             // 
-            // AbandonedShipsListView
+            // SpecialItemListView
             // 
-            AbandonedShipsListView.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            AbandonedShipsListView.Columns.AddRange(new ColumnHeader[] { AbandonedShipsListView_Class, AbandonedShipsListView_Type, AbandonedShipsListView_Sector, AbandonedShipsListView_PositionX, AbandonedShipsListView_PositionY, AbandonedShipsListView_PositionZ });
-            AbandonedShipsListView.FullRowSelect = true;
-            AbandonedShipsListView.Location = new Point(12, 416);
-            AbandonedShipsListView.Name = "AbandonedShipsListView";
-            AbandonedShipsListView.Size = new Size(1056, 133);
-            AbandonedShipsListView.TabIndex = 1;
-            AbandonedShipsListView.UseCompatibleStateImageBehavior = false;
-            AbandonedShipsListView.View = View.Details;
+            SpecialItemListView.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            SpecialItemListView.Columns.AddRange(new ColumnHeader[] { SpecialItemListView_ItemType, SpecialItemListView_Description, SpecialItemListView_Sector, SpecialItemListView_PositionX, SpecialItemListView_PositionY, SpecialItemListView_PositionZ });
+            SpecialItemListView.FullRowSelect = true;
+            SpecialItemListView.Location = new Point(12, 416);
+            SpecialItemListView.Name = "SpecialItemListView";
+            SpecialItemListView.Size = new Size(1056, 133);
+            SpecialItemListView.TabIndex = 1;
+            SpecialItemListView.UseCompatibleStateImageBehavior = false;
+            SpecialItemListView.View = View.Details;
             // 
-            // AbandonedShipsListView_Class
+            // SpecialItemListView_ItemType
             // 
-            AbandonedShipsListView_Class.Text = "Class";
-            AbandonedShipsListView_Class.Width = 100;
+            SpecialItemListView_ItemType.Text = "Item Type";
+            SpecialItemListView_ItemType.Width = 100;
             // 
-            // AbandonedShipsListView_Type
+            // SpecialItemListView_Description
             // 
-            AbandonedShipsListView_Type.Text = "Type";
-            AbandonedShipsListView_Type.Width = 170;
+            SpecialItemListView_Description.Text = "Description";
+            SpecialItemListView_Description.Width = 220;
             // 
-            // AbandonedShipsListView_Sector
+            // SpecialItemListView_Sector
             // 
-            AbandonedShipsListView_Sector.Text = "Sector";
-            AbandonedShipsListView_Sector.Width = 150;
+            SpecialItemListView_Sector.Text = "Sector";
+            SpecialItemListView_Sector.Width = 150;
             // 
-            // AbandonedShipsListView_PositionX
+            // SpecialItemListView_PositionX
             // 
-            AbandonedShipsListView_PositionX.Text = "X";
-            AbandonedShipsListView_PositionX.TextAlign = HorizontalAlignment.Right;
-            AbandonedShipsListView_PositionX.Width = 100;
+            SpecialItemListView_PositionX.Text = "X";
+            SpecialItemListView_PositionX.TextAlign = HorizontalAlignment.Right;
+            SpecialItemListView_PositionX.Width = 100;
+            // 
+            // SpecialItemListView_PositionY
+            // 
+            SpecialItemListView_PositionY.Text = "Y";
+            SpecialItemListView_PositionY.TextAlign = HorizontalAlignment.Right;
+            SpecialItemListView_PositionY.Width = 100;
+            // 
+            // SpecialItemListView_PositionZ
+            // 
+            SpecialItemListView_PositionZ.Text = "Z";
+            SpecialItemListView_PositionZ.TextAlign = HorizontalAlignment.Right;
+            SpecialItemListView_PositionZ.Width = 100;
             // 
             // TradesListViewBuy
             // 
@@ -204,34 +216,22 @@
             lblAverageSellPrice.Size = new Size(0, 15);
             lblAverageSellPrice.TabIndex = 9;
             // 
-            // lblAbandonedShips
+            // lblSpecialItems
             // 
-            lblAbandonedShips.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
-            lblAbandonedShips.AutoSize = true;
-            lblAbandonedShips.Location = new Point(12, 398);
-            lblAbandonedShips.Name = "lblAbandonedShips";
-            lblAbandonedShips.Size = new Size(103, 15);
-            lblAbandonedShips.TabIndex = 10;
-            lblAbandonedShips.Text = "Abandoned Ships:";
-            // 
-            // AbandonedShipsListView_PositionY
-            // 
-            AbandonedShipsListView_PositionY.Text = "Y";
-            AbandonedShipsListView_PositionY.TextAlign = HorizontalAlignment.Right;
-            AbandonedShipsListView_PositionY.Width = 100;
-            // 
-            // AbandonedShipsListView_PositionZ
-            // 
-            AbandonedShipsListView_PositionZ.Text = "Z";
-            AbandonedShipsListView_PositionZ.TextAlign = HorizontalAlignment.Right;
-            AbandonedShipsListView_PositionZ.Width = 100;
+            lblSpecialItems.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+            lblSpecialItems.AutoSize = true;
+            lblSpecialItems.Location = new Point(12, 398);
+            lblSpecialItems.Name = "lblSpecialItems";
+            lblSpecialItems.Size = new Size(79, 15);
+            lblSpecialItems.TabIndex = 10;
+            lblSpecialItems.Text = "Special Items:";
             // 
             // MainForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1080, 561);
-            Controls.Add(lblAbandonedShips);
+            Controls.Add(lblSpecialItems);
             Controls.Add(lblAverageSellPrice);
             Controls.Add(lblAverageBuyPrice);
             Controls.Add(lblTradeListSell);
@@ -240,7 +240,7 @@
             Controls.Add(WareLabel);
             Controls.Add(WareComboBox);
             Controls.Add(TradesListViewBuy);
-            Controls.Add(AbandonedShipsListView);
+            Controls.Add(SpecialItemListView);
             MaximumSize = new Size(1096, 1000);
             MinimumSize = new Size(1096, 600);
             Name = "MainForm";
@@ -250,11 +250,10 @@
         }
 
         #endregion
-        private ListView AbandonedShipsListView;
-        private ColumnHeader AbandonedShipsListView_Class;
-        private ColumnHeader AbandonedShipsListView_Type;
-        private ColumnHeader AbandonedShipsListView_Sector;
-        private ColumnHeader AbandonedShipsListView_PositionX;
+        private ListView SpecialItemListView;
+        private ColumnHeader SpecialItemListView_Description;
+        private ColumnHeader SpecialItemListView_Sector;
+        private ColumnHeader SpecialItemListView_PositionX;
         private ListView TradesListViewBuy;
         private ComboBox WareComboBox;
         private Label WareLabel;
@@ -271,8 +270,9 @@
         private Label lblTradeListSell;
         private Label lblAverageBuyPrice;
         private Label lblAverageSellPrice;
-        private Label lblAbandonedShips;
-        private ColumnHeader AbandonedShipsListView_PositionY;
-        private ColumnHeader AbandonedShipsListView_PositionZ;
+        private Label lblSpecialItems;
+        private ColumnHeader SpecialItemListView_PositionY;
+        private ColumnHeader SpecialItemListView_PositionZ;
+        private ColumnHeader SpecialItemListView_ItemType;
     }
 }

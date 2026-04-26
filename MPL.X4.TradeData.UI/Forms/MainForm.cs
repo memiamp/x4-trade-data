@@ -11,10 +11,10 @@ namespace MPL.X4.TradeData.UI.Forms;
 /// </summary>
 internal partial class MainForm : Form
 {
-    private readonly List<AbandonedShip> _abandonedShips = [];
     private readonly DebugForm _debugForm;
     private readonly IResourceDataLoader _resourceDataLoader;
     private readonly ISaveGameLoader _saveGameLoader;
+    private readonly List<SpecialItem> _specialItems = [];
     private readonly List<TradeOffer> _trades = [];
     private readonly BindingList<Ware> _wares = [];
 
@@ -59,8 +59,8 @@ internal partial class MainForm : Form
             return;
         }
 
-        AbandonedShipsListView.Items.Clear();
-        AbandonedShipsListView.Items.AddRange([.. _abandonedShips.Select(GenerateListViewItem)]);
+        SpecialItemListView.Items.Clear();
+        SpecialItemListView.Items.AddRange([.. _specialItems.Select(GenerateListViewItem)]);
     }
 
     private void DoRefreshTrades()
@@ -98,10 +98,10 @@ internal partial class MainForm : Form
         }
     }
 
-    private static ListViewItem GenerateListViewItem(AbandonedShip source)
+    private static ListViewItem GenerateListViewItem(SpecialItem source)
     {
-        var returnValue = new ListViewItem(source.Class.ToString());
-        returnValue.SubItems.Add(source.Type);
+        var returnValue = new ListViewItem(source.Type.ToString());
+        returnValue.SubItems.Add(source.Description);
         returnValue.SubItems.Add(source.SectorName);
         returnValue.SubItems.Add(source.X);
         returnValue.SubItems.Add(source.Y);
@@ -188,8 +188,10 @@ internal partial class MainForm : Form
                                       .Select(x => Map(x.Sector, x.Station, x.Trade))
             ?? [];
 
-    private void LoadAbandonedShips()
+    private void LoadSpecialItems()
     {
+        var items = new List<SpecialItem>();
+
         var ships = _saveGame?.Universe.Sectors
                                                .SelectMany(x => x.Ships,
                                                            (sector, ship) => new
@@ -197,13 +199,30 @@ internal partial class MainForm : Form
                                                                SectorNameId = sector.NameId,
                                                                Ship = ship
                                                            });
+
         if (ships?.Any() == true)
         {
-            _abandonedShips.Clear();
-            _abandonedShips.AddRange(ships
-                                          .Select(x => Map(x.SectorNameId, x.Ship))
-                                          .OrderBy(x => x.SectorName).ThenBy(x => x.Class));
+            items.AddRange(ships.Select(x => Map(x.SectorNameId, x.Ship)));
         }
+
+        var lockboxes = _saveGame?.Universe.Sectors
+                                                   .SelectMany(x => x.Lockboxes,
+                                                               (sector, lockbox) => new
+                                                               {
+                                                                   SectorNameId = sector.NameId,
+                                                                   Lockbox = lockbox
+                                                               });
+
+        if (lockboxes?.Any() == true)
+        {
+            items.AddRange(lockboxes.Select(x => Map(x.SectorNameId, x.Lockbox)));
+        }
+
+        _specialItems.Clear();
+        _specialItems.AddRange(items
+                                    .OrderBy(x => x.SectorName)
+                                    .ThenBy(x => x.Type)
+                                    .ThenBy(x => x.Description));
 
         DoRefreshAbandonedShips();
     }
@@ -236,12 +255,24 @@ internal partial class MainForm : Form
             }
         }
 
-        LoadAbandonedShips();
+        LoadSpecialItems();
         LoadWares();
 
         _isLoading = false;
 
         RestartMonitor();
+    }
+
+    private void SetSelectedWare(Ware ware)
+    {
+        if (InvokeRequired)
+        {
+            BeginInvoke(() => SetSelectedWare(ware));
+            return;
+        }
+
+        WareComboBox.SelectedItem = ware;
+        LoadSelectedWare();
     }
 
     private void LoadSelectedWare()
@@ -272,6 +303,8 @@ internal partial class MainForm : Form
             BeginInvoke(LoadWares);
             return;
         }
+
+        var selectedWareName = _selectedWare?.Name;
 
         _wares.Clear();
 
@@ -316,6 +349,12 @@ internal partial class MainForm : Form
             {
                 _wares.Add(ware);
             }
+        }
+
+        if (selectedWareName is not null)
+        {
+            var newWare = _wares.First(x => x.Name == selectedWareName);
+            SetSelectedWare(newWare);
         }
     }
 
@@ -412,12 +451,23 @@ internal partial class MainForm : Form
         };
     }
 
-    private AbandonedShip Map(int sectorNameId, IShip source)
+    private SpecialItem Map(int sectorNameId, ILockbox source)
         => new()
         {
-            Class = MapShipClass(source.Class),
+            Description = source.Type,
             SectorName = _resourceData.SectorNames[sectorNameId],
-            Type = source.Macro,
+            Type = SpecialItemType.Lockbox,
+            X = source.Position.X.ToString(),
+            Y = source.Position.Y.ToString(),
+            Z = source.Position.Z.ToString()
+        };
+
+    private SpecialItem Map(int sectorNameId, IShip source)
+        => new()
+        {
+            Description = $"{MapShipClass(source.Class)} - {source.Macro}",
+            SectorName = _resourceData.SectorNames[sectorNameId],
+            Type = SpecialItemType.Ship,
             X = source.Position.X.ToString(),
             Y = source.Position.Y.ToString(),
             Z = source.Position.Z.ToString()

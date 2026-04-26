@@ -64,6 +64,7 @@ public static class Constants
         {
             public static class Class
             {
+                public const string Lockbox = "lockbox";
                 public const string Sector = "sector";
                 public const string Ship = "ship";
                 public const string Station = "station";

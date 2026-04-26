@@ -21,6 +21,11 @@ public interface ISector
     bool IsKnown { get; }
 
     /// <summary>
+    /// Gets the lockboxes in the sector.
+    /// </summary>
+    IEnumerable<ILockbox> Lockboxes { get; }
+
+    /// <summary>
     /// Gets the name identifier of the sector.
     /// </summary>
     int NameId { get; }

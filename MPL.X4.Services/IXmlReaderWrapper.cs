@@ -68,6 +68,14 @@ public interface IXmlReaderWrapper : IDisposable
     /// Tries to get an attribute with the specified <paramref name="name"/>.
     /// </summary>
     /// <param name="name">A <see cref="string"/> that is the name of the attribute to try and get.</param>
+    /// <param name="value">A nullable <see cref="double"/> that will be set to the value of the attribute, or <see langword="null"/>.</param>
+    /// <returns>A <see cref="bool"/> indicating success.</returns>
+    bool TryGetAttribute(string name, [NotNullWhen(true)] out double? value);
+
+    /// <summary>
+    /// Tries to get an attribute with the specified <paramref name="name"/>.
+    /// </summary>
+    /// <param name="name">A <see cref="string"/> that is the name of the attribute to try and get.</param>
     /// <param name="value">A nullable <see cref="int"/> that will be set to the value of the attribute, or <see langword="null"/>.</param>
     /// <returns>A <see cref="bool"/> indicating success.</returns>
     bool TryGetAttribute(string name, [NotNullWhen(true)] out int? value);

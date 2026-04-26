@@ -52,9 +52,60 @@ internal class SaveGameLoader(
                                   Constants.SaveGameFile.AttributeName.KnownTo,
                                   x => x == Constants.SaveGameFile.AttributeValue.KnownTo.Player);
 
+    private async Task<ILockbox> LoadLockbox(IXmlReaderWrapper reader)
+    {
+        ILockbox? returnValue = null;
+        var position = new SectorPosition
+        {
+            X = 0,
+            Y = 0,
+            Z = 0
+        };
+
+        while (await reader.ReadAsync())
+        {
+            if (reader.CheckNodeMatches(Constants.SaveGameFile.ElementName.Component, XmlNodeType.Element) &&
+                reader.TryGetAttribute(Constants.SaveGameFile.AttributeName.Class, x => x == Constants.SaveGameFile.AttributeValue.Class.Lockbox) &&
+                reader.TryGetAttribute(Constants.SaveGameFile.AttributeName.Code, out string? code) &&
+                reader.TryGetAttribute(Constants.SaveGameFile.AttributeName.Id, out string? id) &&
+                reader.TryGetAttribute(Constants.SaveGameFile.AttributeName.Macro, out string? type))
+            {
+                var isKnown = IsKnownToPlayer(reader);
+
+                returnValue = new Lockbox
+                {
+                    Code = code,
+                    Id = id,
+                    IsKnown = isKnown,
+                    Position = position,
+                    Type = type
+                };
+            }
+            else if (reader.CheckNodeMatches(Constants.SaveGameFile.ElementName.Position, XmlNodeType.Element))
+            {
+                reader.TryGetAttribute(Constants.SaveGameFile.AttributeName.X, out double? x);
+                reader.TryGetAttribute(Constants.SaveGameFile.AttributeName.Y, out double? y);
+                reader.TryGetAttribute(Constants.SaveGameFile.AttributeName.Z, out double? z);
+
+                position.X = (int)(x ?? 0);
+                position.Y = (int)(y ?? 0);
+                position.Z = (int)(z ?? 0);
+            }
+        }
+
+        if (returnValue is null)
+        {
+            logger.LogWarning("Could not load lockbox");
+            throw new ArgumentException("Could not load lockbox", nameof(reader));
+        }
+
+        return returnValue;
+    }
+
     private async Task<ISector> LoadSector(IXmlReaderWrapper reader)
     {
         ISector? returnValue = null;
+        List<ILockbox> lockboxes = [];
         List<IShip> ships = [];
         List<IStation> stations = [];
 
@@ -72,6 +123,7 @@ internal class SaveGameLoader(
                 Code = code,
                 Id = id,
                 IsKnown = isKnown,
+                Lockboxes = lockboxes,
                 NameId = nameId,
                 Owner = owner,
                 Ships = ships,
@@ -85,7 +137,7 @@ internal class SaveGameLoader(
                 {
                     using var zoneSubtree = reader.ReadSubtree();
 
-                    await LoadZone(zoneSubtree, ships, stations);
+                    await LoadZone(zoneSubtree, lockboxes, ships, stations);
                 }
             }
         }
@@ -98,23 +150,27 @@ internal class SaveGameLoader(
 
         return returnValue;
     }
+    List<string> donePostIds = [];
 
-    private static async Task<IEnumerable<IShip>> LoadShips(IXmlReaderWrapper reader, ISectorPosition position)
+    private async Task<IEnumerable<IShip>> LoadShips(IXmlReaderWrapper reader, ISectorPosition position)
     {
         List<IShip> returnValue = [];
+        Ship? currentShip = null;
 
         while (await reader.ReadAsync())
         {
             if (reader.CheckNodeMatches(Constants.SaveGameFile.ElementName.Component, XmlNodeType.Element) &&
                 reader.TryGetAttribute(Constants.SaveGameFile.AttributeName.Class, x => x.StartsWith(Constants.SaveGameFile.AttributeValue.Class.Ship), out string? shipClass) &&
-                reader.TryGetAttribute(Constants.SaveGameFile.AttributeName.Owner, x => x == Constants.SaveGameFile.AttributeValue.Owner.Ownerless, out string? owner) &&
+                //reader.TryGetAttribute(Constants.SaveGameFile.AttributeName.Owner, x => x == Constants.SaveGameFile.AttributeValue.Owner.Ownerless, out string? owner) &&
+                reader.TryGetAttribute(Constants.SaveGameFile.AttributeName.Owner, out string? owner) &&
                 reader.TryGetAttribute(Constants.SaveGameFile.AttributeName.Code, out string? code) &&
                 reader.TryGetAttribute(Constants.SaveGameFile.AttributeName.Id, out string? id) &&
                 reader.TryGetAttribute(Constants.SaveGameFile.AttributeName.Macro, out string? macro))
             {
                 var isKnown = IsKnownToPlayer(reader);
 
-                returnValue.Add(new Ship
+                //returnValue.Add(new Ship
+                currentShip = new Ship
                 {
                     Class = shipClass,
                     Code = code,
@@ -123,7 +179,48 @@ internal class SaveGameLoader(
                     Macro = macro,
                     Owner = owner,
                     Position = position
-                });
+                };
+                //});
+                if (owner == "ownerless")
+                {
+                    Console.WriteLine("ABANDONED");
+                    returnValue.Add(currentShip);
+                    currentShip = null;
+                }
+                /*
+								<control>
+									<post id="aipilot" component="[0xc081993]"/>
+								</control>
+                * */
+            }
+            else if (reader.CheckNodeMatches("control", XmlNodeType.Element))
+            {
+                if (currentShip is not null)
+                {
+                    // Look for post
+                    await reader.ReadAsync();
+                    if (reader.CheckNodeMatches("post", XmlNodeType.Element))
+                    {
+                        reader.TryGetAttribute(Constants.SaveGameFile.AttributeName.Id, out string? postId);
+                        reader.TryGetAttribute("component", out string? component);
+
+                        if (postId is null)
+                        {
+                            Console.WriteLine("PostID Is null");
+                        }
+                        else if (postId == "aipilot" && component is null)
+                        {
+                            Console.WriteLine("Ship without pilot component");
+                            returnValue.Add(currentShip);
+                            currentShip = null;
+                        }
+                        else if (!donePostIds.Contains(postId))
+                        {
+                            donePostIds.Add(postId);
+                            Console.WriteLine($"{postId} - component: {component ?? "NONE"}");
+                        }
+                    }
+                }
             }
         }
 
@@ -243,7 +340,7 @@ internal class SaveGameLoader(
         };
     }
 
-    private async Task LoadZone(IXmlReaderWrapper reader, List<IShip> ships, List<IStation> stations)
+    private async Task LoadZone(IXmlReaderWrapper reader, List<ILockbox> lockboxes, List<IShip> ships, List<IStation> stations)
     {
         ISectorPosition? position = ISectorPosition.GetDefault();
    
@@ -263,7 +360,7 @@ internal class SaveGameLoader(
                 };
             }
             else if (reader.CheckNodeMatches(Constants.SaveGameFile.ElementName.Component, XmlNodeType.Element) &&
-                reader.TryGetAttribute(Constants.SaveGameFile.AttributeName.Class, x => x == Constants.SaveGameFile.AttributeValue.Class.Station))
+                     reader.TryGetAttribute(Constants.SaveGameFile.AttributeName.Class, x => x == Constants.SaveGameFile.AttributeValue.Class.Station))
             {
                 using var stationSubtree = reader.ReadSubtree();
 
@@ -272,8 +369,18 @@ internal class SaveGameLoader(
                 stations.Add(station);
             }
             else if (reader.CheckNodeMatches(Constants.SaveGameFile.ElementName.Component, XmlNodeType.Element) &&
-                     reader.TryGetAttribute(Constants.SaveGameFile.AttributeName.Class, x => x.StartsWith(Constants.SaveGameFile.AttributeValue.Class.Ship), out string? shipClass) &&
-                     reader.TryGetAttribute(Constants.SaveGameFile.AttributeName.Owner, x => x == Constants.SaveGameFile.AttributeValue.Owner.Ownerless, out string? _))
+                     reader.TryGetAttribute(Constants.SaveGameFile.AttributeName.Class, x => x == Constants.SaveGameFile.AttributeValue.Class.Lockbox))
+            {
+                using var lockboxSubtree = reader.ReadSubtree();
+
+                var lockbox = await LoadLockbox(lockboxSubtree);
+
+                lockboxes.Add(lockbox);
+            }
+            else if (reader.CheckNodeMatches(Constants.SaveGameFile.ElementName.Component, XmlNodeType.Element) &&
+                     reader.TryGetAttribute(Constants.SaveGameFile.AttributeName.Class, x => x.StartsWith(Constants.SaveGameFile.AttributeValue.Class.Ship), out string? shipClass))
+            //reader.TryGetAttribute(Constants.SaveGameFile.AttributeName.Class, x => x.StartsWith(Constants.SaveGameFile.AttributeValue.Class.Ship), out string? shipClass) &&
+            //reader.TryGetAttribute(Constants.SaveGameFile.AttributeName.Owner, x => x == Constants.SaveGameFile.AttributeValue.Owner.Ownerless, out string? _))
             {
                 // Look for abandoned ships in zone
                 using var shipSubtree = reader.ReadSubtree();
