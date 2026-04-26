@@ -17,6 +17,7 @@ internal class XmlReaderWrapperFactory(
         => new()
         {
             Async = true,
+            CloseInput = true,
             DtdProcessing = DtdProcessing.Ignore,
             IgnoreWhitespace = true
         };
@@ -40,6 +41,7 @@ internal class XmlReaderWrapperFactory(
 
         return CreateXmlReaderInternal(reader);
     }
+
     private IXmlReaderWrapper CreateXmlReaderInternal(XmlReader reader)
         => ActivatorUtilities.CreateInstance<XmlReaderWrapper>(serviceProvider, reader);
 
