@@ -1,5 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using MPL.X4.TradeData.UI.Configuration;
 using MPL.X4.TradeData.UI.Forms;
 using MPL.X4.TradeData.UI.Services;
 
@@ -20,9 +21,12 @@ internal static class Program
             loggingBuilder.AddSimpleConsole();
         });
 
+        // Configuration
+        services.AddSingleton<IFileConfiguration>(new FileConfiguration());
+
         // Services
         X4.Services.Bootstrap.AddServices(services);
-        MPL.X4.TradeData.Services.Bootstrap.AddServices(services);
+        TradeData.Services.Bootstrap.AddServices(services);
 
         // Local forms
         services.AddTransient<DebugForm>();
@@ -30,6 +34,7 @@ internal static class Program
 
         // Local services
         services.AddTransient<IModelMapper, ModelMapper>();
+        services.AddTransient<ISaveGameFileSystemMonitor, SaveGameFileSystemMonitor>();
 
         return services.BuildServiceProvider();
     }

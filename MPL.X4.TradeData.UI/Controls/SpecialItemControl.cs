@@ -10,7 +10,7 @@ internal partial class SpecialItemControl : UserControl
 {
     #region Declarations
 
-    private IEnumerable<SpecialItem> _specialItems = [];
+    private IEnumerable<SpecialItem> _items = [];
 
     #endregion
 
@@ -31,11 +31,10 @@ internal partial class SpecialItemControl : UserControl
 
     private void DoRefresh()
     {
-        var displayNoItems = _specialItems.Any() == false;
+        var displayNoItems = _items.Any() == false;
 
-        lblSpecialItems.Visible = !displayNoItems;
         SpecialItemListView.Visible = !displayNoItems;
-        lblNoItems.Visible = displayNoItems;
+        NoItemsLabel.Visible = displayNoItems;
     }
 
     private static ListViewItem GenerateListViewItem(SpecialItem source)
@@ -60,11 +59,11 @@ internal partial class SpecialItemControl : UserControl
 
     private void LoadSpecialItems()
     {
-        var orderedItems = _specialItems
-                                        .OrderBy(x => x.SectorName)
-                                        .ThenBy(x => x.Type)
-                                        .ThenBy(x => x.Description)
-                                        .Select(GenerateListViewItem);
+        var orderedItems = _items
+                                 .OrderBy(x => x.SectorName)
+                                 .ThenBy(x => x.Type)
+                                 .ThenBy(x => x.Description)
+                                 .Select(GenerateListViewItem);
 
         SpecialItemListView.BeginUpdate();
 
@@ -93,16 +92,16 @@ internal partial class SpecialItemControl : UserControl
     /// Gets or sets the special items to be displayed in the control.
     /// </summary>
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    internal IEnumerable<SpecialItem> SpecialItems
+    internal IEnumerable<SpecialItem> Items
     {
         get
         {
-            return _specialItems;
+            return _items;
         }
 
         set
         {
-            _specialItems = value;
+            _items = value;
             LoadSpecialItems();
         }
     }

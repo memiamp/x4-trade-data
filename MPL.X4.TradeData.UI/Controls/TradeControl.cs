@@ -13,8 +13,8 @@ internal partial class TradeControl : UserControl
 
     private readonly BindingList<Ware> _wares = [];
 
+    private IEnumerable<TradeOffer> _items = [];
     private Ware? _selectedWare;
-    private IEnumerable<TradeOffer> _tradeOffers = [];
 
     #endregion
 
@@ -35,7 +35,7 @@ internal partial class TradeControl : UserControl
 
     private void DoRefresh()
     {
-        var displayNoTrades = _tradeOffers.Any() == false;
+        var displayNoTrades = _items.Any() == false;
 
         if (!displayNoTrades)
         {
@@ -56,7 +56,7 @@ internal partial class TradeControl : UserControl
         }
 
         MainLayoutPanel.Visible = !displayNoTrades;
-        lblNoItems.Visible = displayNoTrades;
+        NoItemsLabel.Visible = displayNoTrades;
     }
 
     private ListViewItem GenerateListViewItem(TradeOffer source)
@@ -97,25 +97,25 @@ internal partial class TradeControl : UserControl
 
     private void LoadTradeOffers()
     {
-        var sellTos = _tradeOffers
-                                  .Where(x => x.Type == TradeType.Buy)
-                                  .GroupBy(x => x.Ware)
-                                  .Select(g => new
-                                  {
-                                      Name = g.Key,
-                                      TotalSellAmount = g.Sum(x => x.Amount),
-                                      TotalPrice = g.Sum(x => (long)x.Price * x.Amount)
-                                  });
+        var sellTos = _items
+                            .Where(x => x.Type == TradeType.Buy)
+                            .GroupBy(x => x.Ware)
+                            .Select(g => new
+                            {
+                                Name = g.Key,
+                                TotalSellAmount = g.Sum(x => x.Amount),
+                                TotalPrice = g.Sum(x => (long)x.Price * x.Amount)
+                            });
 
-        var buyFroms = _tradeOffers
-                                   .Where(x => x.Type == TradeType.Sell)
-                                   .GroupBy(x => x.Ware)
-                                   .Select(g => new
-                                   {
-                                       Name = g.Key,
-                                       TotalBuyAmount = g.Sum(x => x.Amount),
-                                       TotalPrice = g.Sum(x => (long)x.Price * x.Amount)
-                                   });
+        var buyFroms = _items
+                             .Where(x => x.Type == TradeType.Sell)
+                             .GroupBy(x => x.Ware)
+                             .Select(g => new
+                             {
+                                 Name = g.Key,
+                                 TotalBuyAmount = g.Sum(x => x.Amount),
+                                 TotalPrice = g.Sum(x => (long)x.Price * x.Amount)
+                             });
 
         var wares = buyFroms
                             .Join(
@@ -170,10 +170,10 @@ internal partial class TradeControl : UserControl
 
         if (_selectedWare != null)
         {
-            var items = TraderOffers
-                                    .Where(x => x.Ware == _selectedWare?.Name &&
-                                                x.Type == tradeType &&
-                                                x.Amount > 0);
+            var items = _items
+                              .Where(x => x.Ware == _selectedWare?.Name &&
+                                          x.Type == tradeType &&
+                                          x.Amount > 0);
 
             items = orderAsecending
                                     ? items.OrderBy(x => x.Price)
@@ -212,16 +212,16 @@ internal partial class TradeControl : UserControl
     /// Gets or sets the trade offers to be displayed in the control.
     /// </summary>
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    internal IEnumerable<TradeOffer> TraderOffers
+    internal IEnumerable<TradeOffer> Items
     {
         get
         {
-            return _tradeOffers;
+            return _items;
         }
 
         set
         {
-            _tradeOffers = value;
+            _items = value;
             LoadTradeOffers();
         }
     }

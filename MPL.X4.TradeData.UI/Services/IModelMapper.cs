@@ -9,6 +9,22 @@ namespace MPL.X4.TradeData.UI.Services;
 internal interface IModelMapper
 {
     /// <summary>
+    /// Maps a sector model from the specified parameters.
+    /// </summary>
+    /// <param name="source">An <see cref="ISector"/> that is the source to map from.</param>
+    /// <param name="resourceData">An <see cref="IResourceData"/> that is the resource data to use.</param>
+    /// <returns>A <see cref="Sector"/> that is the result.</returns>
+    Sector MapSector(ISector source, IResourceData resourceData);
+
+    /// <summary>
+    /// Maps sectors from the specified parameters.
+    /// </summary>
+    /// <param name="source">An <see cref="IEnumerable{T}"/> of <see cref="ISector"/> that is the source to map from.</param>
+    /// <param name="resourceData">An <see cref="IResourceData"/> that is the resource data to use.</param>
+    /// <returns>An <see cref="IEnumerable{T}"/> of <see cref="Sector"/> that is the result.</returns>
+    IEnumerable<Sector> MapSectors(IEnumerable<ISector> source, IResourceData resourceData);
+
+    /// <summary>
     /// Maps a ship class from the specified <paramref name="source"/>.
     /// </summary>
     /// <param name="source">A <see cref="string"/> containing the source to map.</param>

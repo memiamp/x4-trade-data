@@ -1,5 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using MPL.X4.TradeData.Services;
+﻿using MPL.X4.TradeData.Services;
 using MPL.X4.TradeData.UI.Models;
 
 namespace MPL.X4.TradeData.UI.Services;
@@ -9,6 +8,20 @@ namespace MPL.X4.TradeData.UI.Services;
 /// </summary>
 internal class ModelMapper : IModelMapper
 {
+    Sector IModelMapper.MapSector(ISector source, IResourceData resourceData)
+        => new()
+        {
+            AbandonedShipCount = source.Ships.Count(x => x.Owner == Constants.SaveGameFile.AttributeValue.Owner.Ownerless),
+            Code = source.Code,
+            LockboxCount = source.Lockboxes.Count(),
+            Name = resourceData.SectorNames[source.NameId],
+            ShipCount = source.Ships.Count(),
+            StationCount = source.Stations.Count()
+        };
+
+    IEnumerable<Sector> IModelMapper.MapSectors(IEnumerable<ISector> source, IResourceData resourceData)
+        => source.Select(x => ((IModelMapper)this).MapSector(x, resourceData));
+
     ShipClass IModelMapper.MapShipClass(string source)
         => source switch
         {

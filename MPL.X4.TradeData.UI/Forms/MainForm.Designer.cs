@@ -7,19 +7,6 @@
         /// </summary>
         private System.ComponentModel.IContainer components = null;
 
-        /// <summary>
-        ///  Clean up any resources being used.
-        /// </summary>
-        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing && (components != null))
-            {
-                components.Dispose();
-            }
-            base.Dispose(disposing);
-        }
-
         #region Windows Form Designer generated code
 
         /// <summary>
@@ -32,20 +19,24 @@
             TradesTab = new TabPage();
             TradeControl = new MPL.X4.TradeData.UI.Controls.TradeControl();
             SpecialItemsTab = new TabPage();
+            SpecialItemControl = new MPL.X4.TradeData.UI.Controls.SpecialItemControl();
             menuStrip1 = new MenuStrip();
             fileToolStripMenuItem = new ToolStripMenuItem();
             exitToolStripMenuItem = new ToolStripMenuItem();
-            SpecialItemControl = new MPL.X4.TradeData.UI.Controls.SpecialItemControl();
+            SectorListTab = new TabPage();
+            SectorListControl = new MPL.X4.TradeData.UI.Controls.SectorListControl();
             LayoutControl.SuspendLayout();
             TradesTab.SuspendLayout();
             SpecialItemsTab.SuspendLayout();
             menuStrip1.SuspendLayout();
+            SectorListTab.SuspendLayout();
             SuspendLayout();
             // 
             // LayoutControl
             // 
             LayoutControl.Controls.Add(TradesTab);
             LayoutControl.Controls.Add(SpecialItemsTab);
+            LayoutControl.Controls.Add(SectorListTab);
             LayoutControl.Dock = DockStyle.Fill;
             LayoutControl.Location = new Point(0, 24);
             LayoutControl.Name = "LayoutControl";
@@ -83,6 +74,14 @@
             SpecialItemsTab.Text = "Special Items";
             SpecialItemsTab.UseVisualStyleBackColor = true;
             // 
+            // SpecialItemControl
+            // 
+            SpecialItemControl.Dock = DockStyle.Fill;
+            SpecialItemControl.Location = new Point(3, 3);
+            SpecialItemControl.Name = "SpecialItemControl";
+            SpecialItemControl.Size = new Size(1066, 503);
+            SpecialItemControl.TabIndex = 0;
+            // 
             // menuStrip1
             // 
             menuStrip1.Items.AddRange(new ToolStripItem[] { fileToolStripMenuItem });
@@ -105,13 +104,24 @@
             exitToolStripMenuItem.Size = new Size(93, 22);
             exitToolStripMenuItem.Text = "E&xit";
             // 
-            // SpecialItemControl
+            // SectorListTab
             // 
-            SpecialItemControl.Dock = DockStyle.Fill;
-            SpecialItemControl.Location = new Point(3, 3);
-            SpecialItemControl.Name = "SpecialItemControl";
-            SpecialItemControl.Size = new Size(1066, 503);
-            SpecialItemControl.TabIndex = 0;
+            SectorListTab.Controls.Add(SectorListControl);
+            SectorListTab.Location = new Point(4, 24);
+            SectorListTab.Name = "SectorListTab";
+            SectorListTab.Padding = new Padding(3);
+            SectorListTab.Size = new Size(1072, 509);
+            SectorListTab.TabIndex = 2;
+            SectorListTab.Text = "Sectors";
+            SectorListTab.UseVisualStyleBackColor = true;
+            // 
+            // SectorListControl
+            // 
+            SectorListControl.Dock = DockStyle.Fill;
+            SectorListControl.Location = new Point(3, 3);
+            SectorListControl.Name = "SectorListControl";
+            SectorListControl.Size = new Size(1066, 503);
+            SectorListControl.TabIndex = 0;
             // 
             // MainForm
             // 
@@ -129,6 +139,7 @@
             SpecialItemsTab.ResumeLayout(false);
             menuStrip1.ResumeLayout(false);
             menuStrip1.PerformLayout();
+            SectorListTab.ResumeLayout(false);
             ResumeLayout(false);
             PerformLayout();
         }
@@ -143,5 +154,7 @@
         private ToolStripMenuItem exitToolStripMenuItem;
         private Controls.TradeControl TradeControl;
         private Controls.SpecialItemControl SpecialItemControl;
+        private TabPage SectorListTab;
+        private Controls.SectorListControl SectorListControl;
     }
 }

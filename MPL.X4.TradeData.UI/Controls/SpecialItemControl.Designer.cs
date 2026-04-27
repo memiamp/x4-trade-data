@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            lblSpecialItems = new Label();
             SpecialItemListView = new ListView();
             SpecialItemListView_ItemType = new ColumnHeader();
             SpecialItemListView_Description = new ColumnHeader();
@@ -37,26 +36,17 @@
             SpecialItemListView_PositionX = new ColumnHeader();
             SpecialItemListView_PositionY = new ColumnHeader();
             SpecialItemListView_PositionZ = new ColumnHeader();
-            lblNoItems = new Label();
+            NoItemsLabel = new Label();
             SuspendLayout();
-            // 
-            // lblSpecialItems
-            // 
-            lblSpecialItems.AutoSize = true;
-            lblSpecialItems.Location = new Point(0, 0);
-            lblSpecialItems.Name = "lblSpecialItems";
-            lblSpecialItems.Size = new Size(79, 15);
-            lblSpecialItems.TabIndex = 12;
-            lblSpecialItems.Text = "Special Items:";
             // 
             // SpecialItemListView
             // 
             SpecialItemListView.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             SpecialItemListView.Columns.AddRange(new ColumnHeader[] { SpecialItemListView_ItemType, SpecialItemListView_Description, SpecialItemListView_Code, SpecialItemListView_Sector, SpecialItemListView_PositionX, SpecialItemListView_PositionY, SpecialItemListView_PositionZ });
             SpecialItemListView.FullRowSelect = true;
-            SpecialItemListView.Location = new Point(0, 18);
+            SpecialItemListView.Location = new Point(0, 0);
             SpecialItemListView.Name = "SpecialItemListView";
-            SpecialItemListView.Size = new Size(997, 378);
+            SpecialItemListView.Size = new Size(997, 396);
             SpecialItemListView.TabIndex = 11;
             SpecialItemListView.UseCompatibleStateImageBehavior = false;
             SpecialItemListView.View = View.Details;
@@ -99,33 +89,29 @@
             SpecialItemListView_PositionZ.TextAlign = HorizontalAlignment.Right;
             SpecialItemListView_PositionZ.Width = 100;
             // 
-            // lblNoItems
+            // NoItemsLabel
             // 
-            lblNoItems.Dock = DockStyle.Top;
-            lblNoItems.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            lblNoItems.Location = new Point(0, 0);
-            lblNoItems.Name = "lblNoItems";
-            lblNoItems.Size = new Size(997, 30);
-            lblNoItems.TabIndex = 14;
-            lblNoItems.Text = "No trades currently loaded.";
-            lblNoItems.TextAlign = ContentAlignment.MiddleCenter;
+            NoItemsLabel.Dock = DockStyle.Top;
+            NoItemsLabel.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            NoItemsLabel.Location = new Point(0, 0);
+            NoItemsLabel.Name = "NoItemsLabel";
+            NoItemsLabel.Size = new Size(997, 30);
+            NoItemsLabel.TabIndex = 14;
+            NoItemsLabel.Text = "No special items are currently loaded.";
+            NoItemsLabel.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // SpecialItemControl
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            Controls.Add(lblNoItems);
-            Controls.Add(lblSpecialItems);
+            Controls.Add(NoItemsLabel);
             Controls.Add(SpecialItemListView);
             Name = "SpecialItemControl";
             Size = new Size(997, 396);
             ResumeLayout(false);
-            PerformLayout();
         }
 
         #endregion
-
-        private Label lblSpecialItems;
         private ListView SpecialItemListView;
         private ColumnHeader SpecialItemListView_ItemType;
         private ColumnHeader SpecialItemListView_Description;
@@ -134,6 +120,6 @@
         private ColumnHeader SpecialItemListView_PositionX;
         private ColumnHeader SpecialItemListView_PositionY;
         private ColumnHeader SpecialItemListView_PositionZ;
-        private Label lblNoItems;
+        private Label NoItemsLabel;
     }
 }

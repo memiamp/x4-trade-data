@@ -47,7 +47,7 @@
             TradesListViewBuy_Station = new ColumnHeader();
             TradesListViewBuy_Amount = new ColumnHeader();
             TradesListViewBuy_Price = new ColumnHeader();
-            lblNoItems = new Label();
+            NoItemsLabel = new Label();
             MainLayoutPanel.SuspendLayout();
             BuyLabelPanel.SuspendLayout();
             SellLabelPanel.SuspendLayout();
@@ -213,22 +213,22 @@
             TradesListViewBuy_Price.TextAlign = HorizontalAlignment.Right;
             TradesListViewBuy_Price.Width = 80;
             // 
-            // lblNoItems
+            // NoItemsLabel
             // 
-            lblNoItems.Dock = DockStyle.Top;
-            lblNoItems.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            lblNoItems.Location = new Point(0, 0);
-            lblNoItems.Name = "lblNoItems";
-            lblNoItems.Size = new Size(1191, 30);
-            lblNoItems.TabIndex = 13;
-            lblNoItems.Text = "No trades currently loaded.";
-            lblNoItems.TextAlign = ContentAlignment.MiddleCenter;
+            NoItemsLabel.Dock = DockStyle.Top;
+            NoItemsLabel.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            NoItemsLabel.Location = new Point(0, 0);
+            NoItemsLabel.Name = "NoItemsLabel";
+            NoItemsLabel.Size = new Size(1191, 30);
+            NoItemsLabel.TabIndex = 13;
+            NoItemsLabel.Text = "No trades are currently loaded.";
+            NoItemsLabel.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // TradeControl
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            Controls.Add(lblNoItems);
+            Controls.Add(NoItemsLabel);
             Controls.Add(MainLayoutPanel);
             Name = "TradeControl";
             Size = new Size(1191, 1022);
@@ -260,6 +260,6 @@
         private ColumnHeader TradesListViewBuy_Price;
         private Label WareLabel;
         private ComboBox WareComboBox;
-        private Label lblNoItems;
+        private Label NoItemsLabel;
     }
 }
