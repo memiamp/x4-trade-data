@@ -6,6 +6,11 @@
 public class SpecialItem
 {
     /// <summary>
+    /// Gets or sets the code of the special item.
+    /// </summary>
+    public required string Code { get; set; }
+
+    /// <summary>
     /// Gets or sets the description of the special item.
     /// </summary>
     public required string Description { get; set; }

@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using MPL.X4.Services.DataParser;
 
 namespace MPL.X4.Services;
 
@@ -17,5 +18,15 @@ public static class Bootstrap
         servicesCollection.AddTransient<ISaveGameLoader, SaveGameLoader>();
         servicesCollection.AddTransient<IXmlReaderWrapper, XmlReaderWrapper>();
         servicesCollection.AddTransient<IXmlReaderWrapperFactory, XmlReaderWrapperFactory>();
+
+        // Data parsers
+        servicesCollection.AddTransient<IDataParser<ILockbox>, LockboxParser>();
+        servicesCollection.AddTransient<IDataParser<ISector>, SectorParser>();
+        servicesCollection.AddTransient<IDataParser<ISectorPosition>, SectorPositionParser>();
+        servicesCollection.AddTransient<IDataParser<IShip>, ShipParser>();
+        servicesCollection.AddTransient<IDataParser<IStation>, StationParser>();
+        servicesCollection.AddTransient<IDataParser<ITrade>, TradeParser>();
+        servicesCollection.AddTransient<IDataParser<IUniverse>, UniverseParser>();
+        servicesCollection.AddTransient<IDataParser<IZone>, ZoneParser>();
     }
 }

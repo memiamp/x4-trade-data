@@ -21,7 +21,12 @@ public interface ILockbox
     bool IsKnown { get; }
 
     /// <summary>
-    /// Gets the position of the station.
+    /// Gets the number of locks on the lockbox.
+    /// </summary>
+    int LockCount { get; }
+
+    /// <summary>
+    /// Gets the position of the lockbox.
     /// </summary>
     ISectorPosition Position { get; }
 

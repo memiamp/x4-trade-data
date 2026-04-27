@@ -22,15 +22,11 @@ internal class ResourceFileReader(
             if (reader.CheckNodeMatches(Constants.ResourceFile.ElementName.TextEntry, XmlNodeType.Element) &&
                 reader.TryGetAttribute(Constants.ResourceFile.AttributeName.TextId, out int? textId))
             {
-                using var subtree = reader.ReadSubtree();
+                using var subtree = await reader.ReadSubtree();
 
-                await subtree.ReadAsync(); // move to start
                 string value = await subtree.ReadElementContentAsStringAsync();
 
                 returnValue.Add(textId.Value, value);
-                //var value = await reader.ReadInnerXmlAsync();
-                //var value = await reader.ReadElementContentAsStringAsync();
-                //returnValue.Add(textId.Value, value);
             }
         }
 
@@ -58,7 +54,7 @@ internal class ResourceFileReader(
                 reader.TryGetAttribute(Constants.ResourceFile.AttributeName.PageId, out int? pageId) &&
                 pageIds.Contains(pageId.Value))
             {
-                using var pageSubtree = reader.ReadSubtree();
+                using var pageSubtree = await reader.ReadSubtree();
 
                 var pageResults = await ReadPage(pageSubtree);
 

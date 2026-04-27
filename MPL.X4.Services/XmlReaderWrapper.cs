@@ -39,6 +39,10 @@ internal sealed class XmlReaderWrapper(
         => xmlReader.NodeType == nodeType &&
            xmlReader.Name == name;
 
+    bool IXmlReaderWrapper.CheckNodeMatches(string name, XmlNodeType nodeType, int depth)
+        => ((IXmlReaderWrapper)this).CheckNodeMatches(name, nodeType) &&
+           xmlReader.Depth == depth;
+
     string? IXmlReaderWrapper.GetAttribute(string name)
         => xmlReader.GetAttribute(name);
 
@@ -51,11 +55,18 @@ internal sealed class XmlReaderWrapper(
     Task<string> IXmlReaderWrapper.ReadInnerXmlAsync()
         => xmlReader.ReadInnerXmlAsync();
 
-    IXmlReaderWrapper IXmlReaderWrapper.ReadSubtree()
+    async Task<IXmlReaderWrapper> IXmlReaderWrapper.ReadSubtree(bool moveToFirstElement)
     {
         // The caller is expected to dispose this once consumed
         var subtree = xmlReader.ReadSubtree();
-        return xmlReaderFactory.CreateXmlReader(subtree);
+        var returnValue = xmlReaderFactory.CreateXmlReader(subtree);
+
+        if (moveToFirstElement)
+        {
+            await returnValue.ReadAsync();
+        }
+
+        return returnValue;
     }
 
     bool IXmlReaderWrapper.TryGetAttribute(string name, Func<string, bool> predicate, [NotNullWhen(true)] out string? value)
@@ -107,6 +118,8 @@ internal sealed class XmlReaderWrapper(
 
         return value is not null;
     }
+
+    int IXmlReaderWrapper.Depth => xmlReader.Depth;
 
     string IXmlReaderWrapper.Name => xmlReader.Name;
 

@@ -47,6 +47,7 @@ public static class Constants
             public const string Class = "class";
             public const string Code = "code";
             public const string Connection = "connection";
+            public const string Desired = "desired";
             public const string Id = "id";
             public const string Known = "known";
             public const string KnownTo = "knownto";
@@ -64,6 +65,7 @@ public static class Constants
         {
             public static class Class
             {
+                public const string Lock = "lock";
                 public const string Lockbox = "lockbox";
                 public const string Sector = "sector";
                 public const string Ship = "ship";
@@ -95,6 +97,7 @@ public static class Constants
             public const string Component = "component";
             public const string Connection = "connection";
             public const string Position = "position";
+            public const string Production = "production";
             public const string Trade = "trade";
             public const string Universe = "universe";
         }

@@ -19,15 +19,15 @@ public interface ISectorPosition
     /// <summary>
     /// Gets the X position.
     /// </summary>
-    int X { get; }
+    double X { get; }
 
     /// <summary>
     /// Gets the Y position.
     /// </summary>
-    int Y { get; }
+    double Y { get; }
 
     /// <summary>
     /// Gets the Z position.
     /// </summary>
-    int Z { get; }
+    double Z { get; }
 }

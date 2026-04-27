@@ -8,13 +8,15 @@ internal class Lockbox : ILockbox
     public override string ToString()
         => $"{Type} {Code} - IsKnown {IsKnown} - {Id}";
 
-    public required string Code { get; init; }
+    public required string Code { get; set; }
 
-    public required string Id { get; init; }
+    public required string Id { get; set; }
 
-    public required bool IsKnown { get; init; }
+    public required bool IsKnown { get; set; }
 
-    public required ISectorPosition Position { get; init; }
+    public required int LockCount { get; set; }
 
-    public required string Type { get; init; }
+    public required ISectorPosition Position { get; set; }
+
+    public required string Type { get; set; }
 }

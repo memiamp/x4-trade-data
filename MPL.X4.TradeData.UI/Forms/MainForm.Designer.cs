@@ -28,251 +28,120 @@
         /// </summary>
         private void InitializeComponent()
         {
-            SpecialItemListView = new ListView();
-            SpecialItemListView_ItemType = new ColumnHeader();
-            SpecialItemListView_Description = new ColumnHeader();
-            SpecialItemListView_Sector = new ColumnHeader();
-            SpecialItemListView_PositionX = new ColumnHeader();
-            SpecialItemListView_PositionY = new ColumnHeader();
-            SpecialItemListView_PositionZ = new ColumnHeader();
-            TradesListViewBuy = new ListView();
-            TradesListViewBuy_Sector = new ColumnHeader();
-            TradesListViewBuy_Station = new ColumnHeader();
-            TradesListViewBuy_Amount = new ColumnHeader();
-            TradesListViewBuy_Price = new ColumnHeader();
-            WareComboBox = new ComboBox();
-            WareLabel = new Label();
-            TradesListViewSell = new ListView();
-            TradesListViewSell_Sector = new ColumnHeader();
-            TradesListViewSell_Station = new ColumnHeader();
-            TradesListViewSell_Amount = new ColumnHeader();
-            TradesListViewSell_Price = new ColumnHeader();
-            lblTradeListBuy = new Label();
-            lblTradeListSell = new Label();
-            lblAverageBuyPrice = new Label();
-            lblAverageSellPrice = new Label();
-            lblSpecialItems = new Label();
+            LayoutControl = new TabControl();
+            TradesTab = new TabPage();
+            TradeControl = new MPL.X4.TradeData.UI.Controls.TradeControl();
+            SpecialItemsTab = new TabPage();
+            menuStrip1 = new MenuStrip();
+            fileToolStripMenuItem = new ToolStripMenuItem();
+            exitToolStripMenuItem = new ToolStripMenuItem();
+            SpecialItemControl = new MPL.X4.TradeData.UI.Controls.SpecialItemControl();
+            LayoutControl.SuspendLayout();
+            TradesTab.SuspendLayout();
+            SpecialItemsTab.SuspendLayout();
+            menuStrip1.SuspendLayout();
             SuspendLayout();
             // 
-            // SpecialItemListView
+            // LayoutControl
             // 
-            SpecialItemListView.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            SpecialItemListView.Columns.AddRange(new ColumnHeader[] { SpecialItemListView_ItemType, SpecialItemListView_Description, SpecialItemListView_Sector, SpecialItemListView_PositionX, SpecialItemListView_PositionY, SpecialItemListView_PositionZ });
-            SpecialItemListView.FullRowSelect = true;
-            SpecialItemListView.Location = new Point(12, 416);
-            SpecialItemListView.Name = "SpecialItemListView";
-            SpecialItemListView.Size = new Size(1056, 133);
-            SpecialItemListView.TabIndex = 1;
-            SpecialItemListView.UseCompatibleStateImageBehavior = false;
-            SpecialItemListView.View = View.Details;
+            LayoutControl.Controls.Add(TradesTab);
+            LayoutControl.Controls.Add(SpecialItemsTab);
+            LayoutControl.Dock = DockStyle.Fill;
+            LayoutControl.Location = new Point(0, 24);
+            LayoutControl.Name = "LayoutControl";
+            LayoutControl.SelectedIndex = 0;
+            LayoutControl.Size = new Size(1080, 537);
+            LayoutControl.TabIndex = 0;
             // 
-            // SpecialItemListView_ItemType
+            // TradesTab
             // 
-            SpecialItemListView_ItemType.Text = "Item Type";
-            SpecialItemListView_ItemType.Width = 100;
+            TradesTab.Controls.Add(TradeControl);
+            TradesTab.Location = new Point(4, 24);
+            TradesTab.Name = "TradesTab";
+            TradesTab.Padding = new Padding(3);
+            TradesTab.Size = new Size(1072, 509);
+            TradesTab.TabIndex = 0;
+            TradesTab.Text = "Trades";
+            TradesTab.UseVisualStyleBackColor = true;
             // 
-            // SpecialItemListView_Description
+            // TradeControl
             // 
-            SpecialItemListView_Description.Text = "Description";
-            SpecialItemListView_Description.Width = 220;
+            TradeControl.Dock = DockStyle.Fill;
+            TradeControl.Location = new Point(3, 3);
+            TradeControl.Name = "TradeControl";
+            TradeControl.Size = new Size(1066, 503);
+            TradeControl.TabIndex = 0;
             // 
-            // SpecialItemListView_Sector
+            // SpecialItemsTab
             // 
-            SpecialItemListView_Sector.Text = "Sector";
-            SpecialItemListView_Sector.Width = 150;
+            SpecialItemsTab.Controls.Add(SpecialItemControl);
+            SpecialItemsTab.Location = new Point(4, 24);
+            SpecialItemsTab.Name = "SpecialItemsTab";
+            SpecialItemsTab.Padding = new Padding(3);
+            SpecialItemsTab.Size = new Size(1072, 509);
+            SpecialItemsTab.TabIndex = 1;
+            SpecialItemsTab.Text = "Special Items";
+            SpecialItemsTab.UseVisualStyleBackColor = true;
             // 
-            // SpecialItemListView_PositionX
+            // menuStrip1
             // 
-            SpecialItemListView_PositionX.Text = "X";
-            SpecialItemListView_PositionX.TextAlign = HorizontalAlignment.Right;
-            SpecialItemListView_PositionX.Width = 100;
+            menuStrip1.Items.AddRange(new ToolStripItem[] { fileToolStripMenuItem });
+            menuStrip1.Location = new Point(0, 0);
+            menuStrip1.Name = "menuStrip1";
+            menuStrip1.Size = new Size(1080, 24);
+            menuStrip1.TabIndex = 1;
+            menuStrip1.Text = "menuStrip1";
             // 
-            // SpecialItemListView_PositionY
+            // fileToolStripMenuItem
             // 
-            SpecialItemListView_PositionY.Text = "Y";
-            SpecialItemListView_PositionY.TextAlign = HorizontalAlignment.Right;
-            SpecialItemListView_PositionY.Width = 100;
+            fileToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { exitToolStripMenuItem });
+            fileToolStripMenuItem.Name = "fileToolStripMenuItem";
+            fileToolStripMenuItem.Size = new Size(37, 20);
+            fileToolStripMenuItem.Text = "&File";
             // 
-            // SpecialItemListView_PositionZ
+            // exitToolStripMenuItem
             // 
-            SpecialItemListView_PositionZ.Text = "Z";
-            SpecialItemListView_PositionZ.TextAlign = HorizontalAlignment.Right;
-            SpecialItemListView_PositionZ.Width = 100;
+            exitToolStripMenuItem.Name = "exitToolStripMenuItem";
+            exitToolStripMenuItem.Size = new Size(93, 22);
+            exitToolStripMenuItem.Text = "E&xit";
             // 
-            // TradesListViewBuy
+            // SpecialItemControl
             // 
-            TradesListViewBuy.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            TradesListViewBuy.Columns.AddRange(new ColumnHeader[] { TradesListViewBuy_Sector, TradesListViewBuy_Station, TradesListViewBuy_Amount, TradesListViewBuy_Price });
-            TradesListViewBuy.Location = new Point(12, 56);
-            TradesListViewBuy.Name = "TradesListViewBuy";
-            TradesListViewBuy.Size = new Size(525, 339);
-            TradesListViewBuy.TabIndex = 2;
-            TradesListViewBuy.UseCompatibleStateImageBehavior = false;
-            TradesListViewBuy.View = View.Details;
-            // 
-            // TradesListViewBuy_Sector
-            // 
-            TradesListViewBuy_Sector.Text = "Sector";
-            TradesListViewBuy_Sector.Width = 150;
-            // 
-            // TradesListViewBuy_Station
-            // 
-            TradesListViewBuy_Station.Text = "Station";
-            TradesListViewBuy_Station.Width = 150;
-            // 
-            // TradesListViewBuy_Amount
-            // 
-            TradesListViewBuy_Amount.Text = "Amount";
-            TradesListViewBuy_Amount.TextAlign = HorizontalAlignment.Right;
-            TradesListViewBuy_Amount.Width = 80;
-            // 
-            // TradesListViewBuy_Price
-            // 
-            TradesListViewBuy_Price.Text = "Price";
-            TradesListViewBuy_Price.TextAlign = HorizontalAlignment.Right;
-            TradesListViewBuy_Price.Width = 80;
-            // 
-            // WareComboBox
-            // 
-            WareComboBox.FormattingEnabled = true;
-            WareComboBox.Location = new Point(55, 12);
-            WareComboBox.Name = "WareComboBox";
-            WareComboBox.Size = new Size(198, 23);
-            WareComboBox.TabIndex = 3;
-            // 
-            // WareLabel
-            // 
-            WareLabel.AutoSize = true;
-            WareLabel.Location = new Point(12, 15);
-            WareLabel.Name = "WareLabel";
-            WareLabel.Size = new Size(37, 15);
-            WareLabel.TabIndex = 4;
-            WareLabel.Text = "Ware:";
-            // 
-            // TradesListViewSell
-            // 
-            TradesListViewSell.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            TradesListViewSell.Columns.AddRange(new ColumnHeader[] { TradesListViewSell_Sector, TradesListViewSell_Station, TradesListViewSell_Amount, TradesListViewSell_Price });
-            TradesListViewSell.Location = new Point(543, 56);
-            TradesListViewSell.Name = "TradesListViewSell";
-            TradesListViewSell.Size = new Size(525, 339);
-            TradesListViewSell.TabIndex = 5;
-            TradesListViewSell.UseCompatibleStateImageBehavior = false;
-            TradesListViewSell.View = View.Details;
-            // 
-            // TradesListViewSell_Sector
-            // 
-            TradesListViewSell_Sector.Text = "Sector";
-            TradesListViewSell_Sector.Width = 150;
-            // 
-            // TradesListViewSell_Station
-            // 
-            TradesListViewSell_Station.Text = "Station";
-            TradesListViewSell_Station.Width = 150;
-            // 
-            // TradesListViewSell_Amount
-            // 
-            TradesListViewSell_Amount.Text = "Amount";
-            TradesListViewSell_Amount.TextAlign = HorizontalAlignment.Right;
-            TradesListViewSell_Amount.Width = 80;
-            // 
-            // TradesListViewSell_Price
-            // 
-            TradesListViewSell_Price.Text = "Price";
-            TradesListViewSell_Price.TextAlign = HorizontalAlignment.Right;
-            TradesListViewSell_Price.Width = 80;
-            // 
-            // lblTradeListBuy
-            // 
-            lblTradeListBuy.AutoSize = true;
-            lblTradeListBuy.Location = new Point(12, 38);
-            lblTradeListBuy.Name = "lblTradeListBuy";
-            lblTradeListBuy.Size = new Size(101, 15);
-            lblTradeListBuy.TabIndex = 6;
-            lblTradeListBuy.Text = "Places to SELL TO:";
-            // 
-            // lblTradeListSell
-            // 
-            lblTradeListSell.AutoSize = true;
-            lblTradeListSell.Location = new Point(543, 38);
-            lblTradeListSell.Name = "lblTradeListSell";
-            lblTradeListSell.Size = new Size(118, 15);
-            lblTradeListSell.TabIndex = 7;
-            lblTradeListSell.Text = "Places to BUY FROM:";
-            // 
-            // lblAverageBuyPrice
-            // 
-            lblAverageBuyPrice.AutoSize = true;
-            lblAverageBuyPrice.Location = new Point(162, 38);
-            lblAverageBuyPrice.Name = "lblAverageBuyPrice";
-            lblAverageBuyPrice.Size = new Size(0, 15);
-            lblAverageBuyPrice.TabIndex = 8;
-            // 
-            // lblAverageSellPrice
-            // 
-            lblAverageSellPrice.AutoSize = true;
-            lblAverageSellPrice.Location = new Point(691, 38);
-            lblAverageSellPrice.Name = "lblAverageSellPrice";
-            lblAverageSellPrice.Size = new Size(0, 15);
-            lblAverageSellPrice.TabIndex = 9;
-            // 
-            // lblSpecialItems
-            // 
-            lblSpecialItems.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
-            lblSpecialItems.AutoSize = true;
-            lblSpecialItems.Location = new Point(12, 398);
-            lblSpecialItems.Name = "lblSpecialItems";
-            lblSpecialItems.Size = new Size(79, 15);
-            lblSpecialItems.TabIndex = 10;
-            lblSpecialItems.Text = "Special Items:";
+            SpecialItemControl.Dock = DockStyle.Fill;
+            SpecialItemControl.Location = new Point(3, 3);
+            SpecialItemControl.Name = "SpecialItemControl";
+            SpecialItemControl.Size = new Size(1066, 503);
+            SpecialItemControl.TabIndex = 0;
             // 
             // MainForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1080, 561);
-            Controls.Add(lblSpecialItems);
-            Controls.Add(lblAverageSellPrice);
-            Controls.Add(lblAverageBuyPrice);
-            Controls.Add(lblTradeListSell);
-            Controls.Add(lblTradeListBuy);
-            Controls.Add(TradesListViewSell);
-            Controls.Add(WareLabel);
-            Controls.Add(WareComboBox);
-            Controls.Add(TradesListViewBuy);
-            Controls.Add(SpecialItemListView);
-            MaximumSize = new Size(1096, 1000);
+            Controls.Add(LayoutControl);
+            Controls.Add(menuStrip1);
+            MainMenuStrip = menuStrip1;
             MinimumSize = new Size(1096, 600);
             Name = "MainForm";
             Text = "Form1";
+            LayoutControl.ResumeLayout(false);
+            TradesTab.ResumeLayout(false);
+            SpecialItemsTab.ResumeLayout(false);
+            menuStrip1.ResumeLayout(false);
+            menuStrip1.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
         }
 
         #endregion
-        private ListView SpecialItemListView;
-        private ColumnHeader SpecialItemListView_Description;
-        private ColumnHeader SpecialItemListView_Sector;
-        private ColumnHeader SpecialItemListView_PositionX;
-        private ListView TradesListViewBuy;
-        private ComboBox WareComboBox;
-        private Label WareLabel;
-        private ColumnHeader TradesListViewBuy_Sector;
-        private ColumnHeader TradesListViewBuy_Station;
-        private ColumnHeader TradesListViewBuy_Price;
-        private ColumnHeader TradesListViewBuy_Amount;
-        private ListView TradesListViewSell;
-        private ColumnHeader TradesListViewSell_Sector;
-        private ColumnHeader TradesListViewSell_Station;
-        private ColumnHeader TradesListViewSell_Price;
-        private ColumnHeader TradesListViewSell_Amount;
-        private Label lblTradeListBuy;
-        private Label lblTradeListSell;
-        private Label lblAverageBuyPrice;
-        private Label lblAverageSellPrice;
-        private Label lblSpecialItems;
-        private ColumnHeader SpecialItemListView_PositionY;
-        private ColumnHeader SpecialItemListView_PositionZ;
-        private ColumnHeader SpecialItemListView_ItemType;
+
+        private TabControl LayoutControl;
+        private TabPage TradesTab;
+        private TabPage SpecialItemsTab;
+        private MenuStrip menuStrip1;
+        private ToolStripMenuItem fileToolStripMenuItem;
+        private ToolStripMenuItem exitToolStripMenuItem;
+        private Controls.TradeControl TradeControl;
+        private Controls.SpecialItemControl SpecialItemControl;
     }
 }

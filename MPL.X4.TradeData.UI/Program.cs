@@ -1,7 +1,7 @@
-using System.Diagnostics;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using MPL.X4.TradeData.UI.Forms;
+using MPL.X4.TradeData.UI.Services;
 
 namespace MPL.X4.TradeData.UI;
 
@@ -22,11 +22,14 @@ internal static class Program
 
         // Services
         X4.Services.Bootstrap.AddServices(services);
-        Services.Bootstrap.AddServices(services);
+        MPL.X4.TradeData.Services.Bootstrap.AddServices(services);
 
         // Local forms
         services.AddTransient<DebugForm>();
         services.AddTransient<MainForm>();
+
+        // Local services
+        services.AddTransient<IModelMapper, ModelMapper>();
 
         return services.BuildServiceProvider();
     }
