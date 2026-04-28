@@ -6,9 +6,11 @@
 internal class Zone : IZone
 {
     public override string ToString()
-        => $"{Code} {Position} - Lockboxes {Lockboxes.Count()} Ships {Ships.Count()} Stations {Stations.Count()} - {Id}";
+        => $"{Code} {Position} - Gates {Gates.Count()} Lockboxes {Lockboxes.Count()} Ships {Ships.Count()} Stations {Stations.Count()} - {Id}";
 
     public required string Code { get; init; }
+
+    public required IEnumerable<IGate> Gates { get; init; }
 
     public required string Id { get; init; }
 

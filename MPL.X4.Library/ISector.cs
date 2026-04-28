@@ -11,6 +11,11 @@ public interface ISector
     string Code { get; }
 
     /// <summary>
+    /// Gets the gates in the sector.
+    /// </summary>
+    IEnumerable<IGate> Gates { get; }
+
+    /// <summary>
     /// Gets the identifier of the sector.
     /// </summary>
     string Id { get; }

@@ -141,12 +141,6 @@ internal partial class MainForm : Form
 
     private void UpdateSectorListControl()
     {
-        //if (InvokeRequired)
-        //{
-        //    BeginInvoke(UpdateSectorListControl);
-        //    return;
-        //}
-
         SectorListControl.Items = _saveGame?.Universe.Sectors.Any() == true
             ? _modelMapper.MapSectors(_saveGame.Universe.Sectors, _resourceData)
             : [];
@@ -154,12 +148,6 @@ internal partial class MainForm : Form
 
     private void UpdateSpecialItemsControl()
     {
-        //if (InvokeRequired)
-        //{
-        //    BeginInvoke(UpdateSpecialItemsControl);
-        //    return;
-        //}
-
         SpecialItemControl.Items = _saveGame?.Universe.Sectors.Any() == true
             ? _modelMapper.MapSpecialItems(_saveGame.Universe.Sectors, _resourceData)
             : [];
@@ -167,12 +155,6 @@ internal partial class MainForm : Form
 
     private void UpdateTradeControl()
     {
-        //if (InvokeRequired)
-        //{
-        //    BeginInvoke(UpdateTradeControl);
-        //    return;
-        //}
-
         TradeControl.Items = _saveGame?.Universe.Sectors.Any() == true
             ? _modelMapper.MapTradeOffers(_saveGame.Universe.Sectors, _resourceData)
             : [];

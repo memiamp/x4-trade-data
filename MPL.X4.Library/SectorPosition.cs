@@ -6,7 +6,7 @@
 public class SectorPosition() : ISectorPosition
 {
     /// <summary>
-    /// Creates a new instance of the <see cref="SectorPosition"/> class by copying the values from the specified <see cref="ISectorPosition"/>.
+    /// Creates a new instance of the <see cref="SectorPosition"/> class by copying the values from the specified <paramref name="source"/>.
     /// </summary>
     /// <param name="source">An <see cref="ISectorPosition"/> to copy values from.</param>
     public SectorPosition(ISectorPosition source)

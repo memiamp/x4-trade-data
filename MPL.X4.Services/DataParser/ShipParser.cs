@@ -46,9 +46,9 @@ internal class ShipParser(
 
         while (await reader.ReadAsync())
         {
-            if (reader.CheckNodeMatches(Constants.SaveGameFile.ElementName.Position, XmlNodeType.Element, 2))
+            if (reader.CheckNodeMatches(Constants.SaveGameFile.ElementName.Offset, XmlNodeType.Element, 1))
             {
-                await UpdatePosition(reader, position);
+                await UpdatePositionFromOffset(reader, position);
                 break;
             }
         }

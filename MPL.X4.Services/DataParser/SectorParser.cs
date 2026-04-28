@@ -46,8 +46,9 @@ internal class SectorParser(
 
     private protected override async Task<ISector> OnParse(IXmlReaderWrapper reader, ISectorPosition positionOffset)
     {
-        ISector? returnValue = null;
+        List<IGate> gates = [];
         List<ILockbox> lockboxes = [];
+        ISector? returnValue = null;
         List<IShip> ships = [];
         List<IStation> stations = [];
 
@@ -62,6 +63,7 @@ internal class SectorParser(
             returnValue = new Sector
             {
                 Code = code,
+                Gates = gates,
                 Id = id,
                 IsKnown = isKnown,
                 Lockboxes = lockboxes,
@@ -85,6 +87,7 @@ internal class SectorParser(
                 using var zoneSubtree = await reader.ReadSubtree();
 
                 var zone = await zoneParser.Parse(zoneSubtree);
+                gates.AddRange(zone.Gates);
                 lockboxes.AddRange(zone.Lockboxes);
                 ships.AddRange(zone.Ships);
                 stations.AddRange(zone.Stations);

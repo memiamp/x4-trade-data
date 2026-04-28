@@ -20,6 +20,7 @@ public static class Bootstrap
         servicesCollection.AddTransient<IXmlReaderWrapperFactory, XmlReaderWrapperFactory>();
 
         // Data parsers
+        servicesCollection.AddTransient<IDataParser<IGate>, GateParser>();
         servicesCollection.AddTransient<IDataParser<ILockbox>, LockboxParser>();
         servicesCollection.AddTransient<IDataParser<ISector>, SectorParser>();
         servicesCollection.AddTransient<IDataParser<ISectorPosition>, SectorPositionParser>();

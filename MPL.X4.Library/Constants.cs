@@ -65,6 +65,7 @@ public static class Constants
         {
             public static class Class
             {
+                public const string Gate = "gate";
                 public const string Lock = "lock";
                 public const string Lockbox = "lockbox";
                 public const string Sector = "sector";
@@ -96,6 +97,7 @@ public static class Constants
         {
             public const string Component = "component";
             public const string Connection = "connection";
+            public const string Offset = "offset";
             public const string Position = "position";
             public const string Production = "production";
             public const string Trade = "trade";

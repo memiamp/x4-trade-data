@@ -1,6 +1,11 @@
-﻿using System.ComponentModel;
+﻿using System.Collections.Generic;
+using System.ComponentModel;
 using MPL.X4.TradeData.UI.Helpers;
 using MPL.X4.TradeData.UI.Models;
+using ScottPlot.PlotStyles;
+using ScottPlot.Plottables;
+using ScottPlot.TickGenerators.TimeUnits;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace MPL.X4.TradeData.UI.Controls;
 
@@ -10,6 +15,22 @@ namespace MPL.X4.TradeData.UI.Controls;
 internal partial class TradeControl : UserControl
 {
     #region Declarations
+
+    private static readonly List<string> _loopSectors =
+    [
+        "Argon Prime",
+        "Bright Promise",
+        "Hatikvah's Choice I",
+        "Holy Vision",
+        "Pious Mists II",
+        "Pontifex's Claim",
+        "Profit Center Alpha",
+        "Second Contact II Flashpoint",
+        "Silent Witness I",
+        "Trinity Sanctum III",
+        "True Sight",
+        "Unholy Retribution"
+    ];
 
     private readonly BindingList<Ware> _wares = [];
 
@@ -75,11 +96,24 @@ internal partial class TradeControl : UserControl
 
         var returnValue = new ListViewItem(source.SectorName)
         {
-            BackColor = backColour
+            BackColor = backColour,
         };
         returnValue.SubItems.Add(source.StationName);
         returnValue.SubItems.Add($"{source.Amount:#,##0}");
         returnValue.SubItems.Add(price);
+
+        if (_loopSectors.Contains(source.SectorName))
+        {
+            returnValue.UseItemStyleForSubItems = false;
+            returnValue.SubItems[0].Font = new Font(TradesListViewBuyFrom.Font.FontFamily,
+                                                    TradesListViewBuyFrom.Font.Size,
+                                                    FontStyle.Bold);
+            for (int i = 1; i < returnValue.SubItems.Count; i++)
+            {
+                returnValue.SubItems[i].BackColor = returnValue.SubItems[0].BackColor;
+            }
+        }
+
         return returnValue;
     }
 

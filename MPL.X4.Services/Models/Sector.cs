@@ -10,6 +10,8 @@ internal class Sector : ISector
 
     public required string Code { get; init; }
 
+    public required IEnumerable<IGate> Gates { get; init; }
+ 
     public required string Id { get; init; }
 
     public required bool IsKnown { get; init; }

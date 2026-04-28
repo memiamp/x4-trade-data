@@ -1,16 +1,214 @@
-﻿using ScottPlot;
-using System.ComponentModel;
+﻿using System.ComponentModel;
+using MPL.X4.TradeData.UI.Models;
+using ScottPlot;
 
 namespace MPL.X4.TradeData.UI.Forms;
 
 public partial class SectorViewerForm : Form
 {
+    #region Declarations
+
     private ISector? _sector;
+
+    private PlotData? _abandonedShipPlots;
+    private PlotData? _gatePlots;
+    private PlotData? _lockboxPlots;
+    private PlotData? _stationPlots;
+    private PlotData? _shipPlots;
+
+    #endregion
+
+    #region Constructors
 
     public SectorViewerForm()
     {
         InitializeComponent();
+        Initialise();
     }
+
+    #endregion
+
+    #region Methods
+
+    private PointInfo GeneratePoint(IGate source)
+    {
+        return new PointInfo
+        {
+            X = source.Position.X,
+            Y = source.Position.Y,
+            Z = source.Position.Z
+        };
+    }
+
+    private PointInfo GeneratePoint(ILockbox source)
+    {
+        return new PointInfo
+        {
+            Name = source.Type,
+            ShowTooltip = true,
+            X = source.Position.X,
+            Y = source.Position.Y,
+            Z = source.Position.Z
+        };
+    }
+
+    private PointInfo GeneratePoint(IShip source, bool isAbandoned = false)
+    {
+        return new PointInfo
+        {
+            Name = isAbandoned ? source.Macro : null,
+            ShowTooltip = isAbandoned,
+            X = source.Position.X,
+            Y = source.Position.Y,
+            Z = source.Position.Z
+        };
+    }
+
+    private PointInfo GeneratePoint(IStation source)
+    {
+        return new PointInfo
+        {
+            Name = source.NameId?.ToString(),
+            ShowTooltip = true,
+            X = source.Position.X,
+            Y = source.Position.Y,
+            Z = source.Position.Z
+        };
+    }
+
+    private double GetMaxPlotSize()
+    {
+        var allPlots = new[]
+        {
+            _abandonedShipPlots,
+            _lockboxPlots,
+            _shipPlots,
+            _stationPlots
+        };
+
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
+        return allPlots
+                       .Where(p => p != null)
+                       .SelectMany(p => new[] { p.GetMaxX(), p.GetMaxZ() })
+                       .DefaultIfEmpty(0)
+                       .Max();
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
+    }
+
+    private void Initialise()
+    {
+    }
+
+    private static PlotData LoadPlots(Func<IEnumerable<PointInfo>?> generator)
+        => new()
+        {
+            Points = generator() ?? []
+        };
+
+    private void LoadSectorData()
+    {
+        _abandonedShipPlots = LoadPlots(() => _sector?
+                                                      .Ships
+                                                      .Where(x => x.Owner == Constants.SaveGameFile.AttributeValue.Owner.Ownerless)
+                                                      .Select(x => GeneratePoint(x, true)));
+        _gatePlots = LoadPlots(() => _sector?
+                                            .Gates
+                                            .Select(GeneratePoint));
+
+        _lockboxPlots = LoadPlots(() => _sector?
+                                                .Lockboxes
+                                                .Select(GeneratePoint));
+
+        _shipPlots = LoadPlots(() => _sector?
+                                             .Ships
+                                             .Where(x => x.Owner != Constants.SaveGameFile.AttributeValue.Owner.Ownerless)
+                                             .Select(x => GeneratePoint(x)));
+
+        _stationPlots = LoadPlots(() => _sector?
+                                                .Stations
+                                                .Select(GeneratePoint));
+
+        PlotSectorData();
+    }
+
+    private void PlotPoints(PlotData? plotData, string name, ScottPlot.Color colour, MarkerShape shape, int markerSize)
+    {
+        if (plotData?.Points.Any() == true)
+        {
+            var xPoints = plotData.Points.Select(x => x.X).ToArray();
+            var zPoints = plotData.Points.Select(x => x.Z).ToArray();
+
+            var plot = SectorPlot.Plot.Add.ScatterPoints(xPoints, zPoints);
+            plot.Color = colour;
+            plot.MarkerShape = shape;
+            plot.MarkerSize = markerSize;
+            plot.LegendText = name;
+        }
+    }
+
+    private void PlotSectorData()
+    {
+        SetupPlotStyle();
+
+        PlotPoints(_gatePlots, "Gates", Colors.Gray, MarkerShape.OpenCircleWithCross, 8);
+
+        PlotPoints(_stationPlots, "Stations", Colors.Red, MarkerShape.FilledSquare, 10);
+
+        PlotPoints(_shipPlots, "Ships", Colors.Blue, MarkerShape.FilledDiamond, 5);
+
+        PlotPoints(_abandonedShipPlots, "Abandoned Ships", Colors.Green, MarkerShape.FilledCircle, 8);
+
+        PlotPoints(_lockboxPlots, "Lockboxes", Colors.DarkGoldenRod, MarkerShape.FilledTriangleUp, 10);
+    }
+
+    private void SetupPlotStyle()
+    {
+        var maxDimension = GetMaxPlotSize();
+        maxDimension *= 1.15;
+
+        SectorPlot.Plot.Clear();
+
+        SectorPlot.Plot.Axes.SetLimits(-maxDimension, maxDimension, -maxDimension, maxDimension);
+
+        // Setup 0,0 lines
+        var vLine = SectorPlot.Plot.Add.VerticalLine(0);
+        var hLine = SectorPlot.Plot.Add.HorizontalLine(0);
+
+        vLine.Color = ScottPlot.Colors.Black;
+        vLine.EnableAutoscale = false;
+        vLine.LinePattern = ScottPlot.LinePattern.Dashed;
+        vLine.LineWidth = 2;
+
+        hLine.EnableAutoscale = false;
+        hLine.Color = ScottPlot.Colors.Black;
+        hLine.LinePattern = ScottPlot.LinePattern.Dashed;
+        hLine.LineWidth = 2;
+
+        // Setup axes
+        var tickGen = new ScottPlot.TickGenerators.NumericFixedInterval(50000)
+        {
+            LabelFormatter = pos =>
+            {
+                if (pos == 0) return "0";
+                double abs = Math.Abs(pos);
+                return (pos < 0 ? "-" : "") +
+                       (abs >= 1000000 ? (abs / 1000000).ToString("0.#") + "M" : (abs / 1000).ToString("0.#") + "k");
+            }
+        };
+        SectorPlot.Plot.Axes.Bottom.TickGenerator = tickGen;
+        SectorPlot.Plot.Axes.Left.TickGenerator = tickGen;
+
+        // Setup grid display
+        SectorPlot.Plot.Grid.IsVisible = true;
+        SectorPlot.Plot.Grid.LineColor = Colors.LightGray.WithAlpha(0.5);
+        SectorPlot.Plot.Title($"Sector: {_sector?.NameId}");
+        SectorPlot.Plot.XLabel("X Coordinate");
+        SectorPlot.Plot.YLabel("Z Coordinate");
+    }
+
+    #endregion
+
+    #region Properties
 
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     internal ISector? Sector
@@ -26,58 +224,5 @@ public partial class SectorViewerForm : Form
         }
     }
 
-    private void LoadSectorData()
-    {
-        PlotSectorData();
-    }
-
-    private void PlotSectorData()
-    {
-        formsPlot1.Plot.Clear(); // reset
-
-        // Example: separate lists from your save parser (X/Z plane is typical for X4 2D maps)
-        var shipXs = _sector?.Ships.Select(s => s.Position.X).ToArray() ?? [];
-        var shipZs = _sector?.Ships.Select(s => s.Position.Z).ToArray() ?? [];
-
-        var stationXs = _sector?.Stations.Select(s => s.Position.X).ToArray() ?? [];
-        var stationZs = _sector?.Stations.Select(s => s.Position.Z).ToArray() ?? [];
-
-        var lockboxXs = _sector?.Lockboxes.Select(l => l.Position.X).ToArray() ?? [];
-        var lockboxZs = _sector?.Lockboxes.Select(l => l.Position.Z).ToArray() ?? [];
-
-        // Different styles per type
-        var shipsPlot = formsPlot1.Plot.Add.ScatterPoints(shipXs, shipZs);
-        shipsPlot.Color = Colors.Blue;
-        shipsPlot.MarkerShape = MarkerShape.TriUp;
-        shipsPlot.MarkerSize = 8;
-        shipsPlot.LegendText = "Ships";
-
-        var stationsPlot = formsPlot1.Plot.Add.ScatterPoints(stationXs, stationZs);
-        stationsPlot.Color = Colors.Red;
-        stationsPlot.MarkerShape = MarkerShape.FilledSquare;
-        stationsPlot.MarkerSize = 10;
-        stationsPlot.LegendText = "Stations";
-
-        var lockboxesPlot = formsPlot1.Plot.Add.ScatterPoints(lockboxXs, lockboxZs);
-        lockboxesPlot.Color = Colors.Orange;
-        lockboxesPlot.MarkerShape = MarkerShape.Cross;
-        lockboxesPlot.MarkerSize = 7;
-        lockboxesPlot.LegendText = "Lockboxes";
-
-        // Optional: sector map background (if you have an image)
-        // Image bg = new Image("MySectorMap.png");  // or load from resources
-        // formsPlot1.Plot.DataBackground.Image = bg;
-
-        // Nice grid + labels
-        formsPlot1.Plot.Grid.IsVisible = true;
-        formsPlot1.Plot.Grid.LineColor = Colors.LightGray.WithAlpha(0.5);
-        formsPlot1.Plot.Title($"Sector: {_sector?.NameId}");
-        formsPlot1.Plot.XLabel("X Coordinate");
-        formsPlot1.Plot.YLabel("Z Coordinate");
-
-        // Optional: lock view to sector bounds (prevents weird zooming out)
-        //formsPlot1.Plot.Axes.SetLimits(minX, maxX, minZ, maxZ);
-
-        formsPlot1.Refresh();
-    }
+    #endregion
 }

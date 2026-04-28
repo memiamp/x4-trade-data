@@ -11,6 +11,11 @@ public interface IZone
     string Code { get; }
 
     /// <summary>
+    /// Gets the gates in the zone.
+    /// </summary>
+    IEnumerable<IGate> Gates { get; }
+
+    /// <summary>
     /// Gets the identifier of the zone.
     /// </summary>
     string Id { get; }
