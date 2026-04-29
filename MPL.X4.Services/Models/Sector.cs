@@ -6,7 +6,7 @@
 internal class Sector : ISector
 {
     public override string ToString()
-        => $"{Owner} {NameId} {Code} - Stations {Stations.Count()} Ships {Ships.Count()} IsKnown {IsKnown} - {Id}";
+        => $"{Owner} {Macro} {Code} - Stations {Stations.Count()} Ships {Ships.Count()} IsKnown {IsKnown} - {Id}";
 
     public required string Code { get; init; }
 
@@ -18,7 +18,7 @@ internal class Sector : ISector
 
     public required IEnumerable<ILockbox> Lockboxes { get; init; }
 
-    public required int NameId { get; init; }
+    public required string Macro { get; init; }
 
     public required string Owner { get; init; }
 

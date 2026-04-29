@@ -14,6 +14,29 @@ public static class Constants
         {
             public const string DataFile = "dat";
             public const string IndexFile = "cat";
+            public const string XmlData = "xml";
+        }
+
+        public static class FileId
+        {
+            public const int GameData = 8;
+            public const int TextResources = 9;
+        }
+
+        public static class FileName
+        {
+            public const string EnglishTextResource = $"{Constants.CatalogFile.LanguageId.English}.{Constants.CatalogFile.FileExtensions.XmlData}";
+            public const string MapDefinitionXml = "mapdefaults.xml";
+        }
+
+        public static class IndexFile
+        {
+            public const string ColumnSeparator = " ";
+        }
+
+        public static class LanguageId
+        {
+            public const string English = "44";
         }
     }
 
@@ -24,12 +47,28 @@ public static class Constants
     {
         public static class AttributeName
         {
+            public const string Macro = "macro";
+            public const string Name = "name";
             public const string PageId = "id";
+            public const string Ref = "ref";
             public const string TextId = "id";
+        }
+
+        public static class AttributeValue
+        {
+            public static class Ref
+            {
+                public const string Zones = "zones";
+            }
         }
 
         public static class ElementName
         {
+            public const string Connection = "connection";
+            public const string Dataset = "dataset";
+            public const string Identification = "identification";
+            public const string Macro = "macro";
+            public const string Offset = "offset";
             public const string Page = "page";
             public const string TextEntry = "t";
         }
@@ -65,11 +104,15 @@ public static class Constants
             public const string KnownTo = "knownto";
             public const string Macro = "macro";
             public const string Owner = "owner";
+            public const string Ref = "ref";
             public const string Seller = "seller";
+            public const string Pitch = "pitch";
             public const string Price = "price";
+            public const string Roll = "roll";
             public const string Ware = "ware";
             public const string X = "x";
             public const string Y = "y";
+            public const string Yaw = "yaw";
             public const string Z = "z";
         }
 
@@ -91,7 +134,7 @@ public static class Constants
                 public const string Player = "player";
             }
 
-            public static class  Owner
+            public static class Owner
             {
                 public const string Ownerless = "ownerless";
             }
@@ -109,9 +152,11 @@ public static class Constants
         {
             public const string Component = "component";
             public const string Connection = "connection";
+            public const string Macro = "macro";
             public const string Offset = "offset";
             public const string Position = "position";
             public const string Production = "production";
+            public const string Rotation = "rotation";
             public const string Trade = "trade";
             public const string Universe = "universe";
         }

@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Runtime.CompilerServices;
+using System.Text;
 using Microsoft.Extensions.Logging;
 using MPL.X4.Services.Models;
 
@@ -12,14 +13,17 @@ internal class CatalogFileReader(
                                  ILogger<CatalogFileReader> logger)
     : ICatalogFileReader
 {
+    private const string FileExtensionDataFile = $".{Constants.CatalogFile.FileExtensions.DataFile}";
+    private const string FileFilterIndexFile = $"*.{Constants.CatalogFile.FileExtensions.IndexFile}";
+   
     private readonly Encoding _encoding = Encoding.UTF8;
 
     private static string GetDataPath(string catalogPath, int catalogId)
         => $"{GetPath(catalogPath, catalogId)}.{Constants.CatalogFile.FileExtensions.DataFile}";
 
-    private async Task<CatalogIndexEntry> GetFirstIndexEntry(string indexPath, string? fileFilter)
+    private async Task<ICatalogIndexEntry> GetFirstIndexEntry(string indexPath, string? fileFilter)
     {
-        var indexFiles = await ParseIndex(indexPath, fileFilter);
+        var indexFiles = await ParseIndexInternal(indexPath, fileFilter);
         if (!indexFiles.Any())
         {
             logger.LogWarning("The index file '{IndexFile}' contained no entries", indexPath);
@@ -42,28 +46,58 @@ internal class CatalogFileReader(
     private static string GetPath(string catalogPath, int catalogId)
         => Path.Combine(catalogPath, $"{catalogId:00}");
 
-    private CatalogIndexEntry ParseIndexEntry(string line, long offset)
+    private string GetValidatedDataPath(string catalogPath, int catalogId)
     {
-        var parts = line.Split(' ', StringSplitOptions.RemoveEmptyEntries);
-        if (parts.Length != 4 ||
-            !int.TryParse(parts[1], out var fileSize) ||
-            !long.TryParse(parts[2], out var unixTimestamp))
+        var returnValue = GetDataPath(catalogPath, catalogId);
+
+        if (!File.Exists(returnValue))
+        {
+            logger.LogWarning("The catalog data file {CatalogdataPath} does not exist", returnValue);
+            throw new ArgumentException("The catalog data file does not exist", nameof(catalogId));
+        }
+
+        return returnValue;
+    }
+
+    private string GetValidatedIndexPath(string catalogPath, int catalogId)
+    {
+        var returnValue = GetIndexPath(catalogPath, catalogId);
+
+        if (!File.Exists(returnValue))
+        {
+            logger.LogWarning("The catalog index file {CatalogindexPath} does not exist", returnValue);
+            throw new ArgumentException("The catalog index file does not exist", nameof(catalogId));
+        }
+
+        return returnValue;
+    }
+
+    private CatalogIndexEntry ParseIndexEntry(string indexFilePath, string line, long offset)
+    {
+        var parts = line.Split(Constants.CatalogFile.IndexFile.ColumnSeparator, StringSplitOptions.RemoveEmptyEntries);
+        if (parts.Length < 4 ||
+            !int.TryParse(parts[^3], out var fileSize) ||
+            !long.TryParse(parts[^2], out var unixTimestamp))
         {
             logger.LogWarning("The specified catalog index line '{Line}' was invalid", line);
             throw new ArgumentException("The specified catalog index line is invalid", nameof(line));
         }
 
+        var dataFilePath = Path.ChangeExtension(indexFilePath, FileExtensionDataFile);
+
         return new CatalogIndexEntry
         {
-            FilePath = parts[0],
+            DataFilePath = dataFilePath,
+            FilePath = string.Join(Constants.CatalogFile.IndexFile.ColumnSeparator, parts[..^3]),
+            IndexFilePath = indexFilePath,
             Offset = offset,
-            Signature = parts[3],
+            Signature = parts[^1],
             Size = fileSize,
             Timestamp = DateTimeOffset.FromUnixTimeSeconds(unixTimestamp)
         };
     }
 
-    private async Task<IEnumerable<CatalogIndexEntry>> ParseIndex(string indexPath, string? fileFilter = null)
+    private async Task<IEnumerable<ICatalogIndexEntry>> ParseIndexInternal(string indexPath, string? fileFilter)
     {
         List<CatalogIndexEntry> returnValue = [];
 
@@ -74,7 +108,7 @@ internal class CatalogFileReader(
             var lines = await File.ReadAllLinesAsync(indexPath);
             foreach (var line in lines)
             {
-                var entry = ParseIndexEntry(line, offset);
+                var entry = ParseIndexEntry(indexPath, line, offset);
 
                 offset += entry.Size;
 
@@ -87,7 +121,7 @@ internal class CatalogFileReader(
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, "Unable to parse the index file {CatalogIndexFilePath}", indexPath);
+            logger.LogError(ex, "Unable to parse the index file {CatalogindexPath}", indexPath);
         }
 
         return returnValue;
@@ -95,40 +129,29 @@ internal class CatalogFileReader(
 
     public async Task<byte[]> ReadFromDataFile(string dataPath, long offset, int length)
     {
-         await using var stream = new FileStream(
-                                                 dataPath,
-                                                 FileMode.Open,
-                                                 FileAccess.Read,
-                                                 FileShare.Read,
-                                                 bufferSize: 4096,
-                                                 useAsync: true);
+        await using var stream = new FileStream(
+                                                dataPath,
+                                                FileMode.Open,
+                                                FileAccess.Read,
+                                                FileShare.Read,
+                                                bufferSize: 4096,
+                                                useAsync: true);
 
-        if (stream.Length < offset + length)
-        {
-            logger.LogWarning("The specified length {Length} from {Offset} will exceed the size of {CatalogDataFilePath}", length, offset, dataPath);
-            throw new ArgumentException("The specified offset and length exceed the data file size", nameof(offset));
-        }
+        VerifyReadLength(stream.Length, offset, length, dataPath);
 
         stream.Seek(offset, SeekOrigin.Begin);
 
         byte[] returnValue = new byte[length];
         var read = await stream.ReadAsync(returnValue.AsMemory(0, length));
 
-        if (read < length)
-        {
-            logger.LogWarning("Unable to read the requested {Length} from the data file {CatalogDataFilePath}", length, dataPath);
-            throw new EndOfStreamException("Could not read the requested number of bytes.");
-        }
+        VerifyReadSize(read, length, dataPath);
 
         return returnValue;
     }
 
-    private static bool ValidateCatalogId(int catalogId)
-        => catalogId > 0 && catalogId <= 99;
-
     private async Task<string> ReadTextFileInternal(string indexPath, string dataPath, string fileFilter)
     {
-        logger.LogInformation("Reading the first text file matching '{FileFilter}' from catalog {CatalogDataFilePath}", fileFilter, dataPath);
+        logger.LogInformation("Reading the first text file matching '{FileFilter}' from catalog {CatalogdataPath}", fileFilter, dataPath);
 
         var indexFile = await GetFirstIndexEntry(indexPath, fileFilter);
 
@@ -137,35 +160,119 @@ internal class CatalogFileReader(
         return _encoding.GetString(data);
     }
 
-    Task<string> ICatalogFileReader.ReadTextFile(string catalogPath, int catalogId, string fileFilter)
+    private static bool ValidateCatalogId(int catalogId)
+        => catalogId > 0 && catalogId <= 99;
+
+    private void ValidateParameters(string catalogPath)
     {
         if (!Path.Exists(catalogPath))
         {
             logger.LogWarning("The catalog path {CatalogPath} is invalid", catalogPath);
             throw new ArgumentException("The specified catalog path is invalid", nameof(catalogPath));
         }
+    }
+
+    private void ValidateParameters(string catalogPath, int catalogId)
+    {
+        ValidateParameters(catalogPath);
 
         if (!ValidateCatalogId(catalogId))
         {
             logger.LogWarning("The catalog identifier {CatalogId} is invalid", catalogId);
             throw new ArgumentException("The specified catalog identifier is invalid", nameof(catalogId));
         }
+    }
 
-        var dataFilePath = GetDataPath(catalogPath, catalogId);
-        var indexFilePath = GetIndexPath(catalogPath, catalogId);
-
-        if (!File.Exists(dataFilePath))
+    private void VerifyReadLength(long length, long offset, int size, string filePath)
+    {
+        if (length < offset + size)
         {
-            logger.LogWarning("The catalog data file {CatalogDataFilePath} does not exist", dataFilePath);
-            throw new ArgumentException("The catalog data file does not exist", nameof(catalogId));
+            logger.LogWarning("The specified length {Length} from {Offset} will exceed the size of {FilePath}", length, offset, filePath);
+            throw new ArgumentException("The specified offset and length exceed the data file size", nameof(offset));
+        }
+    }
+
+    private void VerifyReadSize(int read, int size, string filePath)
+    {
+        if (read < size)
+        {
+            logger.LogWarning("Unable to read the requested {Length} from the file {FilePath}", size, filePath);
+            throw new EndOfStreamException("Could not read the requested number of bytes.");
+        }
+    }
+
+    Task<IEnumerable<ICatalogIndexEntry>> ICatalogFileReader.ParseIndex(string catalogPath, int catalogId, string? fileFilter)
+    {
+        ValidateParameters(catalogPath, catalogId);
+
+        var indexPath = GetIndexPath(catalogPath, catalogId);
+
+        return ParseIndexInternal(indexPath, fileFilter);
+    }
+
+    async Task<IEnumerable<ICatalogIndexEntry>> ICatalogFileReader.ParseIndexes(string catalogPath, string? fileFilter, bool recursiveSearch)
+    {
+        var returnValue = new List<ICatalogIndexEntry>();
+
+        ValidateParameters(catalogPath);
+        
+        var searchOption = recursiveSearch
+                                           ? SearchOption.AllDirectories
+                                           : SearchOption.TopDirectoryOnly;
+
+        var indexFiles = Directory.GetFiles(catalogPath, FileFilterIndexFile, searchOption);
+        foreach (var indexFile in indexFiles)
+        {
+            var indexEntries = await ParseIndexInternal(indexFile, fileFilter);
+            returnValue.AddRange(indexEntries);
         }
 
-        if (!File.Exists(indexFilePath))
-        {
-            logger.LogWarning("The catalog index file {CatalogIndexFilePath} does not exist", indexFilePath);
-            throw new ArgumentException("The catalog index file does not exist", nameof(catalogId));
-        }
+        return returnValue;
+    }
 
-        return ReadTextFileInternal(indexFilePath, dataFilePath, fileFilter);
+    Task<string> ICatalogFileReader.ReadTextFile(string catalogPath, int catalogId, string fileFilter)
+    {
+        ValidateParameters(catalogPath, catalogId);
+
+        var dataPath = GetValidatedDataPath(catalogPath, catalogId);
+        var indexPath = GetValidatedIndexPath(catalogPath, catalogId);
+
+        return ReadTextFileInternal(indexPath, dataPath, fileFilter);
+    }
+
+    async IAsyncEnumerable<string> ICatalogFileReader.ReadTextFiles(IEnumerable<ICatalogIndexEntry> entries, [EnumeratorCancellation] CancellationToken cancellationToken)
+    {
+        var groupedEntries = entries.GroupBy(
+                                             x => x.DataFilePath,
+                                             (x, entry) => new
+                                             {
+                                                 DataFilePath = x,
+                                                 Entries = entry
+                                             });
+
+        foreach (var fileEntry in groupedEntries)
+        {
+            await using var stream = new FileStream(
+                                                    fileEntry.DataFilePath,
+                                                    FileMode.Open,
+                                                    FileAccess.Read,
+                                                    FileShare.Read,
+                                                    bufferSize: 4096,
+                                                    useAsync: true);
+
+            foreach (var entry in fileEntry.Entries)
+            {
+                VerifyReadLength(stream.Length, entry.Offset, entry.Size, fileEntry.DataFilePath);
+
+                stream.Seek(entry.Offset, SeekOrigin.Begin);
+
+                byte[] data = new byte[entry.Size];
+                var read = await stream.ReadAsync(data.AsMemory(0, entry.Size), cancellationToken);
+
+                VerifyReadSize(read, entry.Size, fileEntry.DataFilePath);
+
+                yield return _encoding.GetString(data);
+            }
+        }
     }
 }

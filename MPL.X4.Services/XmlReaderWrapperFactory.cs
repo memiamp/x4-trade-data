@@ -24,7 +24,7 @@ internal class XmlReaderWrapperFactory(
 
     private IXmlReaderWrapper CreateXmlReaderInternal(string sourcePath, XmlReaderSettings? settings = null)
     {
-        XmlReader? reader = null;
+        XmlReader? reader;
 
         var extension = Path.GetExtension(sourcePath);
         if (extension.Equals(".gz", StringComparison.OrdinalIgnoreCase))
@@ -53,4 +53,13 @@ internal class XmlReaderWrapperFactory(
 
     IXmlReaderWrapper IXmlReaderWrapperFactory.CreateXmlReader(XmlReader source)
         => CreateXmlReaderInternal(source);
+
+    IXmlReaderWrapper IXmlReaderWrapperFactory.CreateXmlReaderFromXmlString(string xml)
+    {
+        var stringReader = new StringReader(xml);
+
+        var reader = XmlReader.Create(stringReader, GetDefaultSettings());
+
+        return CreateXmlReaderInternal(reader);
+    }
 }

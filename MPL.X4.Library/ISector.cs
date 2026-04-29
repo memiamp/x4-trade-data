@@ -31,9 +31,9 @@ public interface ISector
     IEnumerable<ILockbox> Lockboxes { get; }
 
     /// <summary>
-    /// Gets the name identifier of the sector.
+    /// Gets the macro of the sector.
     /// </summary>
-    int NameId { get; }
+    string Macro { get; }
 
     /// <summary>
     /// Gets the owner of the sector.

@@ -20,9 +20,21 @@ public interface IResourceData
     string Lookup(ITextResourceReference resource);
 
     /// <summary>
+    /// Gets a sector name from the specified <paramref name="macro"/>.
+    /// </summary>
+    /// <param name="macro">A <see cref="string"/> containing the macro to lookup.</param>
+    /// <returns>A <see cref="string"/> containing the result.</returns>
+    string LookupSectorNameFromMacro(string macro);
+
+    /// <summary>
     /// Gets landmark resource data.
     /// </summary>
     Dictionary<int, string> Landmarks { get; }
+
+    /// <summary>
+    /// Gets sector macro name map.
+    /// </summary>
+    Dictionary<string, string> SectorMacros { get; }
 
     /// <summary>
     /// Gets sector name resource data.
@@ -33,4 +45,9 @@ public interface IResourceData
     /// Gets station name resource data.
     /// </summary>
     Dictionary<int, string> StationNames { get; }
+
+    /// <summary>
+    /// Gets zone offset resource data.
+    /// </summary>
+    Dictionary<string, IZoneOffset> ZoneOffsets { get; }
 }

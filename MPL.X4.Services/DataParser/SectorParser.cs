@@ -11,39 +11,10 @@ namespace MPL.X4.Services.DataParser;
 /// <param name="zoneParser">An <see cref="IDataParser{IZone}"/> that is the zone parser to use.</param>
 internal class SectorParser(
                             ILogger<SectorParser> logger,
-                            IDataParser<IZone> zoneParser)
+                            IZoneParser zoneParser)
+                            //IDataParser<IZone> zoneParser)
     : DataParserBase<ISector>(logger)
 {
-    private const string ClusterClusterText = "cluster_";
-    private const string ClusterSectorText = "_sector";
-
-    private int GetSectorNameIdFromMacro(string source)
-    {
-        if (source.Length > 9)
-        {
-            var clusterEndPos = source.IndexOf('_', ClusterClusterText.Length + 1);
-            var sectorStartPos = source.IndexOf(ClusterSectorText);
-            var sectorEndPos = source.IndexOf('_', sectorStartPos + 1);
-
-            if (clusterEndPos >= 0 &&
-                sectorStartPos >= 0 &&
-                sectorEndPos >= 0)
-            {
-                var clusterText = source[ClusterClusterText.Length..source.IndexOf('_', ClusterClusterText.Length)];
-                var sectorText = source[(sectorStartPos + ClusterSectorText.Length)..sectorEndPos];
-
-                var sectorIdText = $"{clusterText}{sectorText}";
-                if (int.TryParse(sectorIdText, out var returnValue))
-                {
-                    return returnValue;
-                }
-            }
-        }
-
-        Logger.LogWarning("Cannot parse sector identifier from {SourceValue}", source);
-        throw new ArgumentException($"Cannot parse sector identifier from {source}", nameof(source));
-    }
-
     private protected override async Task<ISector> OnParse(IXmlReaderWrapper reader, ISectorPosition positionOffset)
     {
         List<IGate> gates = [];
@@ -58,7 +29,6 @@ internal class SectorParser(
             reader.TryGetAttribute(Constants.SaveGameFile.AttributeName.Owner, out string? owner))
         {
             var isKnown = GetIsKnownToPlayer(reader);
-            var nameId = GetSectorNameIdFromMacro(macro);
 
             returnValue = new Sector
             {
@@ -67,7 +37,7 @@ internal class SectorParser(
                 Id = id,
                 IsKnown = isKnown,
                 Lockboxes = lockboxes,
-                NameId = nameId,
+                Macro = macro,
                 Owner = owner,
                 Ships = ships,
                 Stations = stations

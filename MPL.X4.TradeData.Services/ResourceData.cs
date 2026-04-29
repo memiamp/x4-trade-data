@@ -24,11 +24,20 @@ internal class ResourceData(
     }
 
     string IResourceData.Lookup(ITextResourceReference resource)
-      => ((IResourceData)this).Lookup(resource.PageId, resource.TextId);
+        => ((IResourceData)this).Lookup(resource.PageId, resource.TextId);
+
+    string IResourceData.LookupSectorNameFromMacro(string macro)
+        => SectorMacros.TryGetValue(macro, out var returnValue)
+                                                                ? returnValue
+                                                                : macro;
 
     public required Dictionary<int, string> Landmarks { get; init; }
+
+    public required Dictionary<string, string> SectorMacros { get; init; }
 
     public required Dictionary<int, string> SectorNames { get; init; }
 
     public required Dictionary<int, string> StationNames { get; init; }
+
+    public required Dictionary<string, IZoneOffset> ZoneOffsets { get; init; }
 }

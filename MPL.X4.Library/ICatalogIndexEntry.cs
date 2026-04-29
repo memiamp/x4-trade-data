@@ -1,0 +1,42 @@
+﻿namespace MPL.X4;
+
+/// <summary>
+/// An interface that defines a catalog index file entry.
+/// </summary>
+public interface ICatalogIndexEntry
+{
+    /// <summary>
+    /// Gets the path of the data file this entry is from.
+    /// </summary>
+    string DataFilePath { get; }
+
+    /// <summary>
+    /// Gets the filepath in the catalog.
+    /// </summary>
+    string FilePath { get; }
+
+    /// <summary>
+    /// Gets the path of the index file this entry is from.
+    /// </summary>
+    string IndexFilePath { get; }
+
+    /// <summary>
+    /// Gets the file offset.
+    /// </summary>
+    long Offset { get; }
+
+    /// <summary>
+    /// Gets the file signature hash.
+    /// </summary>
+    string Signature { get; }
+
+    /// <summary>
+    /// Gets the file size in bytes.
+    /// </summary>
+    int Size { get; }
+
+    /// <summary>
+    /// Gets the file timestamp.
+    /// </summary>
+    DateTimeOffset Timestamp { get; }
+}

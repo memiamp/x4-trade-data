@@ -4,6 +4,13 @@ using MPL.X4.Services.Models;
 
 namespace MPL.X4.Services.DataParser;
 
+public interface IZoneParser : IDataParser<IZone>
+{
+    /// <summary>
+    /// Gets or sets the zone offsets.
+    /// </summary>
+    Dictionary<string, IZoneOffset> ZoneOffsets { get; set; }
+}
 /// <summary>
 /// A class that implements a data parser for a <see cref="IZone"/>.
 /// </summary>
@@ -20,74 +27,16 @@ internal class ZoneParser(
                           IDataParser<ISectorPosition> positionParser,
                           IDataParser<IShip> shipParser,
                           IDataParser<IStation> stationParser)
-    : PositionalDataParserBase<IZone>(logger, positionParser)
+    : PositionalDataParserBase<IZone>(logger, positionParser),
+      IZoneParser
 {
-    private readonly Dictionary<string, IZoneOffset> _zoneOffsets = new()
+    private Dictionary<string, IZoneOffset> _zoneOffsets = [];
+
+    Dictionary<string, IZoneOffset> IZoneParser.ZoneOffsets 
     {
-        { "zone004_cluster_601_sector001_macro", new ZoneOffset()
-            {
-                MacroName = "zone004_cluster_601_sector001_macro",
-                OffsetPosition = new SectorPosition() { X = -127517.8, Y = 0, Z = 34255.37 },
-                OffsetRotation = ISectorRotation.GetDefault()
-            }
-        },
-        { "zone001_cluster_601_sector001_macro", new ZoneOffset()
-            {
-                MacroName = "zone001_cluster_601_sector001_macro",
-                OffsetPosition = new SectorPosition() { X = 85.55412, Y = 0, Z = 115545.4 },
-                OffsetRotation = ISectorRotation.GetDefault()
-            }
-        },
-        { "zone002_cluster_601_sector001_macro", new ZoneOffset()
-            {
-                MacroName = "",
-                OffsetPosition = new SectorPosition() { X = 137328.5, Y = 0, Z = 138576.5 },
-                OffsetRotation = ISectorRotation.GetDefault()
-            }
-        },
-        { "zone003_cluster_601_sector001_macro", new ZoneOffset()
-            {
-                MacroName = "zone003_cluster_601_sector001_macro",
-                OffsetPosition = new SectorPosition() { X = 105554.4, Y = 0, Z = -127903.8 },
-                OffsetRotation = ISectorRotation.GetDefault()
-            }
-        },
-        { "zone005_cluster_601_sector001_macro", new ZoneOffset()
-            {
-                MacroName = "zone005_cluster_601_sector001_macro",
-                OffsetPosition = new SectorPosition() { X = -129500.2, Y = 0, Z = -126969.5 },
-                OffsetRotation = ISectorRotation.GetDefault()
-            }
-        },
-        { "zone001_cluster_14_sector001_macro", new ZoneOffset()
-            {
-                MacroName = "zone001_cluster_14_sector001_macro",
-                OffsetPosition = new SectorPosition() { X = 89982.4921875, Y = 0, Z =-100098.1640625 },
-                OffsetRotation = ISectorRotation.GetDefault()
-            }
-        },
-        { "zone002_cluster_14_sector001_macro", new ZoneOffset()
-            {
-                MacroName = "zone002_cluster_14_sector001_macroXX",
-                OffsetPosition = new SectorPosition() { X = -57062.328125, Y = 0, Z = 61362.80859375 },
-                OffsetRotation = ISectorRotation.GetDefault()
-            }
-        },
-        { "zone003_cluster_14_sector001_macro", new ZoneOffset()
-            {
-                MacroName = "zone003_cluster_14_sector001_macro",
-                OffsetPosition = new SectorPosition() { X = 45571.9921875, Y = 0, Z = 108137.7109375 },
-                OffsetRotation = ISectorRotation.GetDefault()
-            }
-        },
-        { "zone004_cluster_14_sector001_macro", new ZoneOffset()
-            {
-                MacroName = "zone004_cluster_14_sector001_macro",
-                OffsetPosition = new SectorPosition() { X = 50742.0078125, Y = 0, Z = 5897.970703125 },
-                OffsetRotation = ISectorRotation.GetDefault()
-            }
-        }
-    };
+        get => _zoneOffsets; 
+        set => _zoneOffsets = value; 
+    }
 
     private protected override async Task<IZone> OnParse(IXmlReaderWrapper reader, ISectorPosition positionOffset)
     {
@@ -107,9 +56,7 @@ internal class ZoneParser(
             {
                 if (_zoneOffsets.TryGetValue(macro, out var zoneOffset))
                 {
-                    Console.WriteLine($"{macro} Zone offset before: {offset}");
-                    UpdatePosition(zoneOffset.OffsetPosition, offset);
-                    Console.WriteLine($"{macro} Zone offset after : {offset}");
+                    UpdatePosition(zoneOffset.Position, offset);
                 }
             }
 
@@ -135,11 +82,7 @@ internal class ZoneParser(
         {
             if (reader.CheckNodeMatches(Constants.SaveGameFile.ElementName.Offset, XmlNodeType.Element, 1))
             {
-                if (macro is not null && _zoneOffsets.TryGetValue(macro, out _))
-                    Console.WriteLine($"{macro} position offset before: {offset}");
                 await UpdatePositionFromOffset(reader, offset);
-                if (macro is not null && _zoneOffsets.TryGetValue(macro, out _))
-                    Console.WriteLine($"{macro} position offset after : {offset}");
             }
             else if (reader.CheckNodeMatches(Constants.SaveGameFile.ElementName.Component, XmlNodeType.Element) &&
                      reader.TryGetAttribute(Constants.SaveGameFile.AttributeName.Class, x => x == Constants.SaveGameFile.AttributeValue.Class.Gate))

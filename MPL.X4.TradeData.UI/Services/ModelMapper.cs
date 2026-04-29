@@ -14,7 +14,7 @@ internal class ModelMapper : IModelMapper
             AbandonedShipCount = source.Ships.Count(x => x.Owner == Constants.SaveGameFile.AttributeValue.Owner.Ownerless),
             Code = source.Code,
             LockboxCount = source.Lockboxes.Count(),
-            Name = resourceData.SectorNames[source.NameId],
+            Name = resourceData.LookupSectorNameFromMacro(source.Macro),
             ShipCount = source.Ships.Count(),
             StationCount = source.Stations.Count()
         };
@@ -32,24 +32,24 @@ internal class ModelMapper : IModelMapper
             _ => ShipClass.Unknown
         };
 
-    SpecialItem IModelMapper.MapSpecialItem(int sectorNameId, ILockbox source, IResourceData resourceData)
+    SpecialItem IModelMapper.MapSpecialItem(string sectorMacro, ILockbox source, IResourceData resourceData)
         => new()
         {
             Code = source.Code,
             Description = $"{source.Type} ({source.LockCount} locks)",
-            SectorName = resourceData.SectorNames[sectorNameId],
+            SectorName = resourceData.LookupSectorNameFromMacro(sectorMacro),
             Type = SpecialItemType.Lockbox,
             X = $"{source.Position.X:0}",
             Y = $"{source.Position.Y:0}",
             Z = $"{source.Position.Z:0}"
         };
 
-    SpecialItem IModelMapper.MapSpecialItem(int sectorNameId, IShip source, IResourceData resourceData)
+    SpecialItem IModelMapper.MapSpecialItem(string sectorMacro, IShip source, IResourceData resourceData)
         => new()
         {
             Code = source.Code,
             Description = $"{((IModelMapper)this).MapShipClass(source.Class)} - {source.Macro}",
-            SectorName = resourceData.SectorNames[sectorNameId],
+            SectorName = resourceData.LookupSectorNameFromMacro(sectorMacro),
             Type = SpecialItemType.Ship,
             X = $"{source.Position.X:0}",
             Y = $"{source.Position.Y:0}",
@@ -64,25 +64,25 @@ internal class ModelMapper : IModelMapper
                           .SelectMany(x => x.Ships,
                                       (sector, ship) => new
                                       {
-                                          SectorNameId = sector.NameId,
+                                          SectorMacro = sector.Macro,
                                           Ship = ship
                                       })
                           .Where(x => x.Ship.Owner == Constants.SaveGameFile.AttributeValue.Owner.Ownerless);
         if (ships?.Any() == true)
         {
-            returnValue.AddRange(ships.Select(x => ((IModelMapper)this).MapSpecialItem(x.SectorNameId, x.Ship, resourceData)));
+            returnValue.AddRange(ships.Select(x => ((IModelMapper)this).MapSpecialItem(x.SectorMacro, x.Ship, resourceData)));
         }
 
         var lockboxes = source
                               .SelectMany(x => x.Lockboxes,
                                           (sector, lockbox) => new
                                           {
-                                              SectorNameId = sector.NameId,
+                                              SectorMacro = sector.Macro,
                                               Lockbox = lockbox
                                           });
         if (lockboxes?.Any() == true)
         {
-            returnValue.AddRange(lockboxes.Select(x => ((IModelMapper)this).MapSpecialItem(x.SectorNameId, x.Lockbox, resourceData)));
+            returnValue.AddRange(lockboxes.Select(x => ((IModelMapper)this).MapSpecialItem(x.SectorMacro, x.Lockbox, resourceData)));
         }
 
         return returnValue;
@@ -104,7 +104,7 @@ internal class ModelMapper : IModelMapper
             _ => 0
         };
 
-        var sectorName = resourceData.SectorNames[sector.NameId];
+        var sectorName = resourceData.LookupSectorNameFromMacro(sector.Macro);
         var stationName = station.NameId is not null
                                                      ? resourceData.Lookup(station.NameId)
                                                      : station.Code;

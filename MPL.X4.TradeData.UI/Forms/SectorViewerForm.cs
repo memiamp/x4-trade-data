@@ -201,7 +201,7 @@ public partial class SectorViewerForm : Form
         // Setup grid display
         SectorPlot.Plot.Grid.IsVisible = true;
         SectorPlot.Plot.Grid.LineColor = Colors.LightGray.WithAlpha(0.5);
-        SectorPlot.Plot.Title($"Sector: {_sector?.NameId}");
+        SectorPlot.Plot.Title($"Sector: {_sector?.Macro}");
         SectorPlot.Plot.XLabel("X Coordinate");
         SectorPlot.Plot.YLabel("Z Coordinate");
     }

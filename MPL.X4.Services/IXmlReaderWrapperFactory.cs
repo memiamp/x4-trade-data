@@ -28,4 +28,11 @@ public interface IXmlReaderWrapperFactory
     /// <param name="source">A <see cref="XmlReader"/> that is the source reader to use.</param>
     /// <returns>An <see cref="IXmlReaderWrapper"/> that was created.</returns>
     IXmlReaderWrapper CreateXmlReader(XmlReader source);
+
+    /// <summary>
+    /// Creates a new instance of the wrapper around the specified <paramref name="xml"/>.
+    /// </summary>
+    /// <param name="xml">A <see cref="string"/> containing the XML to read.</param>
+    /// <returns>An <see cref="IXmlReaderWrapper"/> that was created.</returns>
+    IXmlReaderWrapper CreateXmlReaderFromXmlString(string xml);
 }

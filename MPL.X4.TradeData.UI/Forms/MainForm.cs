@@ -1,6 +1,7 @@
 using System.Diagnostics.CodeAnalysis;
 using Microsoft.Extensions.Logging;
 using MPL.X4.Services;
+using MPL.X4.Services.DataParser;
 using MPL.X4.TradeData.Services;
 using MPL.X4.TradeData.UI.Configuration;
 using MPL.X4.TradeData.UI.Controls;
@@ -23,6 +24,7 @@ internal partial class MainForm : Form
     private readonly IResourceDataLoader _resourceDataLoader;
     private readonly ISaveGameLoader _saveGameLoader;
     private readonly ISaveGameFileSystemMonitor _saveGameFileSystemMonitor;
+    private readonly IZoneParser _zoneParser;
 
     [AllowNull]
     private IResourceData _resourceData;
@@ -50,7 +52,8 @@ internal partial class MainForm : Form
                     IModelMapper modelMapper,
                     IResourceDataLoader resourceDataLoader,
                     ISaveGameFileSystemMonitor saveGameFileSystemMonitor,
-                    ISaveGameLoader saveGameLoader)
+                    ISaveGameLoader saveGameLoader,
+                    IZoneParser zoneParser)
     {
         _catalogFileReader = catalogFileReader;
         _debugForm = debugForm;
@@ -60,6 +63,7 @@ internal partial class MainForm : Form
         _resourceDataLoader = resourceDataLoader;
         _saveGameFileSystemMonitor = saveGameFileSystemMonitor;
         _saveGameLoader = saveGameLoader;
+        _zoneParser = zoneParser;
 
         InitializeComponent();
         Initialise();
@@ -92,10 +96,8 @@ internal partial class MainForm : Form
 
     private async Task LoadData()
     {
-        var s = await _catalogFileReader.ReadTextFile(@"C:\Program Files (x86)\Steam\steamapps\common\X4 Foundations", 9, "044.xml");
-        Console.WriteLine(s.Length);
-        _resourceData = await _resourceDataLoader.LoadFrom(_fileConfiguration.TextResourceFilePath);
-
+        _resourceData = await _resourceDataLoader.LoadFromCatalog(_fileConfiguration.CatalogFilePath);
+        _zoneParser.ZoneOffsets = _resourceData.ZoneOffsets;
         _saveGameFileSystemMonitor.Start();
     }
 

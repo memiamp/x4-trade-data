@@ -50,7 +50,6 @@ internal sealed class SaveGameFileSystemMonitor(
         }
 
         var directory = new DirectoryInfo(targetPath);
-
         var mostRecentFile = directory
                                       .GetFiles(fileFilter, SearchOption.TopDirectoryOnly)
                                       .Where(x => !ExcludedFilenames.Any(y => x.FullName.Contains(y)))
@@ -83,7 +82,7 @@ internal sealed class SaveGameFileSystemMonitor(
 
         if (_timer is null)
         {
-            _timer = new System.Threading.Timer(Timer_ELapsed, null, intervalMs, Timeout.Infinite);
+            _timer = new System.Threading.Timer(Timer_Elapsed, null, intervalMs, Timeout.Infinite);
         }
         else
         {
@@ -91,7 +90,7 @@ internal sealed class SaveGameFileSystemMonitor(
         }
     }
 
-    private void Timer_ELapsed(object? o)
+    private void Timer_Elapsed(object? o)
     {
         if (_isRunning)
         {

@@ -38,7 +38,7 @@ internal interface IModelMapper
     /// <param name="source">An <see cref="ILockbox"/> that is the source to map from.</param>
     /// <param name="resourceData">An <see cref="IResourceData"/> that is the resource data to use.</param>
     /// <returns>A <see cref="SpecialItem"/> that is the result.</returns>
-    SpecialItem MapSpecialItem(int sectorNameId, ILockbox source, IResourceData resourceData);
+    SpecialItem MapSpecialItem(string sectorMacro, ILockbox source, IResourceData resourceData);
 
     /// <summary>
     /// Maps a special item model from the specified parameters.
@@ -47,7 +47,7 @@ internal interface IModelMapper
     /// <param name="source">An <see cref="IShip"/> that is the source to map from.</param>
     /// <param name="resourceData">An <see cref="IResourceData"/> that is the resource data to use.</param>
     /// <returns>A <see cref="SpecialItem"/> that is the result.</returns>
-    SpecialItem MapSpecialItem(int sectorNameId, IShip source, IResourceData resourceData);
+    SpecialItem MapSpecialItem(string sectorMacro, IShip source, IResourceData resourceData);
 
     /// <summary>
     /// Maps special items from the specified parameters.

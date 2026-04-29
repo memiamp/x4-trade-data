@@ -3,14 +3,10 @@
 /// <summary>
 /// A class that implements a zone offset.
 /// </summary>
-internal class ZoneOffset : IZoneOffset
+internal class ZoneOffset : Offset, IZoneOffset
 {
     public override string ToString()
-        => $"{MacroName} - {OffsetPosition} {OffsetRotation}";
+        => $"{MacroName} - {Position} {Rotation}";
 
     public required string MacroName { get; init; }
-
-    public required ISectorPosition OffsetPosition { get; init; }
-
-    public required ISectorRotation OffsetRotation { get; init; }
 }

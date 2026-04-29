@@ -8,7 +8,7 @@ internal interface IFileConfiguration
     /// <summary>
     /// Gets the path to the X4 catalog files.
     /// </summary>
-    string CatFilePath { get; }
+    string CatalogFilePath { get; }
 
     /// <summary>
     /// Gets the number of seconds between checks for updates.
@@ -29,9 +29,4 @@ internal interface IFileConfiguration
     /// Gets the path to the X4 save files.
     /// </summary>
     string SaveGameFilePath { get; }
-
-    /// <summary>
-    /// Gets the path to the X4 text resource file.
-    /// </summary>
-    string TextResourceFilePath { get; }
 }

@@ -23,12 +23,17 @@ public static class Bootstrap
         // Data parsers
         servicesCollection.AddTransient<IDataParser<IGate>, GateParser>();
         servicesCollection.AddTransient<IDataParser<ILockbox>, LockboxParser>();
+        servicesCollection.AddTransient<IDataParser<IOffset>, OffsetParser>();
         servicesCollection.AddTransient<IDataParser<ISector>, SectorParser>();
         servicesCollection.AddTransient<IDataParser<ISectorPosition>, SectorPositionParser>();
+        servicesCollection.AddTransient<IDataParser<ISectorRotation>, SectorRotationParser>();
         servicesCollection.AddTransient<IDataParser<IShip>, ShipParser>();
         servicesCollection.AddTransient<IDataParser<IStation>, StationParser>();
         servicesCollection.AddTransient<IDataParser<ITrade>, TradeParser>();
         servicesCollection.AddTransient<IDataParser<IUniverse>, UniverseParser>();
-        servicesCollection.AddTransient<IDataParser<IZone>, ZoneParser>();
+        servicesCollection.AddSingleton<IDataParser<IZoneOffset>, ZoneOffsetParser>();
+
+        //servicesCollection.AddTransient<IDataParser<IZone>, ZoneParser>();
+        servicesCollection.AddSingleton<IZoneParser, ZoneParser>();
     }
 }
