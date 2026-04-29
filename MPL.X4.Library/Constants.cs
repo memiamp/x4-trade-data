@@ -6,6 +6,18 @@
 public static class Constants
 {
     /// <summary>
+    /// Constants relating to X4 catalog files.
+    /// </summary>
+    public static class CatalogFile
+    {
+        public static class FileExtensions
+        {
+            public const string DataFile = "dat";
+            public const string IndexFile = "cat";
+        }
+    }
+
+    /// <summary>
     /// Constants relating to X4 resource files.
     /// </summary>
     public static class ResourceFile

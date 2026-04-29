@@ -5,11 +5,13 @@
 /// </summary>
 internal class FileConfiguration : IFileConfiguration
 {
+    string IFileConfiguration.CatFilePath => @"C:\Program Files (x86)\Steam\steamapps\common\X4 Foundations";
+
     uint IFileConfiguration.CheckIntervalSeconds => 10;
 
     uint IFileConfiguration.SaveGameFileAgeSeconds => 30;
 
-    string IFileConfiguration.SaveGameFileFilter => "*.xml.gz";
+    string IFileConfiguration.SaveGameFileFilter => " *.xml.gz";
 
     string IFileConfiguration.SaveGameFilePath => @"C:\Users\martin\Documents\Egosoft\X4\48359014\save";
 

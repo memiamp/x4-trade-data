@@ -15,6 +15,7 @@ internal partial class MainForm : Form
 {
     #region Declarations
 
+    private readonly ICatalogFileReader _catalogFileReader;
     private readonly DebugForm _debugForm;
     private readonly IFileConfiguration _fileConfiguration;
     private readonly ILogger _logger;
@@ -42,6 +43,7 @@ internal partial class MainForm : Form
     /// <param name="saveGameFileSystemMonitor">An <see cref="ISaveGameFileSystemMonitor"/> that is the save game file system monitor to use.</param>
     /// <param name="saveGameLoader">An <see cref="ISaveGameLoader"/> that is the save game loader to use.</param>
     public MainForm(
+                    ICatalogFileReader catalogFileReader,
                     DebugForm debugForm,
                     IFileConfiguration fileConfiguration,
                     ILogger<MainForm> logger,
@@ -50,6 +52,7 @@ internal partial class MainForm : Form
                     ISaveGameFileSystemMonitor saveGameFileSystemMonitor,
                     ISaveGameLoader saveGameLoader)
     {
+        _catalogFileReader = catalogFileReader;
         _debugForm = debugForm;
         _fileConfiguration = fileConfiguration;
         _logger = logger;
@@ -89,6 +92,8 @@ internal partial class MainForm : Form
 
     private async Task LoadData()
     {
+        var s = await _catalogFileReader.ReadTextFile(@"C:\Program Files (x86)\Steam\steamapps\common\X4 Foundations", 9, "044.xml");
+        Console.WriteLine(s.Length);
         _resourceData = await _resourceDataLoader.LoadFrom(_fileConfiguration.TextResourceFilePath);
 
         _saveGameFileSystemMonitor.Start();

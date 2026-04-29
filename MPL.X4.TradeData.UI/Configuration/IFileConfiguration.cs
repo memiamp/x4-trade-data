@@ -6,6 +6,11 @@
 internal interface IFileConfiguration
 {
     /// <summary>
+    /// Gets the path to the X4 catalog files.
+    /// </summary>
+    string CatFilePath { get; }
+
+    /// <summary>
     /// Gets the number of seconds between checks for updates.
     /// </summary>
     uint CheckIntervalSeconds { get; }

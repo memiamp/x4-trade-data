@@ -14,6 +14,7 @@ public static class Bootstrap
     /// <param name="servicesCollection">An <see cref="IServiceCollection"/> to add services to.</param>
     public static void AddServices(IServiceCollection servicesCollection)
     {
+        servicesCollection.AddTransient<ICatalogFileReader, CatalogFileReader>();
         servicesCollection.AddTransient<IResourceFileReader, ResourceFileReader>();
         servicesCollection.AddTransient<ISaveGameLoader, SaveGameLoader>();
         servicesCollection.AddTransient<IXmlReaderWrapper, XmlReaderWrapper>();

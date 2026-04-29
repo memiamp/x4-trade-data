@@ -50,10 +50,6 @@ internal sealed class SaveGameFileSystemMonitor(
         }
 
         var directory = new DirectoryInfo(targetPath);
-        //var files1 = directory
-        //                      .GetFiles(fileFilter, SearchOption.TopDirectoryOnly);
-        //var files2 = files1.Where(x => !ExcludedFilenames.Any(y => x.FullName.Contains(y)));
-        //var files3 = files2.Where(x => x.LastWriteTime < targetTime);
 
         var mostRecentFile = directory
                                       .GetFiles(fileFilter, SearchOption.TopDirectoryOnly)
