@@ -1,6 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Xml;
-using Microsoft.Extensions.Logging;
 
 namespace MPL.X4.Services;
 

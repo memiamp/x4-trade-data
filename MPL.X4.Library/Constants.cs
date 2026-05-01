@@ -25,6 +25,7 @@ public static class Constants
 
         public static class FileName
         {
+            public const string ColourXml = "colors.xml";
             public const string EnglishTextResource = $"{Constants.CatalogFile.LanguageId.English}.{Constants.CatalogFile.FileExtensions.XmlData}";
             public const string MapDefinitionXml = "mapdefaults.xml";
         }
@@ -47,7 +48,14 @@ public static class Constants
     {
         public static class AttributeName
         {
+            public const string ColourAlpha = "a";
+            public const string ColourBlue = "b";
+            public const string ColourGlow = "glow";
+            public const string ColourGreen = "g";
+            public const string ColourId = "id";
+            public const string ColourRed = "r";
             public const string Macro = "macro";
+            public const string MappingId = "id";
             public const string Name = "name";
             public const string PageId = "id";
             public const string Ref = "ref";
@@ -64,10 +72,14 @@ public static class Constants
 
         public static class ElementName
         {
+            public const string Colour = "color";
+            public const string Colours = "colors";
             public const string Connection = "connection";
             public const string Dataset = "dataset";
             public const string Identification = "identification";
             public const string Macro = "macro";
+            public const string Mapping = "mapping";
+            public const string Mappings = "mappings";
             public const string Offset = "offset";
             public const string Page = "page";
             public const string TextEntry = "t";

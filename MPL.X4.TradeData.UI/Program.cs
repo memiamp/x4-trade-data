@@ -1,8 +1,8 @@
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using MPL.X4.TradeData.UI.Configuration;
 using MPL.X4.TradeData.UI.Forms;
 using MPL.X4.TradeData.UI.Services;
+using MPL.X4.TradeData.UI.Services.Logging;
 
 namespace MPL.X4.TradeData.UI;
 

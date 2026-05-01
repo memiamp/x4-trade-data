@@ -1,6 +1,4 @@
-﻿using System.Xml;
-using Microsoft.Extensions.Logging;
-using MPL.X4.Services.Models;
+﻿using Microsoft.Extensions.Logging;
 
 namespace MPL.X4.Services.DataParser;
 

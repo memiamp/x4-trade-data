@@ -1,7 +1,4 @@
-﻿using System.Runtime.CompilerServices;
-using MPL.X4.Services.Models;
-
-namespace MPL.X4.Services;
+﻿namespace MPL.X4.Services;
 
 /// <summary>
 /// An interface that defines the behaviour of a X4 catalog file reader.

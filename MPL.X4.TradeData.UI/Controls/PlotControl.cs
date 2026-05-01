@@ -1,100 +1,299 @@
-﻿using System.Drawing.Drawing2D;
+﻿using System.ComponentModel;
+using System.Drawing.Drawing2D;
+using System.Drawing.Imaging;
+using MPL.X4.TradeData.UI.Models;
+using MPL.X4.TradeData.UI.Models.SectorPlot;
 
 namespace MPL.X4.TradeData.UI.Controls;
 
-public class PlotControl : Panel
+/// <summary>
+/// A class that implements a control that plots sector data.
+/// </summary>
+internal class PlotControl : Panel
 {
-    // ==================== Data & View State ====================
-    public record PlotItem(double X, double Y, ItemType Type, string? Tooltip = null);
+    #region Declarations
 
-    public enum ItemType { Circle, Square, Ship, Plane /* add more as needed */ }
+    internal readonly record struct PointD(double X, double Y);
 
-    private readonly List<PlotItem> _items = new();
-   // private readonly Dictionary<ItemType, Bitmap> _iconCache = new();
-
-    private double _viewCenterX = 250_000;   // metres
-    private double _viewCenterY = 250_000;
-    private double _pixelsPerMeter = 0.02;   // initial zoom (~50 m per pixel)
-
-    private PlotItem? _lastHovered = null;
+    private readonly List<ISectorPlot> _items = [];
+    private readonly Dictionary<SectorPlotType, Bitmap> _iconCache = [];
+    private readonly PointF[] _logicalHexPoints =
+    [
+        new(-200,  350),
+        new( 200,  350),
+        new( 400,    0),
+        new( 200, -350),
+        new(-200, -350),
+        new(-400,    0)
+    ];
+   // private readonly double _maxPixelxPerMeter = 20;
     private readonly ToolTip _tooltip = new() { InitialDelay = 200, AutoPopDelay = 8000 };
 
-    // ==================== Constructor ====================
+    private bool _isDragging = false;
+    private ISectorPlot? _lastHovered = null;
+    private DateTime _lastInvalidate = DateTime.MinValue;
+    private Point _lastMousePos;
+    private double _maxCenterX;
+    private double _maxCenterY;
+    private double _maxPixelsPerMeter = 10.0;
+    private double _minCenterX;
+    private double _minCenterY;
+    private double _minPixelsPerMeter = 0.001;
+    private double _pixelsPerMeter = 0.02;
+    private double _viewCenterX = 0;
+    private double _viewCenterY = 0;
+
+    #endregion
+
+    #region Constructors
+
+    /// <summary>
+    /// Creates a new instance of the <see cref="PlotControl"/> class.
+    /// </summary>
     public PlotControl()
     {
-        DoubleBuffered = true;
-        BackColor = Color.Black;
-        Cursor = Cursors.Cross;
-
-        // Mouse handlers
-        MouseWheel += OnMouseWheel;
-        MouseDown += OnMouseDown;
-        MouseMove += OnMouseMove;
-        MouseUp += OnMouseUp;
-        MouseLeave += OnMouseLeave;
-
-        LoadIcons();
+        Initialise();
     }
 
-    // ==================== Public API ====================
-    public void AddItem(PlotItem item)
+    #endregion
+
+    #region Methods
+    #region _Internal_
+
+    /// <summary>
+    /// Adds the specified <paramref name="item"/> to the plot.
+    /// </summary>
+    /// <param name="item">An <see cref="ISectorPlot"/> to be added.</param>
+    internal void AddItem(ISectorPlot item)
     {
         _items.Add(item);
+        UpdateZoomLimits();
         Invalidate();
     }
 
-    public void Clear() => _items.Clear();
-
-    // Call this if you change items and want to refresh
-    public void RefreshPlot() => Invalidate();
-
-    // ==================== Icon Loading ====================
-    private void LoadIcons()
+    /// <summary>
+    /// Adds the specified <paramref name="items"/> to the plot.
+    /// </summary>
+    /// <param name="items">A nullable <see cref="IEnumerable{T}"/> of <see cref="ISectorPlot"/> containing the items to be added.</param>
+    internal void AddRange(IEnumerable<ISectorPlot>? items)
     {
-        // Option 1: From files (good for dev)
-        string basePath = AppContext.BaseDirectory;
-        //_iconCache[ItemType.Ship] = new Bitmap(Path.Combine(basePath, "Icons", "ship.png"));
-       // _iconCache[ItemType.Plane] = new Bitmap(Path.Combine(basePath, "Icons", "plane.png"));
-        // _iconCache[ItemType.Circle] = new Bitmap(...) etc.
-
-        // Option 2: Embedded resources (better for release)
-        // _iconCache[ItemType.Ship] = LoadResourceBitmap("MyApp.Icons.ship.png");
+        if (items?.Any() == true)
+        {
+            _items.AddRange(items);
+            UpdateZoomLimits();
+            Invalidate();
+        }
     }
 
-    // private Bitmap LoadResourceBitmap(string resourceName) { ... } // see previous message
-
-    // ==================== Coordinate Transforms ====================
-    private PointF WorldToScreen(double worldX, double worldY)
+    /// <summary>
+    /// Clears all items from the plot.
+    /// </summary>
+    internal void Clear()
     {
-        double screenX = (worldX - _viewCenterX) * _pixelsPerMeter + Width / 2.0;
-        double screenY = (worldY - _viewCenterY) * _pixelsPerMeter + Height / 2.0;
-        return new PointF((float)screenX, (float)screenY);
+        _items.Clear();
+        UpdateZoomLimits();
+        Invalidate();
     }
 
-    private PointD ScreenToWorld(Point screenPoint)
+    /// <summary>
+    /// Immediately refreshes the plot.
+    /// </summary>
+    internal void RefreshPlot()
+        => Invalidate();
+
+    /// <summary>
+    /// Resets the current view to the default (zoomed out).
+    /// </summary>
+    internal void ResetView()
     {
-        double worldX = _viewCenterX + (screenPoint.X - Width / 2.0) / _pixelsPerMeter;
-        double worldY = _viewCenterY + (screenPoint.Y - Height / 2.0) / _pixelsPerMeter;
-        return new PointD(worldX, worldY);
+        UpdateZoomLimits();
+        UpdateZoomLimits();
+
+        if (_items.Count > 0)
+        {
+            _viewCenterX = (_items.Min(i => i.X) + _items.Max(i => i.X)) / 2.0;
+            _viewCenterY = (_items.Min(i => i.Y) + _items.Max(i => i.Y)) / 2.0;
+        }
+
+        _pixelsPerMeter = _minPixelsPerMeter;
+
+        ClampViewCenter();
+
+        Invalidate();
     }
 
-    public readonly record struct PointD(double X, double Y);
+    #endregion
+    #region _Private_
 
-    // ==================== Grid Step ====================
-    private double GetGridStep(double pixelsPerMeter)
+    private void ClampViewCenter()
     {
-        const double targetSpacingPx = 80.0;
-        double idealStep = targetSpacingPx / pixelsPerMeter;
-
-        double magnitude = Math.Pow(10, Math.Floor(Math.Log10(idealStep)));
-        double[] multipliers = { 1, 2, 5 };
-        double multiplier = multipliers.FirstOrDefault(m => m * magnitude >= idealStep);
-
-        return multiplier * magnitude;
+        _viewCenterX = Math.Clamp(_viewCenterX, _minCenterX, _maxCenterX);
+        _viewCenterY = Math.Clamp(_viewCenterY, _minCenterY, _maxCenterY);
     }
 
-    // ==================== Hit Testing ====================
-    private PlotItem? HitTest(Point screenPoint)
+    private void DrawContent(Graphics g, PointF leftPoint, PointF topPoint)
+    {
+        double halfW = Width / 2.0 / _pixelsPerMeter;
+        double halfH = Height / 2.0 / _pixelsPerMeter;
+
+        double minX = _viewCenterX - halfW;
+        double maxX = _viewCenterX + halfW;
+        double minY = _viewCenterY - halfH;
+        double maxY = _viewCenterY + halfH;
+
+        double gridStep = GetGridStep(_pixelsPerMeter);
+        var zero = WorldToScreen(0, 0);
+
+        using var labelFont = new Font("Segoe UI", 9f, FontStyle.Regular);
+        using var labelBrush = new SolidBrush(Color.FromArgb(128, 180, 255, 100)); // light cyan, semi-transparent
+
+        using var gridPen = new Pen(Color.FromArgb(128, Color.LightGray), 1f);
+
+        for (double x = Math.Ceiling(minX / gridStep) * gridStep; x <= maxX; x += gridStep)
+        {
+            if (x != 0)
+            {
+                var p1 = WorldToScreen(x, minY);
+                var p2 = WorldToScreen(x, maxY);
+                g.DrawLine(gridPen, p1, p2);
+
+                string xText = FormatDistance(x, gridStep);
+                var labelPt = WorldToScreen(x, minY);
+                g.DrawString(xText, labelFont, labelBrush, labelPt.X, topPoint.Y);
+            }
+        }
+
+        for (double y = Math.Ceiling(minY / gridStep) * gridStep; y <= maxY; y += gridStep)
+        {
+            if (y != 0)
+            {
+                var p1 = WorldToScreen(minX, y);
+                var p2 = WorldToScreen(maxX, y);
+                g.DrawLine(gridPen, p1, p2);
+
+                string yText = FormatDistance(0 - y, gridStep);
+                var labelPt = WorldToScreen(_viewCenterX - 200, y);
+                g.DrawString(yText, labelFont, labelBrush, leftPoint.X, labelPt.Y);
+            }
+        }
+
+        float thickness = Math.Max(1.5f, 3f / (float)_pixelsPerMeter); // gets thicker when zoomed in
+        using var axisPen = new Pen(Color.FromArgb(128, Color.LimeGreen), 2f) { DashStyle = DashStyle.Dash };
+
+        if (zero.X > -50 && zero.X < Width + 50)
+        {
+            g.DrawLine(axisPen, new PointF(zero.X, 0), new PointF(zero.X, Height));  // Y axis
+
+            using var font = new Font("Segoe UI", 9f);
+            using var brush = new SolidBrush(Color.FromArgb(128, Color.LimeGreen));
+        }
+
+        if (zero.Y > -50 && zero.Y < Height + 50)
+        {
+            g.DrawLine(axisPen, new PointF(0, zero.Y), new PointF(Width, zero.Y));   // X axis
+        }
+
+        if (zero.X > -50 && zero.X < Width + 50 && zero.Y > -50 && zero.Y < Height + 50)
+        {
+            using var font = new Font("Segoe UI", 9f);
+            using var brush = new SolidBrush(Color.FromArgb(128, Color.LimeGreen));
+
+            g.DrawString("(0,0)", font, brush, zero.X + 6, zero.Y + 6);
+        }
+
+        const int iconSize = 16;
+        const int half = iconSize / 2;
+
+        foreach (var item in _items)
+        {
+            if (item.X < minX || item.X > maxX || item.Y < minY || item.Y > maxY)
+                continue;
+
+            var screen = WorldToScreen(item.X, item.Y);
+
+            if (_iconCache.TryGetValue(item.Type, out var bmp))
+            {
+                var destRect = new Rectangle(
+                        (int)(screen.X - half),
+                        (int)(screen.Y - half),
+                        iconSize,
+                        iconSize);
+
+                using var attributes = new ImageAttributes();
+
+                var tintColor = Color.Pink;
+                if (!string.IsNullOrWhiteSpace(item.ColourId) &&
+                    ColourMap.TryGetValue(item.ColourId, out var colour))
+                {
+                    tintColor = Color.FromArgb(colour.Alpha, colour.Red, colour.Green, colour.Blue);
+                }
+
+                float r = tintColor.R / 255f;
+                float gr = tintColor.G / 255f;
+                float b = tintColor.B / 255f;
+
+                var colorMatrix = new ColorMatrix(
+                [
+                    [r, 0, 0, 0, 0],
+                    [0, gr, 0, 0, 0],
+                    [0, 0, b, 0, 0],
+                    [0, 0, 0, 1, 0],
+                    [0, 0, 0, 0, 1]
+                ]);
+
+                attributes.SetColorMatrix(colorMatrix);
+
+                g.DrawImage(
+                            bmp,
+                            destRect,
+                            0,
+                            0,
+                            bmp.Width,
+                            bmp.Height,
+                            GraphicsUnit.Pixel,
+                            attributes);
+            }
+            else
+            {
+                using var brush = new SolidBrush(Color.DodgerBlue);
+                g.FillEllipse(brush, screen.X - 6, screen.Y - 6, 12, 12);
+            }
+        }
+
+    }
+
+    private static string FormatDistance(double metres, double gridStep)
+    {
+        double km = Math.Abs(metres) / 1000.0;
+        string sign = metres < 0 ? "-" : "";
+
+        if (Math.Abs(gridStep) < 1000)
+            return $"{sign}{km:0.0}km";
+
+        return $"{sign}{km:F0}km";
+    }
+
+    private static double GetGridStep(double pixelsPerMeter)
+    {
+        const double target = 80.0;
+        double ideal = target / pixelsPerMeter;
+
+        if (ideal <= 0) return 1.0;
+
+        double log = Math.Log10(ideal);
+        double pow = Math.Pow(10, Math.Floor(log));
+        double frac = ideal / pow;
+
+        double step;
+        if (frac <= 1) step = pow;
+        else if (frac <= 2) step = 2 * pow;
+        else if (frac <= 5) step = 5 * pow;
+        else step = 10 * pow;
+
+        return step;
+    }
+
+    private ISectorPlot? HitTest(Point screenPoint)
     {
         const float hitRadius = 18f;   // generous for icons
 
@@ -109,117 +308,148 @@ public class PlotControl : Panel
         }
         return null;
     }
-    private readonly PointF[] _logicalHexPoints = new PointF[]
-{
-    new PointF(-200,  350),   // A - top-left flat
-    new PointF( 200,  350),   // B - top-right flat
-    new PointF( 400,    0),   // C - rightmost point
-    new PointF( 200, -350),   // D - bottom-right flat
-    new PointF(-200, -350),   // E - bottom-left flat
-    new PointF(-400,    0)    // F - leftmost point
-};
-    private void DrawHexagon(Graphics g, RectangleF bounds)
+
+    private void Initialise()
     {
-        float scale = Math.Min(bounds.Width / 800f, bounds.Height / 700f);
-        float ox = bounds.X + bounds.Width / 2f;
-        float oy = bounds.Y + bounds.Height / 2f;
+        DoubleBuffered = true;
+        SetStyle(ControlStyles.AllPaintingInWmPaint, true);
+        SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
+        SetStyle(ControlStyles.UserPaint, true);
+        SetStyle(ControlStyles.ResizeRedraw, true);
 
-        PointF[] pts = new PointF[_logicalHexPoints.Length];
-        for (int i = 0; i < _logicalHexPoints.Length; i++)
-        {
-            pts[i] = new PointF(
-                _logicalHexPoints[i].X * scale + ox,
-                _logicalHexPoints[i].Y * scale + oy);
-        }
+        BackColor = Color.Black;
+        Cursor = Cursors.Cross;
 
-        using var pen = new Pen(Color.DarkBlue, Math.Max(3f, scale * 6f));
-        using var brush = new SolidBrush(Color.Black);
+        MouseDown += OnMouseDown;
+        MouseLeave += OnMouseLeave;
+        MouseMove += OnMouseMove;
+        MouseUp += OnMouseUp;
+        MouseWheel += OnMouseWheel;
 
-        g.FillPolygon(brush, pts);
-        g.DrawPolygon(pen, pts);
+        _iconCache[SectorPlotType.JumpGate] = MapIcons.Icon_JumpGate;
+        _iconCache[SectorPlotType.Lockbox] = MapIcons.Icon_Lockbox;
+        _iconCache[SectorPlotType.Ship] = MapIcons.Icon_Ship;
+        _iconCache[SectorPlotType.Station] = MapIcons.Icon_Station;
+        _iconCache[SectorPlotType.Superhighway] = MapIcons.Icon_Superhighway;
+        _iconCache[SectorPlotType.TransorbitalAccelerator] = MapIcons.Icon_Transorbital;
     }
 
-    // ==================== Painting ====================
+    private void UpdateZoomLimits()
+    {
+        _maxPixelsPerMeter = Math.Max(0.1, Math.Min(Width, Height) / 1000.0);
+
+        if (_items.Count == 0)
+        {
+            _minPixelsPerMeter = 0.0005;
+            _minCenterX = _minCenterY = -1_000_000;
+            _maxCenterX = _maxCenterY = 1_000_000;
+            return;
+        }
+
+        double dataMinX = _items.Min(i => i.X);
+        double dataMaxX = _items.Max(i => i.X);
+        double dataMinY = _items.Min(i => i.Y);
+        double dataMaxY = _items.Max(i => i.Y);
+
+        double rangeX = dataMaxX - dataMinX;
+        double rangeY = dataMaxY - dataMinY;
+
+        double maxRange = Math.Max(rangeX, rangeY);
+
+        double paddedSquareSide = maxRange * 1.4;
+
+        double fitPPM = Math.Min(Width, Height) / paddedSquareSide;
+        _minPixelsPerMeter = fitPPM * 0.95;
+
+        double visibleHalfSize = (Math.Min(Width, Height) / _minPixelsPerMeter) / 2.0;
+
+        double centerX = (dataMinX + dataMaxX) / 2.0;
+        double centerY = (dataMinY + dataMaxY) / 2.0;
+
+        _minCenterX = centerX - visibleHalfSize * 1.1;
+        _maxCenterX = centerX + visibleHalfSize * 1.1;
+        _minCenterY = centerY - visibleHalfSize * 1.1;
+        _maxCenterY = centerY + visibleHalfSize * 1.1;
+
+        if (_minCenterX > _maxCenterX) (_minCenterX, _maxCenterX) = (_maxCenterX, _minCenterX);
+        if (_minCenterY > _maxCenterY) (_minCenterY, _maxCenterY) = (_maxCenterY, _minCenterY);
+    }
+
+    private PointF WorldToScreen(double worldX, double worldY)
+    {
+        double screenX = (worldX - _viewCenterX) * _pixelsPerMeter + Width / 2.0;
+        double screenY = (worldY - _viewCenterY) * _pixelsPerMeter + Height / 2.0;
+
+        return new PointF((float)screenX, (float)screenY);
+    }
+
+    #endregion
+    #region _Protected_
+
+    protected override void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            foreach (var item in _iconCache.Values)
+                item?.Dispose();
+
+            _iconCache.Clear();
+            _tooltip.Dispose();
+        }
+
+        base.Dispose(disposing);
+    }
+
     protected override void OnPaint(PaintEventArgs e)
     {
         var g = e.Graphics;
-        g.Clear(Color.Transparent);
+        g.Clear(Parent?.BackColor ?? Color.Gray);
         g.SmoothingMode = SmoothingMode.AntiAlias;
         g.InterpolationMode = InterpolationMode.HighQualityBicubic;
 
-        DrawHexagon(g, g.ClipBounds);
+        float scale = Math.Min(g.ClipBounds.Width / 800f, g.ClipBounds.Height / 700f);
+        float ox = g.ClipBounds.X + g.ClipBounds.Width / 2f;
+        float oy = g.ClipBounds.Y + g.ClipBounds.Height / 2f;
 
-        double halfW = Width / 2.0 / _pixelsPerMeter;
-        double halfH = Height / 2.0 / _pixelsPerMeter;
-
-        double minX = _viewCenterX - halfW;
-        double maxX = _viewCenterX + halfW;
-        double minY = _viewCenterY - halfH;
-        double maxY = _viewCenterY + halfH;
-
-        double gridStep = GetGridStep(_pixelsPerMeter);
-
-        // === Grid ===
-        using var gridPen = new Pen(Color.LightGray, 1f);
-
-        // Vertical lines
-        for (double x = Math.Ceiling(minX / gridStep) * gridStep; x <= maxX; x += gridStep)
+        var hexPoints = new PointF[_logicalHexPoints.Length];
+        for (int i = 0; i < _logicalHexPoints.Length; i++)
         {
-            var p1 = WorldToScreen(x, minY);
-            var p2 = WorldToScreen(x, maxY);
-            g.DrawLine(gridPen, p1, p2);
+            hexPoints[i] = new PointF(
+                                      _logicalHexPoints[i].X * scale + ox,
+                                      _logicalHexPoints[i].Y * scale + oy);
         }
 
-        // Horizontal lines
-        for (double y = Math.Ceiling(minY / gridStep) * gridStep; y <= maxY; y += gridStep)
-        {
-            var p1 = WorldToScreen(minX, y);
-            var p2 = WorldToScreen(maxX, y);
-            g.DrawLine(gridPen, p1, p2);
-        }
+        using var path = new GraphicsPath();
+        path.AddPolygon(hexPoints);
 
-        // === Icons ===
-        const int iconSize = 28;
-        const int half = iconSize / 2;
+        using var region = new Region(path);
 
-        foreach (var item in _items)
-        {
-            if (item.X < minX || item.X > maxX || item.Y < minY || item.Y > maxY)
-                continue;
+        g.Clip = region;
 
-            var screen = WorldToScreen(item.X, item.Y);
+        using var bgBrush = new SolidBrush(Color.FromArgb(20, 20, 20)); // dark background
+        g.FillPath(bgBrush, path);
 
-            //if (_iconCache.TryGetValue(item.Type, out var bmp))
-            //{
-            //    g.DrawImage(bmp, screen.X - half, screen.Y - half, iconSize, iconSize);
-            //}
-            //else
-            //{
-                // Fallback shapes
-                using var brush = new SolidBrush(Color.DodgerBlue);
-                g.FillEllipse(brush, screen.X - 6, screen.Y - 6, 12, 12);
-          //  }
-        }
+        DrawContent(g, hexPoints[4], hexPoints[3]);
+
+        g.ResetClip();
+
+        using var borderPen = new Pen(Color.DodgerBlue, 4f);
+        g.DrawPolygon(borderPen, hexPoints);
     }
 
-    // ==================== Mouse Interaction ====================
-    private bool _isDragging = false;
-    private Point _lastMousePos;
-
-    private void OnMouseWheel(object? sender, MouseEventArgs e)
+    protected override void OnResize(EventArgs e)
     {
-        double oldPpm = _pixelsPerMeter;
-        double factor = e.Delta > 0 ? 1.25 : 0.8;
+        base.OnResize(e);
 
-        _pixelsPerMeter *= factor;
-
-        // Zoom toward mouse cursor
-        var mouseWorld = ScreenToWorld(e.Location);
-        _viewCenterX = mouseWorld.X;
-        _viewCenterY = mouseWorld.Y;
+        UpdateZoomLimits();
 
         Invalidate();
     }
+
+    #endregion
+    #endregion
+
+    #region Event Handlers
 
     private void OnMouseDown(object? sender, MouseEventArgs e)
     {
@@ -229,6 +459,12 @@ public class PlotControl : Panel
             _lastMousePos = e.Location;
             Cursor = Cursors.SizeAll;
         }
+    }
+
+    private void OnMouseLeave(object? sender, EventArgs e)
+    {
+        _tooltip.Hide(this);
+        _lastHovered = null;
     }
 
     private void OnMouseMove(object? sender, MouseEventArgs e)
@@ -241,19 +477,25 @@ public class PlotControl : Panel
             _viewCenterX -= dx;
             _viewCenterY -= dy;
 
+            ClampViewCenter();
+
             _lastMousePos = e.Location;
-            Invalidate();
+
+            if ((DateTime.Now - _lastInvalidate).TotalMilliseconds > 16)
+            {
+                Invalidate();
+                _lastInvalidate = DateTime.Now;
+            }
             return;
         }
 
-        // Hover tooltip
         var hovered = HitTest(e.Location);
         if (hovered != _lastHovered)
         {
             if (hovered != null)
             {
-                string text = hovered.Tooltip ??
-                    $"X: {hovered.X:F1} m\nY: {hovered.Y:F1} m\nType: {hovered.Type}";
+                string text = hovered.Name ??
+                                $"X: {hovered.X:F1} m\nY: {hovered.Y:F1} m\nType: {hovered.Type}";
 
                 _tooltip.Show(text, this, e.X + 18, e.Y + 18);
             }
@@ -261,6 +503,7 @@ public class PlotControl : Panel
             {
                 _tooltip.Hide(this);
             }
+
             _lastHovered = hovered;
         }
     }
@@ -271,22 +514,30 @@ public class PlotControl : Panel
         Cursor = Cursors.Cross;
     }
 
-    private void OnMouseLeave(object? sender, EventArgs e)
+    private void OnMouseWheel(object? sender, MouseEventArgs e)
     {
-        _tooltip.Hide(this);
-        _lastHovered = null;
+        double factor = e.Delta > 0 ? 1.25 : 0.80;
+
+        double newPixelsPerMeter = _pixelsPerMeter * factor;
+
+        newPixelsPerMeter = Math.Clamp(newPixelsPerMeter, _minPixelsPerMeter, _maxPixelsPerMeter);
+
+        _pixelsPerMeter = newPixelsPerMeter;
+
+        ClampViewCenter();
+
+        Invalidate();
     }
 
-    // ==================== Cleanup ====================
-    protected override void Dispose(bool disposing)
-    {
-        if (disposing)
-        {
-            //foreach (var bmp in _iconCache.Values)
-            //    bmp?.Dispose();
-            //_iconCache.Clear();
-            _tooltip.Dispose();
-        }
-        base.Dispose(disposing);
-    }
+    #endregion
+
+    #region Properties
+
+    /// <summary>
+    /// Gets or sets the colour map to use.
+    /// </summary>
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+    internal Dictionary<string, IColour> ColourMap { get; set; } = [];
+
+    #endregion
 }

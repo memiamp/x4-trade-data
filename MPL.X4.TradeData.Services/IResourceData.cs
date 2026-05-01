@@ -27,6 +27,11 @@ public interface IResourceData
     string LookupSectorNameFromMacro(string macro);
 
     /// <summary>
+    /// Gets colour map data.
+    /// </summary>
+    Dictionary<string, IColour> ColourMap { get; }
+
+    /// <summary>
     /// Gets landmark resource data.
     /// </summary>
     Dictionary<int, string> Landmarks { get; }

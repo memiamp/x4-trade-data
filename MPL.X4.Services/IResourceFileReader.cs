@@ -6,6 +6,13 @@
 public interface IResourceFileReader
 {
     /// <summary>
+    /// Reads the colour map from the specified <paramref name="reader"/>.
+    /// </summary>
+    /// <param name="reader">An <see cref="IXmlReaderWrapper"/> containing the resource to read.</param>
+    /// <returns>A <see cref="Task{TResult}"/> representing the asynchronous operation.  A <see cref="Dictionary{TKey, TValue}"/> containing the resulting resources.</returns>
+    Task<Dictionary<string, IColour>> ReadColourMap(IXmlReaderWrapper reader);
+
+    /// <summary>
     /// Reads the map dataset from the specified <paramref name="reader"/>.
     /// </summary>
     /// <param name="reader">An <see cref="IXmlReaderWrapper"/> containing the resource to read.</param>

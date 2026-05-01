@@ -1,11 +1,6 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using MPL.X4.TradeData.UI.Helpers;
 using MPL.X4.TradeData.UI.Models;
-using ScottPlot.PlotStyles;
-using ScottPlot.Plottables;
-using ScottPlot.TickGenerators.TimeUnits;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace MPL.X4.TradeData.UI.Controls;
 

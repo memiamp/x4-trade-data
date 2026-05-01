@@ -1,8 +1,4 @@
-﻿using System.Xml;
-using Microsoft.Extensions.Logging;
-using MPL.X4.Services.Models;
-
-namespace MPL.X4.Services.DataParser;
+﻿namespace MPL.X4.Services.DataParser;
 
 /// <summary>
 /// An interface that defines the behaviour of a data parser.

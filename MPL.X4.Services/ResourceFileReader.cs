@@ -1,6 +1,7 @@
 ﻿using System.Xml;
 using Microsoft.Extensions.Logging;
 using MPL.X4.Services.DataParser;
+using MPL.X4.Services.Models;
 
 namespace MPL.X4.Services;
 
@@ -16,6 +17,38 @@ internal class ResourceFileReader(
                                   IDataParser<IZoneOffset> zoneOffsetParser)
     : IResourceFileReader
 {
+    private static async Task<Dictionary<string, IColour>> ReadColours(IXmlReaderWrapper reader)
+    {
+        Dictionary<string, IColour> returnValue = [];
+
+        while (await reader.ReadAsync())
+        {
+            if (reader.CheckNodeMatches(Constants.ResourceFile.ElementName.Colour, XmlNodeType.Element) &&
+                reader.TryGetAttribute(Constants.ResourceFile.AttributeName.ColourId, out string? id))
+            {
+                reader.TryGetAttribute(Constants.ResourceFile.AttributeName.ColourAlpha, out int? alpha);
+                reader.TryGetAttribute(Constants.ResourceFile.AttributeName.ColourBlue, out int? blue);
+                reader.TryGetAttribute(Constants.ResourceFile.AttributeName.ColourGlow, out int? glow);
+                reader.TryGetAttribute(Constants.ResourceFile.AttributeName.ColourGreen, out int? green);
+                reader.TryGetAttribute(Constants.ResourceFile.AttributeName.ColourRed, out int? red);
+
+                var colour = new Colour
+                {
+                    Alpha = alpha ?? 0,
+                    Blue = blue ?? 0,
+                    Glow = glow ?? 0,
+                    Green = green ?? 0,
+                    Id = id,
+                    Red = red ?? 0
+                };
+
+                returnValue.Add(id, colour);
+            }
+        }
+
+        return returnValue;
+    }
+
     private static async Task<string> ReadDatasetName(IXmlReaderWrapper reader)
     {
         var returnValue = string.Empty;
@@ -27,6 +60,23 @@ internal class ResourceFileReader(
             {
                 returnValue = name;
                 break;
+            }
+        }
+
+        return returnValue;
+    }
+
+    private static async Task<Dictionary<string, string>> ReadMappings(IXmlReaderWrapper reader)
+    {
+        Dictionary<string, string> returnValue = [];
+
+        while (await reader.ReadAsync())
+        {
+            if (reader.CheckNodeMatches(Constants.ResourceFile.ElementName.Mapping, XmlNodeType.Element) &&
+                reader.TryGetAttribute(Constants.ResourceFile.AttributeName.MappingId, out string? id) &&
+                reader.TryGetAttribute(Constants.ResourceFile.AttributeName.Ref, out string? reference))
+            {
+                returnValue.Add(id, reference);
             }
         }
 
@@ -70,6 +120,40 @@ internal class ResourceFileReader(
 
                 returnValue.Add(pageId.Value, pageResults);
             }
+        }
+
+        return returnValue;
+    }
+
+    async Task<Dictionary<string, IColour>> IResourceFileReader.ReadColourMap(IXmlReaderWrapper reader)
+    {
+        Dictionary<string, IColour> colours = [];
+        Dictionary<string, string> mappings = [];
+        Dictionary<string, IColour> returnValue = [];
+
+        while (await reader.ReadAsync())
+        {
+            if (reader.CheckNodeMatches(Constants.ResourceFile.ElementName.Colours, XmlNodeType.Element))
+            {
+                using var colourSubtree = await reader.ReadSubtree();
+
+                colours = await ReadColours(colourSubtree);
+            }
+            else if (reader.CheckNodeMatches(Constants.ResourceFile.ElementName.Mappings, XmlNodeType.Element))
+            {
+                using var mappingSubtree = await reader.ReadSubtree();
+
+                mappings = await ReadMappings(mappingSubtree);
+            }
+        }
+
+        if (colours.Count > 0 &&
+            mappings.Count > 0)
+        {
+            returnValue = mappings
+                                  .ToDictionary(
+                                                kvp => kvp.Key,
+                                                kvp => colours[kvp.Value]);
         }
 
         return returnValue;

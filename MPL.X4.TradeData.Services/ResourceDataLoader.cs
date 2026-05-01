@@ -33,23 +33,26 @@ internal partial class ResourceDataLoader(
         return returnValue;
     }
 
-    private async Task<Dictionary<string, IZoneOffset>> LoadZoneOffsets(string catalogFilePath)
+    private static IEnumerable<ICatalogIndexEntry> GetXmlFilesOnly(IEnumerable<ICatalogIndexEntry> source)
+        => source.Where(x => x.FilePath.EndsWith(".xml"));
+
+    private async Task<Dictionary<string, IColour>> LoadColourMaps(string catalogFilePath)
     {
-        var returnValue = new Dictionary<string, IZoneOffset>();
+        var returnValue = new Dictionary<string, IColour>();
 
-        var mapFileEntries = await catalogFileReader.ParseIndexes(catalogFilePath, "maps/", true);
-        mapFileEntries = mapFileEntries.Where(x => x.FilePath.EndsWith(".xml"));
+        var colourFileEntries = await catalogFileReader.ParseIndexes(catalogFilePath, Constants.CatalogFile.FileName.ColourXml, true);
+        colourFileEntries = GetXmlFilesOnly(colourFileEntries);
 
-        var mapFiles = catalogFileReader.ReadTextFiles(mapFileEntries);
-        await foreach (var mapFile in mapFiles)
+        var colourFiles = catalogFileReader.ReadTextFiles(colourFileEntries);
+        await foreach (var colourFile in colourFiles)
         {
-            using var reader = xmlReaderWrapperFactory.CreateXmlReaderFromXmlString(mapFile);
+            using var reader = xmlReaderWrapperFactory.CreateXmlReaderFromXmlString(colourFile);
 
-            var mapData = await resourceFileReader.ReadZoneOffset(reader);
+            var colourMap = await resourceFileReader.ReadColourMap(reader);
 
-            foreach (var kvp in mapData)
+            foreach (var kvp in colourMap)
             {
-                returnValue.TryAdd(kvp.Key, kvp.Value);
+                returnValue[kvp.Key] = kvp.Value;
             }
         }
 
@@ -61,8 +64,7 @@ internal partial class ResourceDataLoader(
         var returnValue = new Dictionary<string, string>();
 
         var mapDefinitionEntries = await catalogFileReader.ParseIndexes(catalogFilePath, Constants.CatalogFile.FileName.MapDefinitionXml, true);
-        // Remove non-XML files
-        mapDefinitionEntries = mapDefinitionEntries.Where(x => x.FilePath.EndsWith(".xml"));
+        mapDefinitionEntries = GetXmlFilesOnly(mapDefinitionEntries);
 
         var mapDefinitions = catalogFileReader.ReadTextFiles(mapDefinitionEntries);
         await foreach (var mapDefinition in mapDefinitions)
@@ -73,7 +75,7 @@ internal partial class ResourceDataLoader(
 
             foreach (var kvp in mapData)
             {
-                returnValue.TryAdd(kvp.Key, kvp.Value);
+                returnValue[kvp.Key] = kvp.Value;
             }
         }
 
@@ -89,6 +91,29 @@ internal partial class ResourceDataLoader(
 
         using var reader = xmlReaderWrapperFactory.CreateXmlReaderFromXmlString(languageFile);
         return await resourceFileReader.ReadTextResource(reader);
+    }
+
+    private async Task<Dictionary<string, IZoneOffset>> LoadZoneOffsets(string catalogFilePath)
+    {
+        var returnValue = new Dictionary<string, IZoneOffset>();
+
+        var mapFileEntries = await catalogFileReader.ParseIndexes(catalogFilePath, "maps/", true);
+        mapFileEntries = GetXmlFilesOnly(mapFileEntries);
+
+        var mapFiles = catalogFileReader.ReadTextFiles(mapFileEntries);
+        await foreach (var mapFile in mapFiles)
+        {
+            using var reader = xmlReaderWrapperFactory.CreateXmlReaderFromXmlString(mapFile);
+
+            var mapData = await resourceFileReader.ReadZoneOffset(reader);
+
+            foreach (var kvp in mapData)
+            {
+                returnValue[kvp.Key] = kvp.Value;
+            }
+        }
+
+        return returnValue;
     }
 
     private static string RecursiveMapName(string identity, Dictionary<int, Dictionary<int, string>> names)
@@ -163,8 +188,11 @@ internal partial class ResourceDataLoader(
 
         var zoneOffsets = await LoadZoneOffsets(catalogFilePath);
 
+        var colourMaps = await LoadColourMaps(catalogFilePath);
+
         return new ResourceData(results)
         {
+            ColourMap = colourMaps,
             Landmarks = landmarks,
             SectorMacros = sectorNameMacros,
             SectorNames = sectorNames,

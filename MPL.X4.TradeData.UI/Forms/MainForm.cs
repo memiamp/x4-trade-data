@@ -138,6 +138,7 @@ internal partial class MainForm : Form
         {
             var sectorViewer = new SectorViewerForm
             {
+                ColourMap = _resourceData.ColourMap,
                 Sector = sector
             };
             sectorViewer.Show();
