@@ -18,5 +18,5 @@ internal class ShipPlot(
 
     double ISectorPlot.Y => item.Position.Y;
 
-    double ISectorPlot.Z => item.Position.Y;
+    double ISectorPlot.Z => item.Position.Z;
 }

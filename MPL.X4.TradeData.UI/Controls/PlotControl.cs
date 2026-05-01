@@ -13,8 +13,6 @@ internal class PlotControl : Panel
 {
     #region Declarations
 
-    internal readonly record struct PointD(double X, double Y);
-
     private readonly List<ISectorPlot> _items = [];
     private readonly Dictionary<SectorPlotType, Bitmap> _iconCache = [];
     private readonly PointF[] _logicalHexPoints =
@@ -112,7 +110,7 @@ internal class PlotControl : Panel
         if (_items.Count > 0)
         {
             _viewCenterX = (_items.Min(i => i.X) + _items.Max(i => i.X)) / 2.0;
-            _viewCenterY = (_items.Min(i => i.Y) + _items.Max(i => i.Y)) / 2.0;
+            _viewCenterY = (_items.Min(i => i.Z) + _items.Max(i => i.Z)) / 2.0;
         }
 
         _pixelsPerMeter = _minPixelsPerMeter;
@@ -206,10 +204,10 @@ internal class PlotControl : Panel
 
         foreach (var item in _items)
         {
-            if (item.X < minX || item.X > maxX || item.Y < minY || item.Y > maxY)
+            if (item.X < minX || item.X > maxX || item.Z < minY || item.Z > maxY)
                 continue;
 
-            var screen = WorldToScreen(item.X, item.Y);
+            var screen = WorldToScreen(item.X, item.Z);
 
             if (_iconCache.TryGetValue(item.Type, out var bmp))
             {
@@ -299,7 +297,7 @@ internal class PlotControl : Panel
 
         foreach (var item in _items)
         {
-            var screen = WorldToScreen(item.X, item.Y);
+            var screen = WorldToScreen(item.X, item.Z);
             float dx = screen.X - screenPoint.X;
             float dy = screen.Y - screenPoint.Y;
 
@@ -348,8 +346,8 @@ internal class PlotControl : Panel
 
         double dataMinX = _items.Min(i => i.X);
         double dataMaxX = _items.Max(i => i.X);
-        double dataMinY = _items.Min(i => i.Y);
-        double dataMaxY = _items.Max(i => i.Y);
+        double dataMinY = _items.Min(i => i.Z);
+        double dataMaxY = _items.Max(i => i.Z);
 
         double rangeX = dataMaxX - dataMinX;
         double rangeY = dataMaxY - dataMinY;
@@ -495,7 +493,7 @@ internal class PlotControl : Panel
             if (hovered != null)
             {
                 string text = hovered.Name ??
-                                $"X: {hovered.X:F1} m\nY: {hovered.Y:F1} m\nType: {hovered.Type}";
+                                $"X: {hovered.X:F1} m\nY: {hovered.Z:F1} m\nType: {hovered.Type}";
 
                 _tooltip.Show(text, this, e.X + 18, e.Y + 18);
             }
