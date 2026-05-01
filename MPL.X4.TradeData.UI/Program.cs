@@ -17,8 +17,7 @@ internal static class Program
 
         services.AddLogging(loggingBuilder =>
         {
-            loggingBuilder.AddConsole();
-            loggingBuilder.AddSimpleConsole();
+            loggingBuilder.AddSimpleConsoleLogger();
         });
 
         // Configuration

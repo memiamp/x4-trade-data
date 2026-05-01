@@ -19,4 +19,10 @@
     <ProjectReference Include="..\MPL.X4.TradeData.Services\MPL.X4.TradeData.Services.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Update="Forms\SectorViewerFormOld.cs">
+      <SubType>Form</SubType>
+    </Compile>
+  </ItemGroup>
+
 </Project>

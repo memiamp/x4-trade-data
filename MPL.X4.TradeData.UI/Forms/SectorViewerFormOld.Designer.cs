@@ -1,6 +1,6 @@
 ﻿namespace MPL.X4.TradeData.UI.Forms
 {
-    partial class DebugForm
+    partial class SectorViewerFormOld
     {
         /// <summary>
         /// Required designer variable.
@@ -28,38 +28,30 @@
         /// </summary>
         private void InitializeComponent()
         {
-            OutputTextBox = new TextBox();
+            SectorPlot = new ScottPlot.WinForms.FormsPlot();
             SuspendLayout();
             // 
-            // OutputTextBox
+            // SectorPlot
             // 
-            OutputTextBox.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            OutputTextBox.BackColor = SystemColors.Window;
-            OutputTextBox.Location = new Point(12, 12);
-            OutputTextBox.Multiline = true;
-            OutputTextBox.Name = "OutputTextBox";
-            OutputTextBox.ReadOnly = true;
-            OutputTextBox.ScrollBars = ScrollBars.Both;
-            OutputTextBox.Size = new Size(780, 437);
-            OutputTextBox.TabIndex = 0;
-            OutputTextBox.WordWrap = false;
+            SectorPlot.Dock = DockStyle.Bottom;
+            SectorPlot.Location = new Point(0, 98);
+            SectorPlot.Name = "SectorPlot";
+            SectorPlot.Size = new Size(946, 580);
+            SectorPlot.TabIndex = 0;
             // 
-            // DebugForm
+            // SectorViewerForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(804, 461);
-            Controls.Add(OutputTextBox);
-            MinimumSize = new Size(820, 500);
-            Name = "DebugForm";
-            StartPosition = FormStartPosition.CenterParent;
-            Text = "Debug Output";
+            ClientSize = new Size(946, 678);
+            Controls.Add(SectorPlot);
+            Name = "SectorViewerForm";
+            Text = "SectorViewerForm";
             ResumeLayout(false);
-            PerformLayout();
         }
 
         #endregion
 
-        private TextBox OutputTextBox;
+        private ScottPlot.WinForms.FormsPlot SectorPlot;
     }
 }

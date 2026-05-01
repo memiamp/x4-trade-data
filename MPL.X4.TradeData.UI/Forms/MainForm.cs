@@ -96,6 +96,8 @@ internal partial class MainForm : Form
 
     private async Task LoadData()
     {
+        //var s = new SectorViewerForm();
+        //s.Show();
         _resourceData = await _resourceDataLoader.LoadFromCatalog(_fileConfiguration.CatalogFilePath);
         _zoneParser.ZoneOffsets = _resourceData.ZoneOffsets;
         _saveGameFileSystemMonitor.Start();

@@ -28,30 +28,18 @@
         /// </summary>
         private void InitializeComponent()
         {
-            SectorPlot = new ScottPlot.WinForms.FormsPlot();
             SuspendLayout();
-            // 
-            // SectorPlot
-            // 
-            SectorPlot.Dock = DockStyle.Bottom;
-            SectorPlot.Location = new Point(0, 98);
-            SectorPlot.Name = "SectorPlot";
-            SectorPlot.Size = new Size(946, 580);
-            SectorPlot.TabIndex = 0;
             // 
             // SectorViewerForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(946, 678);
-            Controls.Add(SectorPlot);
             Name = "SectorViewerForm";
             Text = "SectorViewerForm";
             ResumeLayout(false);
         }
 
         #endregion
-
-        private ScottPlot.WinForms.FormsPlot SectorPlot;
     }
 }
