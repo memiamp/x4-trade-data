@@ -58,6 +58,29 @@ internal partial class ResourceDataLoader(
 
         return returnValue;
     }
+    
+    private async Task<Dictionary<string, IFaction>> LoadFactions(string catalogFilePath)
+    {
+        var returnValue = new Dictionary<string, IFaction>();
+
+        var factionFileEntries = await catalogFileReader.ParseIndexes(catalogFilePath, Constants.CatalogFile.FileName.FactionsXml, true);
+        factionFileEntries = GetXmlFilesOnly(factionFileEntries);
+
+        var factionFiles = catalogFileReader.ReadTextFiles(factionFileEntries);
+        await foreach (var factionFile in factionFiles)
+        {
+            using var reader = xmlReaderWrapperFactory.CreateXmlReaderFromXmlString(factionFile);
+
+            var factions = await resourceFileReader.ReadFactions(reader);
+
+            foreach (var kvp in factions)
+            {
+                returnValue[kvp.Key] = kvp.Value;
+            }
+        }
+
+        return returnValue;
+    }
 
     private async Task<Dictionary<string, string>> LoadSectorNameMap(string catalogFilePath)
     {
@@ -188,11 +211,18 @@ internal partial class ResourceDataLoader(
 
         var zoneOffsets = await LoadZoneOffsets(catalogFilePath);
 
+        var factions = await LoadFactions(catalogFilePath);
+        foreach (var kvp in factions)
+        {
+            //kvp.Value.Name = RecursiveMapName(kvp.Value.NameResource, results);
+        }
+
         var colourMaps = await LoadColourMaps(catalogFilePath);
 
         return new ResourceData(results)
         {
             ColourMap = colourMaps,
+            Factions = factions,
             Landmarks = landmarks,
             SectorMacros = sectorNameMacros,
             SectorNames = sectorNames,

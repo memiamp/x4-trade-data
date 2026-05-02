@@ -114,6 +114,8 @@ internal class ModelMapper : IModelMapper
             Amount = amount,
             Price = trade.Price,
             SectorName = sectorName,
+            SectorOwner = sector.Owner,
+            StationOwner = station.Owner,
             StationName = stationName,
             Type = tradeType,
             Ware = trade.Ware

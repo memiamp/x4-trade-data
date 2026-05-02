@@ -24,7 +24,6 @@ internal class PlotControl : Panel
         new(-200, -350),
         new(-400,    0)
     ];
-   // private readonly double _maxPixelxPerMeter = 20;
     private readonly ToolTip _tooltip = new() { InitialDelay = 200, AutoPopDelay = 8000 };
 
     private bool _isDragging = false;
@@ -293,7 +292,7 @@ internal class PlotControl : Panel
 
     private ISectorPlot? HitTest(Point screenPoint)
     {
-        const float hitRadius = 18f;   // generous for icons
+        const float hitRadius = 18f;
 
         foreach (var item in _items)
         {

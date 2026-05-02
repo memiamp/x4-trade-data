@@ -11,6 +11,11 @@ internal partial class TradeControl : UserControl
 {
     #region Declarations
 
+    private const string SectorOwnerAny = "Any";
+    private const string StationOwnerAny = "Any";
+    private const string WareAny = "Any";
+    private const int WareColumnWidth = 100;
+
     private static readonly List<string> _loopSectors =
     [
         "Argon Prime",
@@ -27,9 +32,13 @@ internal partial class TradeControl : UserControl
         "Unholy Retribution"
     ];
 
+    private readonly BindingList<string> _sectorOwners = [];
+    private readonly BindingList<string> _stationOwners = [];
     private readonly BindingList<Ware> _wares = [];
 
     private IEnumerable<TradeOffer> _items = [];
+    private string? _selectedSectorOwner;
+    private string? _selectedStationOwner;
     private Ware? _selectedWare;
 
     #endregion
@@ -56,19 +65,27 @@ internal partial class TradeControl : UserControl
         if (!displayNoTrades)
         {
             var buyFromText = string.Empty;
+            var isWareSelected = !GetIsWareAnySelected();
             var sellToText = string.Empty;
+            var wareColumnWidth = isWareSelected ? 0 : WareColumnWidth;
 
             PopulateTrades(TradesListViewSellTo, TradeType.Buy, orderAsecending: false);
             PopulateTrades(TradesListViewBuyFrom, TradeType.Sell);
 
-            if (_selectedWare != null)
+            if (isWareSelected &&
+                _selectedWare is not null)
             {
                 buyFromText = $"Average BUY FROM price: {(float)_selectedWare.AverageBuyPrice / 100:0.00}";
                 sellToText = $"Average SELL TO price: {(float)_selectedWare.AverageSellPrice / 100:0.00}";
             }
 
-            lblAverageBuyFromPrice.Text = buyFromText;
-            lblAverageSellToPrice.Text = sellToText;
+            AverageBuyFromPriceLabel.Text = buyFromText;
+            AverageBuyFromPriceLabel.Visible = isWareSelected;
+            AverageSellToPriceLabel.Text = sellToText;
+            AverageSellToPriceLabel.Visible = isWareSelected;
+
+            TradesListViewBuyFrom_Ware.Width = wareColumnWidth;
+            TradesListViewSellTo_Ware.Width = wareColumnWidth;
         }
 
         MainLayoutPanel.Visible = !displayNoTrades;
@@ -79,30 +96,41 @@ internal partial class TradeControl : UserControl
     {
         var averageBuyPrice = (int)(_selectedWare?.AverageBuyPrice ?? 0);
         var averageSellPrice = (int)(_selectedWare?.AverageSellPrice ?? 0);
+        var isWareSelected = !GetIsWareAnySelected();
 
-        var backColour = source.Type switch
+        var backColour = (isWareSelected, source.Type) switch
         {
-            TradeType.Buy => ColourHelper.GetAverageGradientColour(source.Price, averageBuyPrice, 0.5),
-            TradeType.Sell => ColourHelper.GetAverageGradientColour(source.Price, averageSellPrice, -0.5),
+            (true, TradeType.Buy) => ColourHelper.GetAverageGradientColour(source.Price, averageBuyPrice, 0.5),
+            (true, TradeType.Sell) => ColourHelper.GetAverageGradientColour(source.Price, averageSellPrice, -0.5),
             _ => SystemColors.Window
         };
 
         var price = $"{source.Price / 100F:0.00}";
 
-        var returnValue = new ListViewItem(source.SectorName)
+        var itemList = new List<string>
+        {
+            source.Ware,
+            source.SectorName,
+            source.StationName,
+            $"{source.Amount:#,##0}",
+            price
+        };
+
+        var returnValue = new ListViewItem(itemList[0])
         {
             BackColor = backColour,
         };
-        returnValue.SubItems.Add(source.StationName);
-        returnValue.SubItems.Add($"{source.Amount:#,##0}");
-        returnValue.SubItems.Add(price);
+        foreach (var item in itemList.Skip(1))
+        {
+            returnValue.SubItems.Add(item);
+        }
 
         if (_loopSectors.Contains(source.SectorName))
         {
             returnValue.UseItemStyleForSubItems = false;
-            returnValue.SubItems[0].Font = new Font(TradesListViewBuyFrom.Font.FontFamily,
-                                                    TradesListViewBuyFrom.Font.Size,
-                                                    FontStyle.Bold);
+            returnValue.SubItems[1].Font = new Font(TradesListViewBuyFrom.Font.FontFamily,
+                                                               TradesListViewBuyFrom.Font.Size,
+                                                               FontStyle.Bold);
             for (int i = 1; i < returnValue.SubItems.Count; i++)
             {
                 returnValue.SubItems[i].BackColor = returnValue.SubItems[0].BackColor;
@@ -112,13 +140,20 @@ internal partial class TradeControl : UserControl
         return returnValue;
     }
 
+    private bool GetIsWareAnySelected()
+        => _selectedWare?.Name == WareAny;
+
     private void Initialise()
     {
+        SectorOwnerComboBox.DataSource = _sectorOwners;
+        StationOwnerComboBox.DataSource = _stationOwners;
         WareComboBox.DataSource = _wares;
         WareComboBox.DisplayMember = nameof(Ware.Name);
 
         // Event wireup
         Load += TradeControl_Load;
+        SectorOwnerComboBox.SelectedValueChanged += SectorOwnerComboBox_SelectedValueChanged;
+        StationOwnerComboBox.SelectedValueChanged += StationOwnerComboBox_SelectedValueChanged;
         WareComboBox.SelectedValueChanged += WareComboBox_SelectedValueChanged;
 
         DoRefresh();
@@ -133,7 +168,7 @@ internal partial class TradeControl : UserControl
                             {
                                 Name = g.Key,
                                 TotalSellAmount = g.Sum(x => x.Amount),
-                                TotalPrice = g.Sum(x => (long)x.Price * x.Amount)
+                                TotalSellPrice = g.Sum(x => (long)x.Price * x.Amount)
                             });
 
         var buyFroms = _items
@@ -143,35 +178,55 @@ internal partial class TradeControl : UserControl
                              {
                                  Name = g.Key,
                                  TotalBuyAmount = g.Sum(x => x.Amount),
-                                 TotalPrice = g.Sum(x => (long)x.Price * x.Amount)
+                                 TotalBuyPrice = g.Sum(x => (long)x.Price * x.Amount)
                              });
 
         var wares = buyFroms
-                            .Join(
-                                  sellTos,
-                                  x => x.Name,
-                                  x => x.Name,
-                                  (x, y) => new Ware
-                                  {
-                                      AverageBuyPrice = x.TotalPrice / x.TotalBuyAmount,
-                                      AverageSellPrice = y.TotalPrice / y.TotalSellAmount,
-                                      Name = x.Name,
-                                      TotalBuyAvailability = x.TotalBuyAmount,
-                                      TotalSellAvailability = y.TotalSellAmount,
-                                  })
+                            .GroupJoin(
+                                       sellTos,
+                                       b => b.Name,
+                                       s => s.Name,
+                                       (b, sellGroup) => new { Buy = b, Sell = sellGroup.DefaultIfEmpty() })
+                            .SelectMany(
+                                        x => x.Sell.Select(s => new Ware
+                                        {
+                                            Name = x.Buy.Name,
+                                            TotalBuyAvailability = x.Buy.TotalBuyAmount,
+                                            AverageBuyPrice = x.Buy.TotalBuyPrice / x.Buy.TotalBuyAmount,
+
+                                            TotalSellAvailability = s?.TotalSellAmount ?? 0,
+                                            AverageSellPrice = s != null && s.TotalSellAmount > 0
+                                                                                                  ? s.TotalSellPrice / s.TotalSellAmount
+                                                                                                  : 0
+                                        }))
+                            .Union(
+                                   sellTos
+                                          .GroupJoin(
+                                                     buyFroms,
+                                                     s => s.Name,
+                                                     b => b.Name,
+                                                     (s, buyGroup) => new { Sell = s, Buy = buyGroup.DefaultIfEmpty() })
+                                          .SelectMany(
+                                                      x => x.Buy.Select(b => new Ware
+                                                      {
+                                                          Name = x.Sell.Name,
+                                                          TotalSellAvailability = x.Sell.TotalSellAmount,
+                                                          AverageSellPrice = x.Sell.TotalSellPrice / x.Sell.TotalSellAmount,
+
+                                                          TotalBuyAvailability = b?.TotalBuyAmount ?? 0,
+                                                          AverageBuyPrice = b != null && b.TotalBuyAmount > 0
+                                                                                                              ? b.TotalBuyPrice / b.TotalBuyAmount
+                                                                                                              : 0
+                                                      })))
                             .OrderBy(x => x.Name);
 
-        // Check unjoined results
-        var allBuyNames = buyFroms.Select(x => x.Name).Distinct();
-        var allSellNames = sellTos.Select(x => x.Name).Distinct();
-
-        if (wares.Any(x => !allBuyNames.Contains(x.Name) || !allSellNames.Contains(x.Name)))
-        {
-            Console.WriteLine("MISSING ITEM FROM ONE LIST");
-        }
         var selectedWareName = _selectedWare?.Name;
 
         _wares.Clear();
+        _wares.Add(new Ware
+        {
+            Name = WareAny
+        });
         foreach (var ware in wares)
         {
             _wares.Add(ware);
@@ -187,29 +242,55 @@ internal partial class TradeControl : UserControl
             }
         }
 
+        var sectorOwners = _items
+                                 .Select(x => x.SectorOwner)
+                                 .Distinct()
+                                 .Order();
+
+        _sectorOwners.Clear();
+        _sectorOwners.Add(SectorOwnerAny);
+        foreach (var sectorOwner in sectorOwners)
+        {
+            _sectorOwners.Add(sectorOwner);
+        }
+
+        var stationOwners = _items
+                                  .Select(x => x.StationOwner)
+                                  .Distinct()
+                                  .Order();
+
+        _stationOwners.Clear();
+        _stationOwners.Add(StationOwnerAny);
+        foreach (var stationOwner in stationOwners)
+        {
+            _stationOwners.Add(stationOwner);
+        }
+
         DoRefresh();
     }
 
     private void PopulateTrades(ListView target, TradeType tradeType, bool orderAsecending = true)
     {
-        var selectedWareName = _selectedWare?.Name;
+        IEnumerable<TradeOffer> items = [];
+        var isWareSelected = !GetIsWareAnySelected();
 
         target.BeginUpdate();
         target.Items.Clear();
 
-        if (_selectedWare != null)
-        {
-            var items = _items
-                              .Where(x => x.Ware == _selectedWare?.Name &&
-                                          x.Type == tradeType &&
-                                          x.Amount > 0);
+        items = isWareSelected
+                               ? _items.Where(x => x.Ware == _selectedWare?.Name)
+                               : _items;
 
-            items = orderAsecending
-                                    ? items.OrderBy(x => x.Price)
-                                    : items.OrderByDescending(x => x.Price);
+        items = items.Where(x => (_selectedSectorOwner is null || x.SectorOwner == _selectedSectorOwner) &&
+                                 (_selectedStationOwner is null || x.StationOwner == _selectedStationOwner) &&
+                                 x.Type == tradeType &&
+                                 x.Amount > 0);
 
-            target.Items.AddRange([.. items.Select(GenerateListViewItem)]);
-        }
+        items = orderAsecending
+                                ? items.OrderBy(x => x.Ware).ThenBy(x => x.Price)
+                                : items.OrderBy(x => x.Ware).ThenByDescending(x => x.Price);
+
+        target.Items.AddRange([.. items.Select(GenerateListViewItem)]);
 
         target.EndUpdate();
     }
@@ -217,6 +298,36 @@ internal partial class TradeControl : UserControl
     #endregion
 
     #region Event Handlers
+
+    private void SectorOwnerComboBox_SelectedValueChanged(object? sender, EventArgs e)
+    {
+        if (SectorOwnerComboBox.SelectedValue is string value &&
+            value != SectorOwnerAny)
+        {
+            _selectedSectorOwner = value;
+        }
+        else
+        {
+            _selectedSectorOwner = null;
+        }
+
+        DoRefresh();
+    }
+
+    private void StationOwnerComboBox_SelectedValueChanged(object? sender, EventArgs e)
+    {
+        if (StationOwnerComboBox.SelectedValue is string value &&
+            value != StationOwnerAny)
+        {
+            _selectedStationOwner = value;
+        }
+        else
+        {
+            _selectedStationOwner = null;
+        }
+
+        DoRefresh();
+    }
 
     private void TradeControl_Load(object? sender, EventArgs e)
     {

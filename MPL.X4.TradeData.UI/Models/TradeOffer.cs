@@ -21,9 +21,19 @@ public class TradeOffer
     public required string SectorName { get; set; }
 
     /// <summary>
+    /// Gets or sets the name of the sector owner.
+    /// </summary>
+    public required string SectorOwner { get; set; }
+
+    /// <summary>
     /// Gets or sets the name of the station that trade is located in.
     /// </summary>
     public required string StationName { get; set; }
+
+    /// <summary>
+    /// Gets or sets the name of the station owner.
+    /// </summary>
+    public required string StationOwner { get; set; }
 
     /// <summary>
     /// Gets or sets the type of the trade.

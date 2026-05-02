@@ -32,6 +32,11 @@ public interface IResourceData
     Dictionary<string, IColour> ColourMap { get; }
 
     /// <summary>
+    /// Gets faction resource data.
+    /// </summary>
+    Dictionary<string, IFaction> Factions { get; }
+
+    /// <summary>
     /// Gets landmark resource data.
     /// </summary>
     Dictionary<int, string> Landmarks { get; }

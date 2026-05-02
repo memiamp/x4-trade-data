@@ -33,6 +33,8 @@ internal class ResourceData(
 
     public required Dictionary<string, IColour> ColourMap { get; init; }
 
+    public required Dictionary<string, IFaction> Factions { get; init; }
+
     public required Dictionary<int, string> Landmarks { get; init; }
 
     public required Dictionary<string, string> SectorMacros { get; init; }

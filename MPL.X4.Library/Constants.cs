@@ -26,7 +26,8 @@ public static class Constants
         public static class FileName
         {
             public const string ColourXml = "colors.xml";
-            public const string EnglishTextResource = $"{Constants.CatalogFile.LanguageId.English}.{Constants.CatalogFile.FileExtensions.XmlData}";
+            public const string EnglishTextResource = $"{LanguageId.English}.{FileExtensions.XmlData}";
+            public const string FactionsXml = "factions.xml";
             public const string MapDefinitionXml = "mapdefaults.xml";
         }
 
@@ -54,11 +55,13 @@ public static class Constants
             public const string ColourGreen = "g";
             public const string ColourId = "id";
             public const string ColourRed = "r";
+            public const string FactionId = "id";
             public const string Macro = "macro";
             public const string MappingId = "id";
             public const string Name = "name";
             public const string PageId = "id";
             public const string Ref = "ref";
+            public const string ShortName = "shortname";
             public const string TextId = "id";
         }
 
@@ -76,6 +79,7 @@ public static class Constants
             public const string Colours = "colors";
             public const string Connection = "connection";
             public const string Dataset = "dataset";
+            public const string Faction = "faction";
             public const string Identification = "identification";
             public const string Macro = "macro";
             public const string Mapping = "mapping";

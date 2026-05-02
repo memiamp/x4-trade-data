@@ -28,135 +28,212 @@
         /// </summary>
         private void InitializeComponent()
         {
-            lblTradeListSellTo = new Label();
+            TradeListSellToLabel = new Label();
             TradesListViewBuyFrom = new ListView();
-            TradesListViewSell_Sector = new ColumnHeader();
-            TradesListViewSell_Station = new ColumnHeader();
-            TradesListViewSell_Amount = new ColumnHeader();
-            TradesListViewSell_Price = new ColumnHeader();
-            MainLayoutPanel = new TableLayoutPanel();
+            TradesListViewBuyFrom_Ware = new ColumnHeader();
+            TradesListViewBuyFrom_Sector = new ColumnHeader();
+            TradesListViewBuyFrom_Station = new ColumnHeader();
+            TradesListViewBuyFrom_Amount = new ColumnHeader();
+            TradesListViewBuyFrom_Price = new ColumnHeader();
+            TradeLayoutPanel = new TableLayoutPanel();
             BuyLabelPanel = new Panel();
-            lblAverageBuyFromPrice = new Label();
-            lblTradeListBuyFrom = new Label();
+            AverageBuyFromPriceLabel = new Label();
+            TradeListBuyFromLabel = new Label();
             SellLabelPanel = new Panel();
+            AverageSellToPriceLabel = new Label();
+            TradesListViewSellTo = new ListView();
+            TradesListViewSellTo_Ware = new ColumnHeader();
+            TradesListViewSellTo_Sector = new ColumnHeader();
+            TradesListViewSellTo_Station = new ColumnHeader();
+            TradesListViewSellTo_Amount = new ColumnHeader();
+            TradesListViewSellTo_Price = new ColumnHeader();
+            SectorOwnerLabel = new Label();
+            SectorOwnerComboBox = new ComboBox();
             WareLabel = new Label();
             WareComboBox = new ComboBox();
-            lblAverageSellToPrice = new Label();
-            TradesListViewSellTo = new ListView();
-            TradesListViewBuy_Sector = new ColumnHeader();
-            TradesListViewBuy_Station = new ColumnHeader();
-            TradesListViewBuy_Amount = new ColumnHeader();
-            TradesListViewBuy_Price = new ColumnHeader();
             NoItemsLabel = new Label();
-            MainLayoutPanel.SuspendLayout();
+            MainLayoutPanel = new TableLayoutPanel();
+            FilterPanel = new Panel();
+            StationOwnerLabel = new Label();
+            StationOwnerComboBox = new ComboBox();
+            TradeLayoutPanel.SuspendLayout();
             BuyLabelPanel.SuspendLayout();
             SellLabelPanel.SuspendLayout();
+            MainLayoutPanel.SuspendLayout();
+            FilterPanel.SuspendLayout();
             SuspendLayout();
             // 
-            // lblTradeListSellTo
+            // TradeListSellToLabel
             // 
-            lblTradeListSellTo.AutoSize = true;
-            lblTradeListSellTo.Location = new Point(0, 26);
-            lblTradeListSellTo.Name = "lblTradeListSellTo";
-            lblTradeListSellTo.Size = new Size(101, 15);
-            lblTradeListSellTo.TabIndex = 10;
-            lblTradeListSellTo.Text = "Places to SELL TO:";
+            TradeListSellToLabel.AutoSize = true;
+            TradeListSellToLabel.Location = new Point(0, 0);
+            TradeListSellToLabel.Name = "TradeListSellToLabel";
+            TradeListSellToLabel.Size = new Size(101, 15);
+            TradeListSellToLabel.TabIndex = 10;
+            TradeListSellToLabel.Text = "Places to SELL TO:";
             // 
             // TradesListViewBuyFrom
             // 
-            TradesListViewBuyFrom.Columns.AddRange(new ColumnHeader[] { TradesListViewSell_Sector, TradesListViewSell_Station, TradesListViewSell_Amount, TradesListViewSell_Price });
-            TradesListViewBuyFrom.Dock = DockStyle.Fill;
-            TradesListViewBuyFrom.Location = new Point(598, 47);
+            TradesListViewBuyFrom.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            TradesListViewBuyFrom.Columns.AddRange(new ColumnHeader[] { TradesListViewBuyFrom_Ware, TradesListViewBuyFrom_Sector, TradesListViewBuyFrom_Station, TradesListViewBuyFrom_Amount, TradesListViewBuyFrom_Price });
+            TradesListViewBuyFrom.Location = new Point(595, 25);
             TradesListViewBuyFrom.Name = "TradesListViewBuyFrom";
-            TradesListViewBuyFrom.Size = new Size(590, 972);
+            TradesListViewBuyFrom.Size = new Size(587, 958);
             TradesListViewBuyFrom.TabIndex = 9;
             TradesListViewBuyFrom.UseCompatibleStateImageBehavior = false;
             TradesListViewBuyFrom.View = View.Details;
             // 
-            // TradesListViewSell_Sector
+            // TradesListViewBuyFrom_Ware
             // 
-            TradesListViewSell_Sector.Text = "Sector";
-            TradesListViewSell_Sector.Width = 150;
+            TradesListViewBuyFrom_Ware.Text = "Ware";
+            TradesListViewBuyFrom_Ware.Width = 100;
             // 
-            // TradesListViewSell_Station
+            // TradesListViewBuyFrom_Sector
             // 
-            TradesListViewSell_Station.Text = "Station";
-            TradesListViewSell_Station.Width = 150;
+            TradesListViewBuyFrom_Sector.Text = "Sector";
+            TradesListViewBuyFrom_Sector.Width = 150;
             // 
-            // TradesListViewSell_Amount
+            // TradesListViewBuyFrom_Station
             // 
-            TradesListViewSell_Amount.Text = "Amount";
-            TradesListViewSell_Amount.TextAlign = HorizontalAlignment.Right;
-            TradesListViewSell_Amount.Width = 80;
+            TradesListViewBuyFrom_Station.Text = "Station";
+            TradesListViewBuyFrom_Station.Width = 150;
             // 
-            // TradesListViewSell_Price
+            // TradesListViewBuyFrom_Amount
             // 
-            TradesListViewSell_Price.Text = "Price";
-            TradesListViewSell_Price.TextAlign = HorizontalAlignment.Right;
-            TradesListViewSell_Price.Width = 80;
+            TradesListViewBuyFrom_Amount.Text = "Amount";
+            TradesListViewBuyFrom_Amount.TextAlign = HorizontalAlignment.Right;
+            TradesListViewBuyFrom_Amount.Width = 80;
             // 
-            // MainLayoutPanel
+            // TradesListViewBuyFrom_Price
             // 
-            MainLayoutPanel.ColumnCount = 2;
-            MainLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
-            MainLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
-            MainLayoutPanel.Controls.Add(BuyLabelPanel, 1, 0);
-            MainLayoutPanel.Controls.Add(SellLabelPanel, 0, 0);
-            MainLayoutPanel.Controls.Add(TradesListViewSellTo, 0, 1);
-            MainLayoutPanel.Controls.Add(TradesListViewBuyFrom, 1, 1);
-            MainLayoutPanel.Dock = DockStyle.Fill;
-            MainLayoutPanel.Location = new Point(0, 0);
-            MainLayoutPanel.Name = "MainLayoutPanel";
-            MainLayoutPanel.RowCount = 2;
-            MainLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 44F));
-            MainLayoutPanel.RowStyles.Add(new RowStyle());
-            MainLayoutPanel.Size = new Size(1191, 1022);
-            MainLayoutPanel.TabIndex = 12;
+            TradesListViewBuyFrom_Price.Text = "Price";
+            TradesListViewBuyFrom_Price.TextAlign = HorizontalAlignment.Right;
+            TradesListViewBuyFrom_Price.Width = 80;
+            // 
+            // TradeLayoutPanel
+            // 
+            TradeLayoutPanel.ColumnCount = 2;
+            TradeLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            TradeLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            TradeLayoutPanel.Controls.Add(BuyLabelPanel, 1, 0);
+            TradeLayoutPanel.Controls.Add(SellLabelPanel, 0, 0);
+            TradeLayoutPanel.Controls.Add(TradesListViewSellTo, 0, 1);
+            TradeLayoutPanel.Controls.Add(TradesListViewBuyFrom, 1, 1);
+            TradeLayoutPanel.Dock = DockStyle.Fill;
+            TradeLayoutPanel.Location = new Point(3, 33);
+            TradeLayoutPanel.Name = "TradeLayoutPanel";
+            TradeLayoutPanel.RowCount = 2;
+            TradeLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 22F));
+            TradeLayoutPanel.RowStyles.Add(new RowStyle());
+            TradeLayoutPanel.Size = new Size(1185, 986);
+            TradeLayoutPanel.TabIndex = 12;
             // 
             // BuyLabelPanel
             // 
-            BuyLabelPanel.Controls.Add(lblAverageBuyFromPrice);
-            BuyLabelPanel.Controls.Add(lblTradeListBuyFrom);
+            BuyLabelPanel.Controls.Add(AverageBuyFromPriceLabel);
+            BuyLabelPanel.Controls.Add(TradeListBuyFromLabel);
             BuyLabelPanel.Dock = DockStyle.Fill;
-            BuyLabelPanel.Location = new Point(598, 3);
+            BuyLabelPanel.Location = new Point(595, 3);
             BuyLabelPanel.Name = "BuyLabelPanel";
-            BuyLabelPanel.Size = new Size(590, 38);
+            BuyLabelPanel.Size = new Size(587, 16);
             BuyLabelPanel.TabIndex = 11;
             // 
-            // lblAverageBuyFromPrice
+            // AverageBuyFromPriceLabel
             // 
-            lblAverageBuyFromPrice.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            lblAverageBuyFromPrice.Location = new Point(260, 22);
-            lblAverageBuyFromPrice.Name = "lblAverageBuyFromPrice";
-            lblAverageBuyFromPrice.Size = new Size(225, 15);
-            lblAverageBuyFromPrice.TabIndex = 13;
-            lblAverageBuyFromPrice.TextAlign = ContentAlignment.MiddleRight;
+            AverageBuyFromPriceLabel.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            AverageBuyFromPriceLabel.Location = new Point(257, 0);
+            AverageBuyFromPriceLabel.Name = "AverageBuyFromPriceLabel";
+            AverageBuyFromPriceLabel.Size = new Size(225, 15);
+            AverageBuyFromPriceLabel.TabIndex = 13;
+            AverageBuyFromPriceLabel.TextAlign = ContentAlignment.MiddleRight;
             // 
-            // lblTradeListBuyFrom
+            // TradeListBuyFromLabel
             // 
-            lblTradeListBuyFrom.AutoSize = true;
-            lblTradeListBuyFrom.Location = new Point(0, 26);
-            lblTradeListBuyFrom.Name = "lblTradeListBuyFrom";
-            lblTradeListBuyFrom.Size = new Size(118, 15);
-            lblTradeListBuyFrom.TabIndex = 12;
-            lblTradeListBuyFrom.Text = "Places to BUY FROM:";
+            TradeListBuyFromLabel.AutoSize = true;
+            TradeListBuyFromLabel.Location = new Point(0, 0);
+            TradeListBuyFromLabel.Name = "TradeListBuyFromLabel";
+            TradeListBuyFromLabel.Size = new Size(118, 15);
+            TradeListBuyFromLabel.TabIndex = 12;
+            TradeListBuyFromLabel.Text = "Places to BUY FROM:";
             // 
             // SellLabelPanel
             // 
-            SellLabelPanel.Controls.Add(WareLabel);
-            SellLabelPanel.Controls.Add(WareComboBox);
-            SellLabelPanel.Controls.Add(lblAverageSellToPrice);
-            SellLabelPanel.Controls.Add(lblTradeListSellTo);
+            SellLabelPanel.Controls.Add(AverageSellToPriceLabel);
+            SellLabelPanel.Controls.Add(TradeListSellToLabel);
             SellLabelPanel.Dock = DockStyle.Fill;
             SellLabelPanel.Location = new Point(3, 3);
             SellLabelPanel.Name = "SellLabelPanel";
-            SellLabelPanel.Size = new Size(589, 38);
+            SellLabelPanel.Size = new Size(586, 16);
             SellLabelPanel.TabIndex = 10;
+            // 
+            // AverageSellToPriceLabel
+            // 
+            AverageSellToPriceLabel.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            AverageSellToPriceLabel.Location = new Point(257, 0);
+            AverageSellToPriceLabel.Name = "AverageSellToPriceLabel";
+            AverageSellToPriceLabel.Size = new Size(225, 15);
+            AverageSellToPriceLabel.TabIndex = 11;
+            AverageSellToPriceLabel.TextAlign = ContentAlignment.TopRight;
+            // 
+            // TradesListViewSellTo
+            // 
+            TradesListViewSellTo.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            TradesListViewSellTo.Columns.AddRange(new ColumnHeader[] { TradesListViewSellTo_Ware, TradesListViewSellTo_Sector, TradesListViewSellTo_Station, TradesListViewSellTo_Amount, TradesListViewSellTo_Price });
+            TradesListViewSellTo.Location = new Point(3, 25);
+            TradesListViewSellTo.Name = "TradesListViewSellTo";
+            TradesListViewSellTo.Size = new Size(586, 958);
+            TradesListViewSellTo.TabIndex = 12;
+            TradesListViewSellTo.UseCompatibleStateImageBehavior = false;
+            TradesListViewSellTo.View = View.Details;
+            // 
+            // TradesListViewSellTo_Ware
+            // 
+            TradesListViewSellTo_Ware.Text = "Ware";
+            TradesListViewSellTo_Ware.Width = 100;
+            // 
+            // TradesListViewSellTo_Sector
+            // 
+            TradesListViewSellTo_Sector.Text = "Sector";
+            TradesListViewSellTo_Sector.Width = 150;
+            // 
+            // TradesListViewSellTo_Station
+            // 
+            TradesListViewSellTo_Station.Text = "Station";
+            TradesListViewSellTo_Station.Width = 150;
+            // 
+            // TradesListViewSellTo_Amount
+            // 
+            TradesListViewSellTo_Amount.Text = "Amount";
+            TradesListViewSellTo_Amount.TextAlign = HorizontalAlignment.Right;
+            TradesListViewSellTo_Amount.Width = 80;
+            // 
+            // TradesListViewSellTo_Price
+            // 
+            TradesListViewSellTo_Price.Text = "Price";
+            TradesListViewSellTo_Price.TextAlign = HorizontalAlignment.Right;
+            TradesListViewSellTo_Price.Width = 80;
+            // 
+            // SectorOwnerLabel
+            // 
+            SectorOwnerLabel.AutoSize = true;
+            SectorOwnerLabel.Location = new Point(278, 3);
+            SectorOwnerLabel.Name = "SectorOwnerLabel";
+            SectorOwnerLabel.Size = new Size(81, 15);
+            SectorOwnerLabel.TabIndex = 15;
+            SectorOwnerLabel.Text = "Sector Owner:";
+            // 
+            // SectorOwnerComboBox
+            // 
+            SectorOwnerComboBox.FormattingEnabled = true;
+            SectorOwnerComboBox.Location = new Point(360, 0);
+            SectorOwnerComboBox.Name = "SectorOwnerComboBox";
+            SectorOwnerComboBox.Size = new Size(229, 23);
+            SectorOwnerComboBox.TabIndex = 14;
             // 
             // WareLabel
             // 
             WareLabel.AutoSize = true;
-            WareLabel.Location = new Point(3, 3);
+            WareLabel.Location = new Point(0, 3);
             WareLabel.Name = "WareLabel";
             WareLabel.Size = new Size(37, 15);
             WareLabel.TabIndex = 13;
@@ -170,52 +247,9 @@
             WareComboBox.Size = new Size(229, 23);
             WareComboBox.TabIndex = 12;
             // 
-            // lblAverageSellToPrice
-            // 
-            lblAverageSellToPrice.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            lblAverageSellToPrice.Location = new Point(260, 22);
-            lblAverageSellToPrice.Name = "lblAverageSellToPrice";
-            lblAverageSellToPrice.Size = new Size(225, 15);
-            lblAverageSellToPrice.TabIndex = 11;
-            lblAverageSellToPrice.Text = "SSS";
-            lblAverageSellToPrice.TextAlign = ContentAlignment.TopRight;
-            // 
-            // TradesListViewSellTo
-            // 
-            TradesListViewSellTo.Columns.AddRange(new ColumnHeader[] { TradesListViewBuy_Sector, TradesListViewBuy_Station, TradesListViewBuy_Amount, TradesListViewBuy_Price });
-            TradesListViewSellTo.Dock = DockStyle.Fill;
-            TradesListViewSellTo.Location = new Point(3, 47);
-            TradesListViewSellTo.Name = "TradesListViewSellTo";
-            TradesListViewSellTo.Size = new Size(589, 972);
-            TradesListViewSellTo.TabIndex = 12;
-            TradesListViewSellTo.UseCompatibleStateImageBehavior = false;
-            TradesListViewSellTo.View = View.Details;
-            // 
-            // TradesListViewBuy_Sector
-            // 
-            TradesListViewBuy_Sector.Text = "Sector";
-            TradesListViewBuy_Sector.Width = 150;
-            // 
-            // TradesListViewBuy_Station
-            // 
-            TradesListViewBuy_Station.Text = "Station";
-            TradesListViewBuy_Station.Width = 150;
-            // 
-            // TradesListViewBuy_Amount
-            // 
-            TradesListViewBuy_Amount.Text = "Amount";
-            TradesListViewBuy_Amount.TextAlign = HorizontalAlignment.Right;
-            TradesListViewBuy_Amount.Width = 80;
-            // 
-            // TradesListViewBuy_Price
-            // 
-            TradesListViewBuy_Price.Text = "Price";
-            TradesListViewBuy_Price.TextAlign = HorizontalAlignment.Right;
-            TradesListViewBuy_Price.Width = 80;
-            // 
             // NoItemsLabel
             // 
-            NoItemsLabel.Dock = DockStyle.Top;
+            NoItemsLabel.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             NoItemsLabel.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
             NoItemsLabel.Location = new Point(0, 0);
             NoItemsLabel.Name = "NoItemsLabel";
@@ -224,42 +258,99 @@
             NoItemsLabel.Text = "No trades are currently loaded.";
             NoItemsLabel.TextAlign = ContentAlignment.MiddleCenter;
             // 
+            // MainLayoutPanel
+            // 
+            MainLayoutPanel.ColumnCount = 1;
+            MainLayoutPanel.ColumnStyles.Add(new ColumnStyle());
+            MainLayoutPanel.Controls.Add(FilterPanel, 0, 0);
+            MainLayoutPanel.Controls.Add(TradeLayoutPanel, 0, 1);
+            MainLayoutPanel.Dock = DockStyle.Fill;
+            MainLayoutPanel.Location = new Point(0, 0);
+            MainLayoutPanel.Name = "MainLayoutPanel";
+            MainLayoutPanel.RowCount = 2;
+            MainLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 30F));
+            MainLayoutPanel.RowStyles.Add(new RowStyle());
+            MainLayoutPanel.Size = new Size(1191, 1022);
+            MainLayoutPanel.TabIndex = 14;
+            // 
+            // FilterPanel
+            // 
+            FilterPanel.Controls.Add(StationOwnerLabel);
+            FilterPanel.Controls.Add(StationOwnerComboBox);
+            FilterPanel.Controls.Add(SectorOwnerLabel);
+            FilterPanel.Controls.Add(WareComboBox);
+            FilterPanel.Controls.Add(SectorOwnerComboBox);
+            FilterPanel.Controls.Add(WareLabel);
+            FilterPanel.Dock = DockStyle.Fill;
+            FilterPanel.Location = new Point(3, 3);
+            FilterPanel.Name = "FilterPanel";
+            FilterPanel.Size = new Size(1185, 24);
+            FilterPanel.TabIndex = 16;
+            // 
+            // StationOwnerLabel
+            // 
+            StationOwnerLabel.AutoSize = true;
+            StationOwnerLabel.Location = new Point(601, 3);
+            StationOwnerLabel.Name = "StationOwnerLabel";
+            StationOwnerLabel.Size = new Size(85, 15);
+            StationOwnerLabel.TabIndex = 17;
+            StationOwnerLabel.Text = "Station Owner:";
+            // 
+            // StationOwnerComboBox
+            // 
+            StationOwnerComboBox.FormattingEnabled = true;
+            StationOwnerComboBox.Location = new Point(692, 0);
+            StationOwnerComboBox.Name = "StationOwnerComboBox";
+            StationOwnerComboBox.Size = new Size(229, 23);
+            StationOwnerComboBox.TabIndex = 16;
+            // 
             // TradeControl
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            Controls.Add(NoItemsLabel);
             Controls.Add(MainLayoutPanel);
+            Controls.Add(NoItemsLabel);
             Name = "TradeControl";
             Size = new Size(1191, 1022);
-            MainLayoutPanel.ResumeLayout(false);
+            TradeLayoutPanel.ResumeLayout(false);
             BuyLabelPanel.ResumeLayout(false);
             BuyLabelPanel.PerformLayout();
             SellLabelPanel.ResumeLayout(false);
             SellLabelPanel.PerformLayout();
+            MainLayoutPanel.ResumeLayout(false);
+            FilterPanel.ResumeLayout(false);
+            FilterPanel.PerformLayout();
             ResumeLayout(false);
         }
 
         #endregion
-        private Label lblTradeListSellTo;
+        private Label TradeListSellToLabel;
         private ListView TradesListViewBuyFrom;
-        private ColumnHeader TradesListViewSell_Sector;
-        private ColumnHeader TradesListViewSell_Station;
-        private ColumnHeader TradesListViewSell_Amount;
-        private ColumnHeader TradesListViewSell_Price;
-        private TableLayoutPanel MainLayoutPanel;
+        private ColumnHeader TradesListViewBuyFrom_Sector;
+        private ColumnHeader TradesListViewBuyFrom_Station;
+        private ColumnHeader TradesListViewBuyFrom_Amount;
+        private ColumnHeader TradesListViewBuyFrom_Price;
+        private TableLayoutPanel TradeLayoutPanel;
         private Panel SellLabelPanel;
-        private Label lblAverageSellToPrice;
+        private Label AverageSellToPriceLabel;
         private Panel BuyLabelPanel;
-        private Label lblTradeListBuyFrom;
-        private Label lblAverageBuyFromPrice;
+        private Label TradeListBuyFromLabel;
+        private Label AverageBuyFromPriceLabel;
         private ListView TradesListViewSellTo;
-        private ColumnHeader TradesListViewBuy_Sector;
-        private ColumnHeader TradesListViewBuy_Station;
-        private ColumnHeader TradesListViewBuy_Amount;
-        private ColumnHeader TradesListViewBuy_Price;
+        private ColumnHeader TradesListViewSellTo_Sector;
+        private ColumnHeader TradesListViewSellTo_Station;
+        private ColumnHeader TradesListViewSellTo_Amount;
+        private ColumnHeader TradesListViewSellTo_Price;
         private Label WareLabel;
         private ComboBox WareComboBox;
         private Label NoItemsLabel;
+        private Label SectorOwnerLabel;
+        private ComboBox SectorOwnerComboBox;
+        private TableLayoutPanel MainLayoutPanel;
+        private Panel FilterPanel;
+        private Label StationOwnerLabel;
+        private ComboBox StationOwnerComboBox;
+        private ColumnHeader TradesListViewSellTo_Ware;
+        private ColumnHeader TradesListViewBuyFrom_Ware;
     }
 }

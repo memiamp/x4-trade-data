@@ -49,6 +49,41 @@ internal class ResourceFileReader(
         return returnValue;
     }
 
+    private async Task<IFaction> ReadFaction(IXmlReaderWrapper reader)
+    {
+        Faction? returnValue;
+
+        if (reader.TryGetAttribute(Constants.ResourceFile.AttributeName.FactionId, out string? id))
+        {
+            reader.TryGetAttribute(Constants.ResourceFile.AttributeName.Name, out string? name);
+            reader.TryGetAttribute(Constants.ResourceFile.AttributeName.ShortName, out string? shortName);
+
+            returnValue = new Faction
+            {
+                AcronymResource = shortName is not null ? new TextResourceReference(shortName) : null,
+                Id = id,
+                NameResource = name is not null ? new TextResourceReference(name) : null
+            };
+        }
+        else
+        {
+            logger.LogWarning("Could not load faction");
+            throw new ArgumentException("Could not load faction", nameof(reader));
+        }
+
+        while (await reader.ReadAsync())
+        {
+            if (reader.CheckNodeMatches(Constants.ResourceFile.ElementName.Colour, XmlNodeType.Element, 1) &&
+                reader.TryGetAttribute(Constants.ResourceFile.AttributeName.Ref, out string? colourReference))
+            {
+                returnValue.ColourRef = colourReference;
+                break;
+            }
+        }
+
+        return returnValue;
+    }
+
     private static async Task<string> ReadDatasetName(IXmlReaderWrapper reader)
     {
         var returnValue = string.Empty;
@@ -154,6 +189,26 @@ internal class ResourceFileReader(
                                   .ToDictionary(
                                                 kvp => kvp.Key,
                                                 kvp => colours[kvp.Value]);
+        }
+
+        return returnValue;
+    }
+
+    async Task<Dictionary<string, IFaction>> IResourceFileReader.ReadFactions(IXmlReaderWrapper reader)
+    {
+        Dictionary<string, IFaction> returnValue = [];
+
+        while (await reader.ReadAsync())
+        {
+            if (reader.CheckNodeMatches(Constants.ResourceFile.ElementName.Faction, XmlNodeType.Element) &&
+                reader.TryGetAttribute(Constants.ResourceFile.AttributeName.FactionId, out string? id))
+            {
+                using var factionSubTree = await reader.ReadSubtree();
+
+                var faction = await ReadFaction(factionSubTree);
+
+                returnValue.Add(id, faction);
+            }
         }
 
         return returnValue;
