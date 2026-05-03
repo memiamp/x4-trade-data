@@ -15,7 +15,7 @@ internal class SectorParser(
                             //IDataParser<IZone> zoneParser)
     : DataParserBase<ISector>(logger)
 {
-    private protected override async Task<ISector> OnParse(IXmlReaderWrapper reader, ISectorPosition positionOffset)
+    private protected override async Task<ISector> OnParse(IXmlReaderWrapper reader)
     {
         List<IGate> gates = [];
         List<ILockbox> lockboxes = [];

@@ -14,7 +14,7 @@ internal class ZoneOffsetParser(
                                 IDataParser<IOffset> offsetParser)
     : DataParserBase<IZoneOffset>(logger)
 {
-    private protected override async Task<IZoneOffset> OnParse(IXmlReaderWrapper reader, ISectorPosition positionOffset)
+    private protected override async Task<IZoneOffset> OnParse(IXmlReaderWrapper reader)
     {
         var macro = string.Empty;
         ISectorPosition position = ISectorPosition.GetDefault();

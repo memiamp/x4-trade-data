@@ -1,4 +1,6 @@
-﻿namespace MPL.X4.TradeData.Services;
+﻿using MPL.X4.Data;
+
+namespace MPL.X4.TradeData.Services;
 
 /// <summary>
 /// An interface that defines the behaviour of a resource file reader.
@@ -34,7 +36,7 @@ public interface IResourceData
     /// <summary>
     /// Gets faction resource data.
     /// </summary>
-    Dictionary<string, IFaction> Factions { get; }
+    IFactionsData Factions { get; }
 
     /// <summary>
     /// Gets landmark resource data.

@@ -1,4 +1,6 @@
-﻿namespace MPL.X4.TradeData.Services;
+﻿using MPL.X4.Data;
+
+namespace MPL.X4.TradeData.Services;
 
 /// <summary>
 /// A class that implements resource data.
@@ -33,7 +35,7 @@ internal class ResourceData(
 
     public required Dictionary<string, IColour> ColourMap { get; init; }
 
-    public required Dictionary<string, IFaction> Factions { get; init; }
+    public required IFactionsData Factions { get; init; }
 
     public required Dictionary<int, string> Landmarks { get; init; }
 

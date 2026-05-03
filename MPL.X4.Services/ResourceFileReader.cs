@@ -1,5 +1,7 @@
 ﻿using System.Xml;
 using Microsoft.Extensions.Logging;
+using MPL.X4.Data;
+using MPL.X4.Services.Data;
 using MPL.X4.Services.DataParser;
 using MPL.X4.Services.Models;
 
@@ -8,10 +10,12 @@ namespace MPL.X4.Services;
 /// <summary>
 /// A class that implements a resource file reader.
 /// </summary>
+/// <param name="factionsParser">An <see cref="IDataParser{IFactionsData}"/> that is the factions parser to use.</param>
 /// <param name="logger">An <see cref="ILogger{TCategoryName}"/> that is the logger to use.</param>
 /// <param name="xmlReaderFactory">An <see cref="IXmlReaderWrapperFactory"/> that is the XmlReader factory to use.</param>
 /// <param name="zoneOffsetParser">An <see cref="IDataParser{IZoneOffset}"/> that is the zone offset parser to use.</param>
 internal class ResourceFileReader(
+                                  IDataParser<IFactionsData> factionsParser,
                                   ILogger<ResourceFileReader> logger,
                                   IXmlReaderWrapperFactory xmlReaderFactory,
                                   IDataParser<IZoneOffset> zoneOffsetParser)
@@ -49,40 +53,40 @@ internal class ResourceFileReader(
         return returnValue;
     }
 
-    private async Task<IFaction> ReadFaction(IXmlReaderWrapper reader)
-    {
-        Faction? returnValue;
+    //private async Task<IFaction> ReadFaction(IXmlReaderWrapper reader)
+    //{
+    //    Faction? returnValue;
 
-        if (reader.TryGetAttribute(Constants.ResourceFile.AttributeName.FactionId, out string? id))
-        {
-            reader.TryGetAttribute(Constants.ResourceFile.AttributeName.Name, out string? name);
-            reader.TryGetAttribute(Constants.ResourceFile.AttributeName.ShortName, out string? shortName);
+    //    if (reader.TryGetAttribute(Constants.ResourceFile.AttributeName.FactionId, out string? id))
+    //    {
+    //        reader.TryGetAttribute(Constants.ResourceFile.AttributeName.Name, out string? name);
+    //        reader.TryGetAttribute(Constants.ResourceFile.AttributeName.ShortName, out string? shortName);
 
-            returnValue = new Faction
-            {
-                AcronymResource = shortName is not null ? new TextResourceReference(shortName) : null,
-                Id = id,
-                NameResource = name is not null ? new TextResourceReference(name) : null
-            };
-        }
-        else
-        {
-            logger.LogWarning("Could not load faction");
-            throw new ArgumentException("Could not load faction", nameof(reader));
-        }
+    //        returnValue = new Faction
+    //        {
+    //            AcronymResource = shortName is not null ? new TextResourceReference(shortName) : null,
+    //            Id = id,
+    //            NameResource = name is not null ? new TextResourceReference(name) : null
+    //        };
+    //    }
+    //    else
+    //    {
+    //        logger.LogWarning("Could not load faction");
+    //        throw new ArgumentException("Could not load faction", nameof(reader));
+    //    }
 
-        while (await reader.ReadAsync())
-        {
-            if (reader.CheckNodeMatches(Constants.ResourceFile.ElementName.Colour, XmlNodeType.Element, 1) &&
-                reader.TryGetAttribute(Constants.ResourceFile.AttributeName.Ref, out string? colourReference))
-            {
-                returnValue.ColourRef = colourReference;
-                break;
-            }
-        }
+    //    while (await reader.ReadAsync())
+    //    {
+    //        if (reader.CheckNodeMatches(Constants.ResourceFile.ElementName.Colour, XmlNodeType.Element, 1) &&
+    //            reader.TryGetAttribute(Constants.ResourceFile.AttributeName.Ref, out string? colourReference))
+    //        {
+    //            returnValue.ColourRef = colourReference;
+    //            break;
+    //        }
+    //    }
 
-        return returnValue;
-    }
+    //    return returnValue;
+    //}
 
     private static async Task<string> ReadDatasetName(IXmlReaderWrapper reader)
     {
@@ -194,20 +198,19 @@ internal class ResourceFileReader(
         return returnValue;
     }
 
-    async Task<Dictionary<string, IFaction>> IResourceFileReader.ReadFactions(IXmlReaderWrapper reader)
+    async Task<IFactionsData> IResourceFileReader.ReadFactions(IXmlReaderWrapper reader)
     {
-        Dictionary<string, IFaction> returnValue = [];
+        FactionsData returnValue = [];
 
         while (await reader.ReadAsync())
         {
-            if (reader.CheckNodeMatches(Constants.ResourceFile.ElementName.Faction, XmlNodeType.Element) &&
-                reader.TryGetAttribute(Constants.ResourceFile.AttributeName.FactionId, out string? id))
+            if (reader.CheckNodeMatches(Constants.XmlDataFile.ElementName.Factions, XmlNodeType.Element))
             {
                 using var factionSubTree = await reader.ReadSubtree();
 
-                var faction = await ReadFaction(factionSubTree);
+                var factions = await factionsParser.Parse(factionSubTree);
 
-                returnValue.Add(id, faction);
+                returnValue.Merge(factions);
             }
         }
 

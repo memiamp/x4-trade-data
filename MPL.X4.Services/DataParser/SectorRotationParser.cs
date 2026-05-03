@@ -6,7 +6,7 @@ internal class SectorRotationParser(
                                     ILogger<SectorRotationParser> logger)
     : DataParserBase<ISectorRotation>(logger)
 {
-    private protected override Task<ISectorRotation> OnParse(IXmlReaderWrapper reader, ISectorPosition positionOffset)
+    private protected override Task<ISectorRotation> OnParse(IXmlReaderWrapper reader)
     {
         reader.TryGetAttribute(Constants.SaveGameFile.AttributeName.Pitch, out double? pitch);
         reader.TryGetAttribute(Constants.SaveGameFile.AttributeName.Roll, out double? roll);

@@ -48,9 +48,11 @@ internal class StationParser(
         return returnValue;
     }
 
-    private protected override async Task<IStation> OnParse(IXmlReaderWrapper reader, ISectorPosition positionOffset)
+    private protected override async Task<IStation> OnParse(IXmlReaderWrapper reader)
+    //private protected override async Task<IStation> OnParse(IXmlReaderWrapper reader, ISectorPosition positionOffset)
     {
-        SectorPosition position = new(positionOffset);
+        SectorPosition position = new();
+        //SectorPosition position = new(positionOffset);
         Station? returnValue;
         List<ITrade> trades = [];
 

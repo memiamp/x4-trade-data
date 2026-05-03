@@ -1,5 +1,6 @@
 ﻿using System.Text.RegularExpressions;
 using Microsoft.Extensions.Logging;
+using MPL.X4.Data;
 using MPL.X4.Services;
 
 namespace MPL.X4.TradeData.Services;
@@ -59,9 +60,9 @@ internal partial class ResourceDataLoader(
         return returnValue;
     }
     
-    private async Task<Dictionary<string, IFaction>> LoadFactions(string catalogFilePath)
+    private async Task<IFactionsData> LoadFactions(string catalogFilePath)
     {
-        var returnValue = new Dictionary<string, IFaction>();
+        IFactionsData returnValue;
 
         var factionFileEntries = await catalogFileReader.ParseIndexes(catalogFilePath, Constants.CatalogFile.FileName.FactionsXml, true);
         factionFileEntries = GetXmlFilesOnly(factionFileEntries);
@@ -73,11 +74,20 @@ internal partial class ResourceDataLoader(
 
             var factions = await resourceFileReader.ReadFactions(reader);
 
-            foreach (var kvp in factions)
-            {
-                returnValue[kvp.Key] = kvp.Value;
-            }
+            //if (returnValue is null)
+            //{
+            //    returnValue = factions;
+            //}
+            //else
+            //{
+                
+            //}
+            //    foreach (var kvp in factions)
+            //    {
+            //        returnValue[kvp.Key] = kvp.Value;
+            //    }
         }
+        throw new ArgumentException("YO");
 
         return returnValue;
     }

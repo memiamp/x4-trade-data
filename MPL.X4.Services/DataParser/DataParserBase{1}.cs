@@ -27,7 +27,8 @@ internal abstract class DataParserBase<TData>(
     /// <param name="reader">An <see cref="IXmlReaderWrapper"/> that is the data reader.</param>
     /// <param name="positionOffset">An <see cref="ISectorPosition"/> that is the position offset.</param>
     /// <returns>A <see cref="Task{TResult}"/> representing the asynchronous operation. A <typeparamref name="TData"/> that is the result.</returns>
-    private protected abstract Task<TData> OnParse(IXmlReaderWrapper reader, ISectorPosition positionOffset);
+    private protected abstract Task<TData> OnParse(IXmlReaderWrapper reader);
+    //private protected abstract Task<TData> OnParse(IXmlReaderWrapper reader, ISectorPosition positionOffset);
 
     /// <summary>
     /// Gets the logger.
@@ -35,8 +36,9 @@ internal abstract class DataParserBase<TData>(
     private protected ILogger Logger => logger;
 
     Task<TData> IDataParser<TData>.Parse(IXmlReaderWrapper reader)
-        => ((IDataParser<TData>)this).Parse(reader, ISectorPosition.GetDefault());
+        => OnParse(reader);
+        //=> ((IDataParser<TData>)this).Parse(reader, ISectorPosition.GetDefault());
 
-    Task<TData> IDataParser<TData>.Parse(IXmlReaderWrapper reader, ISectorPosition positionOffset)
-        => OnParse(reader, positionOffset);
+    //Task<TData> IDataParser<TData>.Parse(IXmlReaderWrapper reader, ISectorPosition positionOffset)
+    //    => OnParse(reader, positionOffset);
 }

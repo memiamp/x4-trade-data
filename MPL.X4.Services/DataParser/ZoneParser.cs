@@ -38,11 +38,12 @@ internal class ZoneParser(
         set => _zoneOffsets = value; 
     }
 
-    private protected override async Task<IZone> OnParse(IXmlReaderWrapper reader, ISectorPosition positionOffset)
+    private protected override async Task<IZone> OnParse(IXmlReaderWrapper reader)
+    //private protected override async Task<IZone> OnParse(IXmlReaderWrapper reader, ISectorPosition positionOffset)
     {
         List<IGate> gates = [];
         List<ILockbox> lockboxes = [];
-        SectorPosition? offset = new(positionOffset);
+        //SectorPosition? offset = new(positionOffset);
         Zone? returnValue;
         List<IShip> ships = [];
         List<IStation> stations = [];
@@ -56,7 +57,7 @@ internal class ZoneParser(
             {
                 if (_zoneOffsets.TryGetValue(macro, out var zoneOffset))
                 {
-                    UpdatePosition(zoneOffset.Position, offset);
+                    //UpdatePosition(zoneOffset.Position, offset);
                 }
             }
 
@@ -67,7 +68,8 @@ internal class ZoneParser(
                 Id = id,
                 IsKnown = isKnown,
                 Lockboxes = lockboxes,
-                Position = offset,
+                Position = ISectorPosition.GetDefault(),
+                //Position = offset,
                 Ships = ships,
                 Stations = stations
             };
@@ -82,43 +84,43 @@ internal class ZoneParser(
         {
             if (reader.CheckNodeMatches(Constants.SaveGameFile.ElementName.Offset, XmlNodeType.Element, 1))
             {
-                await UpdatePositionFromOffset(reader, offset);
+                //await UpdatePositionFromOffset(reader, offset);
             }
             else if (reader.CheckNodeMatches(Constants.SaveGameFile.ElementName.Component, XmlNodeType.Element) &&
                      reader.TryGetAttribute(Constants.SaveGameFile.AttributeName.Class, x => x == Constants.SaveGameFile.AttributeValue.Class.Gate))
             {
                 using var gateSubtree = await reader.ReadSubtree();
 
-                var gate = await gateParser.Parse(gateSubtree, offset);
+                //var gate = await gateParser.Parse(gateSubtree, offset);
 
-                gates.Add(gate);
+                //gates.Add(gate);
             }
             else if (reader.CheckNodeMatches(Constants.SaveGameFile.ElementName.Component, XmlNodeType.Element) &&
                      reader.TryGetAttribute(Constants.SaveGameFile.AttributeName.Class, x => x == Constants.SaveGameFile.AttributeValue.Class.Lockbox))
             {
                 using var lockboxSubtree = await reader.ReadSubtree();
 
-                var lockbox = await lockboxParser.Parse(lockboxSubtree, offset);
+                //var lockbox = await lockboxParser.Parse(lockboxSubtree, offset);
 
-                lockboxes.Add(lockbox);
+                //lockboxes.Add(lockbox);
             }
             else if (reader.CheckNodeMatches(Constants.SaveGameFile.ElementName.Component, XmlNodeType.Element) &&
                      reader.TryGetAttribute(Constants.SaveGameFile.AttributeName.Class, x => x.StartsWith(Constants.SaveGameFile.AttributeValue.Class.Ship), out string? _))
             {
                 using var shipSubtree = await reader.ReadSubtree();
 
-                var ship = await shipParser.Parse(shipSubtree, offset);
+                //var ship = await shipParser.Parse(shipSubtree, offset);
 
-                ships.AddRange(ship);
+                //ships.AddRange(ship);
             }
             else if (reader.CheckNodeMatches(Constants.SaveGameFile.ElementName.Component, XmlNodeType.Element) &&
                      reader.TryGetAttribute(Constants.SaveGameFile.AttributeName.Class, x => x == Constants.SaveGameFile.AttributeValue.Class.Station))
             {
                 using var stationSubtree = await reader.ReadSubtree();
 
-                var station = await stationParser.Parse(stationSubtree, offset);
+                //var station = await stationParser.Parse(stationSubtree, offset);
 
-                stations.Add(station);
+                //stations.Add(station);
             }
         }
 

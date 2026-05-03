@@ -177,4 +177,17 @@ public static class Constants
             public const string Universe = "universe";
         }
     }
+
+    /// <summary>
+    /// Constants relation to X4 XML data files.
+    /// </summary>
+    public static class XmlDataFile
+    {
+        public static class ElementName
+        {
+            public const string Faction = "faction";
+            public const string Factions = "factions";
+        }
+
+    }
 }

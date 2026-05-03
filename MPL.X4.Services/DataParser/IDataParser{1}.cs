@@ -19,5 +19,5 @@ public interface IDataParser<TData>
     /// <param name="reader">An <see cref="IXmlReaderWrapper"/> that is the data reader.</param>
     /// <param name="positionOffset">An <see cref="ISectorPosition"/> that is the position offset.</param>
     /// <returns>A <see cref="Task{TResult}"/> representing the asynchronous operation. A <typeparamref name="TData"/> that is the result.</returns>
-    Task<TData> Parse(IXmlReaderWrapper reader, ISectorPosition positionOffset);
+    //Task<TData> Parse(IXmlReaderWrapper reader, ISectorPosition positionOffset);
 }

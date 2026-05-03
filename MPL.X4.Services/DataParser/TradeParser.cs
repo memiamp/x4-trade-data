@@ -12,7 +12,7 @@ internal class TradeParser(
                            ILogger<TradeParser> logger)
     : DataParserBase<ITrade>(logger)
 {
-    private protected override Task<ITrade> OnParse(IXmlReaderWrapper reader, ISectorPosition positionOffset)
+    private protected override Task<ITrade> OnParse(IXmlReaderWrapper reader)
     {
         Trade? returnValue;
 

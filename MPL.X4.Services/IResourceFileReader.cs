@@ -1,4 +1,6 @@
-﻿namespace MPL.X4.Services;
+﻿using MPL.X4.Data;
+
+namespace MPL.X4.Services;
 
 /// <summary>
 /// An interface that defines the behaviour of a resource file reader.
@@ -16,8 +18,8 @@ public interface IResourceFileReader
     /// Reads the factions from the specified <paramref name="reader"/>.
     /// </summary>
     /// <param name="reader">An <see cref="IXmlReaderWrapper"/> containing the resource to read.</param>
-    /// <returns>A <see cref="Task{TResult}"/> representing the asynchronous operation.  A <see cref="Dictionary{TKey, TValue}"/> containing the resulting resources.</returns>
-    Task<Dictionary<string, IFaction>> ReadFactions(IXmlReaderWrapper reader);
+    /// <returns>A <see cref="Task{TResult}"/> representing the asynchronous operation.  An <see cref="IFactionsData"/> containing the resulting resources.</returns>
+    Task<IFactionsData> ReadFactions(IXmlReaderWrapper reader);
 
     /// <summary>
     /// Reads the map dataset from the specified <paramref name="reader"/>.

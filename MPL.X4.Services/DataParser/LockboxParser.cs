@@ -14,10 +14,12 @@ internal class LockboxParser(
                              IDataParser<ISectorPosition> positionParser)
     : PositionalDataParserBase<ILockbox>(logger, positionParser)
 {
-    private protected override async Task<ILockbox> OnParse(IXmlReaderWrapper reader, ISectorPosition positionOffset)
+    private protected override async Task<ILockbox> OnParse(IXmlReaderWrapper reader)
+    //private protected override async Task<ILockbox> OnParse(IXmlReaderWrapper reader, ISectorPosition positionOffset)
     {
         var lockCount = 0;
-        var position = new SectorPosition(positionOffset);
+        var position = new SectorPosition();
+        //var position = new SectorPosition(positionOffset);
         Lockbox? returnValue;
 
         if (reader.TryGetAttribute(Constants.SaveGameFile.AttributeName.Code, out string? code) &&

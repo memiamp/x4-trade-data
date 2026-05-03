@@ -6,7 +6,8 @@ internal class SectorPositionParser(
                                     ILogger<SectorPositionParser> logger)
     : DataParserBase<ISectorPosition>(logger)
 {
-    private protected override Task<ISectorPosition> OnParse(IXmlReaderWrapper reader, ISectorPosition positionOffset)
+    private protected override Task<ISectorPosition> OnParse(IXmlReaderWrapper reader)
+    //private protected override Task<ISectorPosition> OnParse(IXmlReaderWrapper reader, ISectorPosition positionOffset)
     {
         reader.TryGetAttribute(Constants.SaveGameFile.AttributeName.X, out double? x);
         reader.TryGetAttribute(Constants.SaveGameFile.AttributeName.Y, out double? y);
@@ -14,9 +15,13 @@ internal class SectorPositionParser(
 
         var returnValue = new SectorPosition
         {
-            X = (x ?? 0) + positionOffset.X,
-            Y = (y ?? 0) + positionOffset.Y,
-            Z = (z ?? 0) + positionOffset.Z
+            X = x ?? 0,
+            Y = y ?? 0,
+            Z = z ?? 0
+
+            //X = (x ?? 0) + positionOffset.X,
+            //Y = (y ?? 0) + positionOffset.Y,
+            //Z = (z ?? 0) + positionOffset.Z
         };
 
         return Task.FromResult<ISectorPosition>(returnValue);

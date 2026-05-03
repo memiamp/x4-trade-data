@@ -14,9 +14,11 @@ internal class GateParser(
                           IDataParser<ISectorPosition> positionParser)
     : PositionalDataParserBase<IGate>(logger, positionParser)
 {
-    private protected override async Task<IGate> OnParse(IXmlReaderWrapper reader, ISectorPosition positionOffset)
+    private protected override async Task<IGate> OnParse(IXmlReaderWrapper reader)
+    //private protected override async Task<IGate> OnParse(IXmlReaderWrapper reader, ISectorPosition positionOffset)
     {
-        var position = new SectorPosition(positionOffset);
+        var position = new SectorPosition();
+        //var position = new SectorPosition(positionOffset);
         Gate? returnValue;
 
         if (reader.TryGetAttribute(Constants.SaveGameFile.AttributeName.Code, out string? code) &&

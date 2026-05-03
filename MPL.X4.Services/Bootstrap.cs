@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using MPL.X4.Data;
 using MPL.X4.Services.DataParser;
 
 namespace MPL.X4.Services;
@@ -21,6 +22,8 @@ public static class Bootstrap
         servicesCollection.AddTransient<IXmlReaderWrapperFactory, XmlReaderWrapperFactory>();
 
         // Data parsers
+        servicesCollection.AddTransient<IDataParser<IFactionData>, FactionParser>();
+        servicesCollection.AddTransient<IDataParser<IFactionsData>, FactionsParser>();
         servicesCollection.AddTransient<IDataParser<IGate>, GateParser>();
         servicesCollection.AddTransient<IDataParser<ILockbox>, LockboxParser>();
         servicesCollection.AddTransient<IDataParser<IOffset>, OffsetParser>();

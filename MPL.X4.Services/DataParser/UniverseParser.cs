@@ -14,7 +14,7 @@ internal class UniverseParser(
                               ILogger<UniverseParser> logger)
     : DataParserBase<IUniverse>(logger)
 {
-    private protected override async Task<IUniverse> OnParse(IXmlReaderWrapper reader, ISectorPosition positionOffset)
+    private protected override async Task<IUniverse> OnParse(IXmlReaderWrapper reader)
     {
         var sectors = new List<ISector>();
 

@@ -14,9 +14,11 @@ internal class ShipParser(
                           IDataParser<ISectorPosition> positionParser)
     : PositionalDataParserBase<IShip>(logger, positionParser)
 {
-    private protected override async Task<IShip> OnParse(IXmlReaderWrapper reader, ISectorPosition positionOffset)
+    private protected override async Task<IShip> OnParse(IXmlReaderWrapper reader)
+    //private protected override async Task<IShip> OnParse(IXmlReaderWrapper reader, ISectorPosition positionOffset)
     {
-        SectorPosition position = new(positionOffset);
+        SectorPosition position = new();
+        //SectorPosition position = new(positionOffset);
         Ship? returnValue;
 
         if (reader.TryGetAttribute(Constants.SaveGameFile.AttributeName.Class, out string? shipClass) &&

@@ -16,7 +16,7 @@ internal class OffsetParser(
                             IDataParser<ISectorRotation> sectorRotationParser)
     : DataParserBase<IOffset>(logger)
 {
-    private protected override async Task<IOffset> OnParse(IXmlReaderWrapper reader, ISectorPosition positionOffset)
+    private protected override async Task<IOffset> OnParse(IXmlReaderWrapper reader)
     {
         ISectorPosition sectorPosition = ISectorPosition.GetDefault();
         ISectorRotation sectorRotation = ISectorRotation.GetDefault();
