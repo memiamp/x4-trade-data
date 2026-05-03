@@ -183,11 +183,18 @@ public static class Constants
     /// </summary>
     public static class XmlDataFile
     {
-        public static class ElementName
+        public static class AttributeName
         {
-            public const string Faction = "faction";
-            public const string Factions = "factions";
+            public const string Amount = "amount";
+            public const string Ware = "ware";
         }
 
+        public static class ElementName
+        {
+            public const string Cargo = "cargo";
+            public const string Faction = "faction";
+            public const string Factions = "factions";
+            public const string Ware = "ware";
+        }
     }
 }

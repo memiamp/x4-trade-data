@@ -21,9 +21,9 @@ internal class CatalogFileReader(
     private static string GetDataPath(string catalogPath, int catalogId)
         => $"{GetPath(catalogPath, catalogId)}.{Constants.CatalogFile.FileExtensions.DataFile}";
 
-    private async Task<ICatalogIndexEntry> GetFirstIndexEntry(string indexPath, string? fileFilter)
+    private async Task<ICatalogIndexEntry> GetFirstIndexEntry(string indexPath, string? fileFilter, string? fileExtension)
     {
-        var indexFiles = await ParseIndexInternal(indexPath, fileFilter);
+        var indexFiles = await ParseIndexInternal(indexPath, fileFilter, fileExtension);
         if (!indexFiles.Any())
         {
             logger.LogWarning("The index file '{IndexFile}' contained no entries", indexPath);
@@ -72,6 +72,10 @@ internal class CatalogFileReader(
         return returnValue;
     }
 
+    private static bool IsValidFileExtension(ICatalogIndexEntry source, string? fileExtension)
+        => string.IsNullOrWhiteSpace(fileExtension) ||
+           source.FilePath.EndsWith(fileExtension, StringComparison.OrdinalIgnoreCase);
+
     private CatalogIndexEntry ParseIndexEntry(string indexFilePath, string line, long offset)
     {
         var parts = line.Split(Constants.CatalogFile.IndexFile.ColumnSeparator, StringSplitOptions.RemoveEmptyEntries);
@@ -97,7 +101,7 @@ internal class CatalogFileReader(
         };
     }
 
-    private async Task<IEnumerable<ICatalogIndexEntry>> ParseIndexInternal(string indexPath, string? fileFilter)
+    private async Task<IEnumerable<ICatalogIndexEntry>> ParseIndexInternal(string indexPath, string? fileFilter, string? fileExtension)
     {
         List<CatalogIndexEntry> returnValue = [];
 
@@ -112,8 +116,8 @@ internal class CatalogFileReader(
 
                 offset += entry.Size;
 
-                if (fileFilter is null ||
-                    line.Contains(fileFilter, StringComparison.OrdinalIgnoreCase))
+                if ((fileFilter is null || line.Contains(fileFilter, StringComparison.OrdinalIgnoreCase)) &&
+                    IsValidFileExtension(entry, fileExtension))
                 {
                     returnValue.Add(entry);
                 }
@@ -149,11 +153,11 @@ internal class CatalogFileReader(
         return returnValue;
     }
 
-    private async Task<string> ReadTextFileInternal(string indexPath, string dataPath, string fileFilter)
+    private async Task<string> ReadTextFileInternal(string indexPath, string dataPath, string fileFilter, string? fileExtension)
     {
         logger.LogInformation("Reading the first text file matching '{FileFilter}' from catalog {CatalogdataPath}", fileFilter, dataPath);
 
-        var indexFile = await GetFirstIndexEntry(indexPath, fileFilter);
+        var indexFile = await GetFirstIndexEntry(indexPath, fileFilter, fileExtension);
 
         var data = await ReadFromDataFile(dataPath, indexFile.Offset, indexFile.Size);
 
@@ -201,16 +205,16 @@ internal class CatalogFileReader(
         }
     }
 
-    Task<IEnumerable<ICatalogIndexEntry>> ICatalogFileReader.ParseIndex(string catalogPath, int catalogId, string? fileFilter)
+    Task<IEnumerable<ICatalogIndexEntry>> ICatalogFileReader.ParseIndex(string catalogPath, int catalogId, string? fileFilter, string? fileExtension)
     {
         ValidateParameters(catalogPath, catalogId);
 
         var indexPath = GetIndexPath(catalogPath, catalogId);
 
-        return ParseIndexInternal(indexPath, fileFilter);
+        return ParseIndexInternal(indexPath, fileFilter, fileExtension);
     }
 
-    async Task<IEnumerable<ICatalogIndexEntry>> ICatalogFileReader.ParseIndexes(string catalogPath, string? fileFilter, bool recursiveSearch)
+    async Task<IEnumerable<ICatalogIndexEntry>> ICatalogFileReader.ParseIndexes(string catalogPath, string? fileFilter, string? fileExtension, bool recursiveSearch)
     {
         var returnValue = new List<ICatalogIndexEntry>();
 
@@ -223,21 +227,22 @@ internal class CatalogFileReader(
         var indexFiles = Directory.GetFiles(catalogPath, FileFilterIndexFile, searchOption);
         foreach (var indexFile in indexFiles)
         {
-            var indexEntries = await ParseIndexInternal(indexFile, fileFilter);
+            var indexEntries = await ParseIndexInternal(indexFile, fileFilter, fileExtension);
+
             returnValue.AddRange(indexEntries);
         }
 
         return returnValue;
     }
 
-    Task<string> ICatalogFileReader.ReadTextFile(string catalogPath, int catalogId, string fileFilter)
+    Task<string> ICatalogFileReader.ReadTextFile(string catalogPath, int catalogId, string fileFilter, string? fileExtension)
     {
         ValidateParameters(catalogPath, catalogId);
 
         var dataPath = GetValidatedDataPath(catalogPath, catalogId);
         var indexPath = GetValidatedIndexPath(catalogPath, catalogId);
 
-        return ReadTextFileInternal(indexPath, dataPath, fileFilter);
+        return ReadTextFileInternal(indexPath, dataPath, fileFilter, fileExtension);
     }
 
     async IAsyncEnumerable<string> ICatalogFileReader.ReadTextFiles(IEnumerable<ICatalogIndexEntry> entries, [EnumeratorCancellation] CancellationToken cancellationToken)

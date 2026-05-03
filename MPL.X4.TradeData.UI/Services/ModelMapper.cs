@@ -36,7 +36,8 @@ internal class ModelMapper : IModelMapper
         => new()
         {
             Code = source.Code,
-            Description = $"{source.Type} ({source.LockCount} locks)",
+            Comments = $"Lock count: {source.LockCount}",
+            Description = $"{source.Type}",
             SectorName = resourceData.LookupSectorNameFromMacro(sectorMacro),
             Type = SpecialItemType.Lockbox,
             X = $"{source.Position.X:0}",
@@ -45,9 +46,18 @@ internal class ModelMapper : IModelMapper
         };
 
     SpecialItem IModelMapper.MapSpecialItem(string sectorMacro, IShip source, IResourceData resourceData)
-        => new()
+    {
+        var comments = string.Empty;
+
+        if (source.Cargo.Items.Any())
+        {
+            comments = string.Join(", ", source.Cargo.Items.Select(x => x.ToString()));
+        }
+
+        var returnValue = new SpecialItem
         {
             Code = source.Code,
+            Comments = comments,
             Description = $"{((IModelMapper)this).MapShipClass(source.Class)} - {source.Macro}",
             SectorName = resourceData.LookupSectorNameFromMacro(sectorMacro),
             Type = SpecialItemType.Ship,
@@ -55,6 +65,9 @@ internal class ModelMapper : IModelMapper
             Y = $"{source.Position.Y:0}",
             Z = $"{source.Position.Z:0}"
         };
+
+        return returnValue;
+    }
 
     IEnumerable<SpecialItem> IModelMapper.MapSpecialItems(IEnumerable<ISector> source, IResourceData resourceData)
     {

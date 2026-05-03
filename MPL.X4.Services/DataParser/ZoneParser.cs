@@ -91,36 +91,40 @@ internal class ZoneParser(
             {
                 using var gateSubtree = await reader.ReadSubtree();
 
+                var gate = await gateParser.Parse(gateSubtree);
                 //var gate = await gateParser.Parse(gateSubtree, offset);
 
-                //gates.Add(gate);
+                gates.Add(gate);
             }
             else if (reader.CheckNodeMatches(Constants.SaveGameFile.ElementName.Component, XmlNodeType.Element) &&
                      reader.TryGetAttribute(Constants.SaveGameFile.AttributeName.Class, x => x == Constants.SaveGameFile.AttributeValue.Class.Lockbox))
             {
                 using var lockboxSubtree = await reader.ReadSubtree();
 
+                var lockbox = await lockboxParser.Parse(lockboxSubtree);
                 //var lockbox = await lockboxParser.Parse(lockboxSubtree, offset);
 
-                //lockboxes.Add(lockbox);
+                lockboxes.Add(lockbox);
             }
             else if (reader.CheckNodeMatches(Constants.SaveGameFile.ElementName.Component, XmlNodeType.Element) &&
                      reader.TryGetAttribute(Constants.SaveGameFile.AttributeName.Class, x => x.StartsWith(Constants.SaveGameFile.AttributeValue.Class.Ship), out string? _))
             {
                 using var shipSubtree = await reader.ReadSubtree();
 
+                var ship = await shipParser.Parse(shipSubtree);
                 //var ship = await shipParser.Parse(shipSubtree, offset);
 
-                //ships.AddRange(ship);
+                ships.AddRange(ship);
             }
             else if (reader.CheckNodeMatches(Constants.SaveGameFile.ElementName.Component, XmlNodeType.Element) &&
                      reader.TryGetAttribute(Constants.SaveGameFile.AttributeName.Class, x => x == Constants.SaveGameFile.AttributeValue.Class.Station))
             {
                 using var stationSubtree = await reader.ReadSubtree();
 
+                var station = await stationParser.Parse(stationSubtree);
                 //var station = await stationParser.Parse(stationSubtree, offset);
 
-                //stations.Add(station);
+                stations.Add(station);
             }
         }
 

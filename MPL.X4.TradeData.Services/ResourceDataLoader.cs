@@ -1,6 +1,5 @@
 ﻿using System.Text.RegularExpressions;
 using Microsoft.Extensions.Logging;
-using MPL.X4.Data;
 using MPL.X4.Services;
 
 namespace MPL.X4.TradeData.Services;
@@ -10,11 +9,13 @@ namespace MPL.X4.TradeData.Services;
 /// </summary>
 /// <param name="catalogFileReader">An <see cref="ICatalogFileReader"/> that is the catalog file reader to use.</param>
 /// <param name="logger">An <see cref="ILogger{TCategoryName}"/> that is the logger to use.</param>
+/// <param name="resourceDataLoader">An <see cref="X4.Services.IResourceDataLoader"/> that is the resource data loader service.</param>
 /// <param name="resourceFileReader">An <see cref="IResourceFileReader"/> that is the resource file reader service.</param>
 /// <param name="xmlReaderWrapperFactory">An <see cref="IXmlReaderWrapperFactory"/> that is the XML reader factory to use.</param>
 internal partial class ResourceDataLoader(
                                           ICatalogFileReader catalogFileReader,
                                           ILogger<ResourceDataLoader> logger,
+                                          X4.Services.IResourceDataLoader resourceDataLoader,
                                           IResourceFileReader resourceFileReader,
                                           IXmlReaderWrapperFactory xmlReaderWrapperFactory)
     : IResourceDataLoader
@@ -41,7 +42,7 @@ internal partial class ResourceDataLoader(
     {
         var returnValue = new Dictionary<string, IColour>();
 
-        var colourFileEntries = await catalogFileReader.ParseIndexes(catalogFilePath, Constants.CatalogFile.FileName.ColourXml, true);
+        var colourFileEntries = await catalogFileReader.ParseIndexes(catalogFilePath, Constants.CatalogFile.FileName.ColourXml, null, true);
         colourFileEntries = GetXmlFilesOnly(colourFileEntries);
 
         var colourFiles = catalogFileReader.ReadTextFiles(colourFileEntries);
@@ -60,43 +61,11 @@ internal partial class ResourceDataLoader(
         return returnValue;
     }
     
-    private async Task<IFactionsData> LoadFactions(string catalogFilePath)
-    {
-        IFactionsData returnValue;
-
-        var factionFileEntries = await catalogFileReader.ParseIndexes(catalogFilePath, Constants.CatalogFile.FileName.FactionsXml, true);
-        factionFileEntries = GetXmlFilesOnly(factionFileEntries);
-
-        var factionFiles = catalogFileReader.ReadTextFiles(factionFileEntries);
-        await foreach (var factionFile in factionFiles)
-        {
-            using var reader = xmlReaderWrapperFactory.CreateXmlReaderFromXmlString(factionFile);
-
-            var factions = await resourceFileReader.ReadFactions(reader);
-
-            //if (returnValue is null)
-            //{
-            //    returnValue = factions;
-            //}
-            //else
-            //{
-                
-            //}
-            //    foreach (var kvp in factions)
-            //    {
-            //        returnValue[kvp.Key] = kvp.Value;
-            //    }
-        }
-        throw new ArgumentException("YO");
-
-        return returnValue;
-    }
-
     private async Task<Dictionary<string, string>> LoadSectorNameMap(string catalogFilePath)
     {
         var returnValue = new Dictionary<string, string>();
 
-        var mapDefinitionEntries = await catalogFileReader.ParseIndexes(catalogFilePath, Constants.CatalogFile.FileName.MapDefinitionXml, true);
+        var mapDefinitionEntries = await catalogFileReader.ParseIndexes(catalogFilePath, Constants.CatalogFile.FileName.MapDefinitionXml, null, true);
         mapDefinitionEntries = GetXmlFilesOnly(mapDefinitionEntries);
 
         var mapDefinitions = catalogFileReader.ReadTextFiles(mapDefinitionEntries);
@@ -130,7 +99,7 @@ internal partial class ResourceDataLoader(
     {
         var returnValue = new Dictionary<string, IZoneOffset>();
 
-        var mapFileEntries = await catalogFileReader.ParseIndexes(catalogFilePath, "maps/", true);
+        var mapFileEntries = await catalogFileReader.ParseIndexes(catalogFilePath, "maps/", null, true);
         mapFileEntries = GetXmlFilesOnly(mapFileEntries);
 
         var mapFiles = catalogFileReader.ReadTextFiles(mapFileEntries);
@@ -221,11 +190,12 @@ internal partial class ResourceDataLoader(
 
         var zoneOffsets = await LoadZoneOffsets(catalogFilePath);
 
-        var factions = await LoadFactions(catalogFilePath);
-        foreach (var kvp in factions)
-        {
-            //kvp.Value.Name = RecursiveMapName(kvp.Value.NameResource, results);
-        }
+        var factions = await resourceDataLoader.LoadFactionsFromCatalogs(catalogFilePath);
+        //var factions = await LoadFactions(catalogFilePath);
+        //foreach (var kvp in factions)
+        //{
+        //    //kvp.Value.Name = RecursiveMapName(kvp.Value.NameResource, results);
+        //}
 
         var colourMaps = await LoadColourMaps(catalogFilePath);
 

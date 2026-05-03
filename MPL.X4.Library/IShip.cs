@@ -6,6 +6,11 @@
 public interface IShip
 {
     /// <summary>
+    /// Gets the ship cargo.
+    /// </summary>
+    ICargo Cargo { get; }
+
+    /// <summary>
     /// Gets the class of the ship.
     /// </summary>
     string Class { get; }

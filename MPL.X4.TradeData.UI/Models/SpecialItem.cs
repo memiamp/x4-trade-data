@@ -11,6 +11,11 @@ public class SpecialItem
     public required string Code { get; set; }
 
     /// <summary>
+    /// Gets or sets the comments of the special item.
+    /// </summary>
+    public required string Comments { get; set; }
+
+    /// <summary>
     /// Gets or sets the description of the special item.
     /// </summary>
     public required string Description { get; set; }

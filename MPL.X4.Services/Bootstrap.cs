@@ -16,12 +16,14 @@ public static class Bootstrap
     public static void AddServices(IServiceCollection servicesCollection)
     {
         servicesCollection.AddTransient<ICatalogFileReader, CatalogFileReader>();
+        servicesCollection.AddTransient<IResourceDataLoader, ResourceDataLoader>();
         servicesCollection.AddTransient<IResourceFileReader, ResourceFileReader>();
         servicesCollection.AddTransient<ISaveGameLoader, SaveGameLoader>();
         servicesCollection.AddTransient<IXmlReaderWrapper, XmlReaderWrapper>();
         servicesCollection.AddTransient<IXmlReaderWrapperFactory, XmlReaderWrapperFactory>();
 
         // Data parsers
+        servicesCollection.AddTransient<IDataParser<ICargo>, CargoParser>();
         servicesCollection.AddTransient<IDataParser<IFactionData>, FactionParser>();
         servicesCollection.AddTransient<IDataParser<IFactionsData>, FactionsParser>();
         servicesCollection.AddTransient<IDataParser<IGate>, GateParser>();

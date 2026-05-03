@@ -46,6 +46,7 @@ internal partial class SpecialItemControl : UserControl
         returnValue.SubItems.Add(source.X);
         returnValue.SubItems.Add(source.Y);
         returnValue.SubItems.Add(source.Z);
+        returnValue.SubItems.Add(source.Comments);
         return returnValue;
     }
 

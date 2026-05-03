@@ -8,6 +8,8 @@ internal class Ship : IShip
     public override string ToString()
         => $"{Owner} {Class} {Macro} {Code} - {Position} - IsKnown {IsKnown} - {Id}";
 
+    public required ICargo Cargo { get; set; }
+
     public required string Class { get; init; }
 
     public required string Code { get; init; }

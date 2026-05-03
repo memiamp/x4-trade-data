@@ -21,7 +21,7 @@ internal partial class MainForm : Form
     private readonly IFileConfiguration _fileConfiguration;
     private readonly ILogger _logger;
     private readonly IModelMapper _modelMapper;
-    private readonly IResourceDataLoader _resourceDataLoader;
+    private readonly TradeData.Services.IResourceDataLoader _resourceDataLoader;
     private readonly ISaveGameLoader _saveGameLoader;
     private readonly ISaveGameFileSystemMonitor _saveGameFileSystemMonitor;
     private readonly IZoneParser _zoneParser;
@@ -41,7 +41,7 @@ internal partial class MainForm : Form
     /// <param name="fileConfiguration">An <see cref="IFileConfiguration"/> that is the file configuration to use.</param>
     /// <param name="logger">An <see cref="ILogger{TCategoryName}"/> that is the logger to use.</param>
     /// <param name="modelMapper">An <see cref="IModelMapper"/> that is the model mapper to use.</param>
-    /// <param name="resourceDataLoader">An <see cref="IResourceDataLoader"/> that is the resource data loader to use.</param>
+    /// <param name="resourceDataLoader">An <see cref="TradeData.Services.IResourceDataLoader"/> that is the resource data loader to use.</param>
     /// <param name="saveGameFileSystemMonitor">An <see cref="ISaveGameFileSystemMonitor"/> that is the save game file system monitor to use.</param>
     /// <param name="saveGameLoader">An <see cref="ISaveGameLoader"/> that is the save game loader to use.</param>
     public MainForm(
@@ -50,7 +50,7 @@ internal partial class MainForm : Form
                     IFileConfiguration fileConfiguration,
                     ILogger<MainForm> logger,
                     IModelMapper modelMapper,
-                    IResourceDataLoader resourceDataLoader,
+                    TradeData.Services.IResourceDataLoader resourceDataLoader,
                     ISaveGameFileSystemMonitor saveGameFileSystemMonitor,
                     ISaveGameLoader saveGameLoader,
                     IZoneParser zoneParser)

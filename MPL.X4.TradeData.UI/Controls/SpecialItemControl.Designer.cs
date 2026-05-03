@@ -37,12 +37,13 @@
             SpecialItemListView_PositionY = new ColumnHeader();
             SpecialItemListView_PositionZ = new ColumnHeader();
             NoItemsLabel = new Label();
+            SpecialItemListView_Comments = new ColumnHeader();
             SuspendLayout();
             // 
             // SpecialItemListView
             // 
             SpecialItemListView.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            SpecialItemListView.Columns.AddRange(new ColumnHeader[] { SpecialItemListView_ItemType, SpecialItemListView_Description, SpecialItemListView_Code, SpecialItemListView_Sector, SpecialItemListView_PositionX, SpecialItemListView_PositionY, SpecialItemListView_PositionZ });
+            SpecialItemListView.Columns.AddRange(new ColumnHeader[] { SpecialItemListView_ItemType, SpecialItemListView_Description, SpecialItemListView_Code, SpecialItemListView_Sector, SpecialItemListView_PositionX, SpecialItemListView_PositionY, SpecialItemListView_PositionZ, SpecialItemListView_Comments });
             SpecialItemListView.FullRowSelect = true;
             SpecialItemListView.Location = new Point(0, 0);
             SpecialItemListView.Name = "SpecialItemListView";
@@ -100,6 +101,11 @@
             NoItemsLabel.Text = "No special items are currently loaded.";
             NoItemsLabel.TextAlign = ContentAlignment.MiddleCenter;
             // 
+            // SpecialItemListView_Comments
+            // 
+            SpecialItemListView_Comments.Text = "Comments";
+            SpecialItemListView_Comments.Width = 200;
+            // 
             // SpecialItemControl
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -121,5 +127,6 @@
         private ColumnHeader SpecialItemListView_PositionY;
         private ColumnHeader SpecialItemListView_PositionZ;
         private Label NoItemsLabel;
+        private ColumnHeader SpecialItemListView_Comments;
     }
 }
