@@ -192,9 +192,14 @@ public static class Constants
         public static class ElementName
         {
             public const string Cargo = "cargo";
+            public const string Engine = "engine";
             public const string Faction = "faction";
             public const string Factions = "factions";
+            public const string Modification = "modification";
+            public const string Paint = "paint";
+            public const string Ship = "ship";
             public const string Ware = "ware";
+            public const string Wares = "wares";
         }
     }
 }

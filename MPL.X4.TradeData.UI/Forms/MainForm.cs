@@ -106,7 +106,7 @@ internal partial class MainForm : Form
     private async Task LoadSaveGame(string filePath)
     {
         _logger.LogInformation("Loading save game file from {SaveGameFilePath}", filePath);
-
+        
         _saveGame = await _saveGameLoader.LoadFrom(filePath);
 
         OnUpdateAfterSaveGameLoaded();

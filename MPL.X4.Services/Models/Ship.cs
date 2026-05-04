@@ -20,6 +20,8 @@ internal class Ship : IShip
 
     public required string Macro { get; init; }
 
+    public required IEnumerable<string> Modifications { get; init; }
+
     public required string Owner { get; init; }
 
     public required ISectorPosition Position { get; init; }

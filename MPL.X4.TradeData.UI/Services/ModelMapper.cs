@@ -1,4 +1,5 @@
-﻿using MPL.X4.TradeData.Services;
+﻿using System.Xml.Linq;
+using MPL.X4.TradeData.Services;
 using MPL.X4.TradeData.UI.Models;
 
 namespace MPL.X4.TradeData.UI.Services;
@@ -33,10 +34,18 @@ internal class ModelMapper : IModelMapper
         };
 
     SpecialItem IModelMapper.MapSpecialItem(string sectorMacro, ILockbox source, IResourceData resourceData)
-        => new()
+    {
+        var comments = $"Lock count: {source.LockCount}";
+
+        if (source.Wares.Any())
+        {
+            comments += $", Contents: {string.Join(", ", source.Wares)}";
+        }
+
+        return new()
         {
             Code = source.Code,
-            Comments = $"Lock count: {source.LockCount}",
+            Comments = comments,
             Description = $"{source.Type}",
             SectorName = resourceData.LookupSectorNameFromMacro(sectorMacro),
             Type = SpecialItemType.Lockbox,
@@ -44,6 +53,7 @@ internal class ModelMapper : IModelMapper
             Y = $"{source.Position.Y:0}",
             Z = $"{source.Position.Z:0}"
         };
+    }
 
     SpecialItem IModelMapper.MapSpecialItem(string sectorMacro, IShip source, IResourceData resourceData)
     {
@@ -54,7 +64,20 @@ internal class ModelMapper : IModelMapper
             comments = string.Join(", ", source.Cargo.Items.Select(x => x.ToString()));
         }
 
-        var returnValue = new SpecialItem
+        if (source.Modifications.Any())
+        {
+            var modifications = $"{source.Modifications.Count()}: {string.Join(", ", source.Modifications)}";
+            if (comments.Length > 0)
+            {
+                comments += $", {modifications}";
+            }
+            else
+            {
+                comments = modifications;
+            }
+        }
+
+        return new SpecialItem
         {
             Code = source.Code,
             Comments = comments,
@@ -65,8 +88,6 @@ internal class ModelMapper : IModelMapper
             Y = $"{source.Position.Y:0}",
             Z = $"{source.Position.Z:0}"
         };
-
-        return returnValue;
     }
 
     IEnumerable<SpecialItem> IModelMapper.MapSpecialItems(IEnumerable<ISector> source, IResourceData resourceData)

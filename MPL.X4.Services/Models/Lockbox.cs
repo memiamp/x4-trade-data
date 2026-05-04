@@ -19,4 +19,6 @@ internal class Lockbox : ILockbox
     public required ISectorPosition Position { get; set; }
 
     public required string Type { get; set; }
+
+    public required IEnumerable<string> Wares { get; init; }
 }

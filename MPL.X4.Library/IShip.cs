@@ -36,6 +36,11 @@ public interface IShip
     string Macro { get; }
 
     /// <summary>
+    /// Gets the modifications applied to the ship.
+    /// </summary>
+    IEnumerable<string> Modifications { get; }
+
+    /// <summary>
     /// Gets the owner of the ship.
     /// </summary>
     string Owner { get; }

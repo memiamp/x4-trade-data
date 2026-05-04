@@ -34,4 +34,9 @@ public interface ILockbox
     /// Gets the lockbox type.
     /// </summary>
     string Type { get; }
+
+    /// <summary>
+    /// Gets explicit wares in the lockbox.
+    /// </summary>
+    IEnumerable<string> Wares { get; }
 }

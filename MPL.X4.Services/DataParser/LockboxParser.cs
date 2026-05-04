@@ -21,6 +21,7 @@ internal class LockboxParser(
         var position = new SectorPosition();
         //var position = new SectorPosition(positionOffset);
         Lockbox? returnValue;
+        List<string> wares = [];
 
         if (reader.TryGetAttribute(Constants.SaveGameFile.AttributeName.Code, out string? code) &&
             reader.TryGetAttribute(Constants.SaveGameFile.AttributeName.Id, out string? id) &&
@@ -35,7 +36,8 @@ internal class LockboxParser(
                 IsKnown = isKnown,
                 LockCount = 0,
                 Position = position,
-                Type = type
+                Type = type,
+                Wares = wares
             };
         }
         else
@@ -50,6 +52,14 @@ internal class LockboxParser(
             {
                 await UpdatePosition(reader, position);
             }
+            else if (reader.CheckNodeMatches(Constants.XmlDataFile.ElementName.Wares, XmlNodeType.Element, 1))
+            {
+                using var waresSubtree = await reader.ReadSubtree();
+
+                var lockboxWares = await ProcessWares(waresSubtree);
+
+                wares.AddRange(lockboxWares);
+            }
             else if (reader.CheckNodeMatches(Constants.SaveGameFile.ElementName.Component, XmlNodeType.Element) &&
                      reader.TryGetAttribute(Constants.SaveGameFile.AttributeName.Class, x => x == Constants.SaveGameFile.AttributeValue.Class.Lock))
             {
@@ -58,6 +68,29 @@ internal class LockboxParser(
         }
 
         returnValue.LockCount = lockCount;
+
+        return returnValue;
+    }
+
+    private async Task<IEnumerable<string>> ProcessWares(IXmlReaderWrapper reader)
+    {
+        /*
+		<wares>
+			<ware ware="inv_quantum_data_shard"/>
+			<ware ware="inv_seminar_piloting_4"/>
+			<ware ware="inv_kyondevice_03"/>
+		</wares>
+        */
+        var returnValue = new List<string>();
+
+        while (await reader.ReadAsync())
+        {
+            if (reader.CheckNodeMatches(Constants.XmlDataFile.ElementName.Ware, XmlNodeType.Element, 1) &&
+                reader.TryGetAttribute(Constants.XmlDataFile.AttributeName.Ware, out string? ware))
+            {
+                returnValue.Add(ware);
+            }
+        }
 
         return returnValue;
     }
