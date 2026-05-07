@@ -1,9 +1,9 @@
-﻿namespace MPL.X4;
+﻿namespace MPL.X4.GameResources.Data;
 
 /// <summary>
-/// An interface that defines a zone offset.
+/// An interface that defines a zone offset data model.
 /// </summary>
-public interface IZoneOffset : IOffset
+public interface IZoneOffsetData : IOffsetData
 {
     /// <summary>
     /// Gets the macro name of the zone offset.

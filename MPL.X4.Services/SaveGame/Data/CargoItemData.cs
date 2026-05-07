@@ -1,9 +1,9 @@
-﻿namespace MPL.X4.Services.Models;
+﻿namespace MPL.X4.SaveGame.Data;
 
 /// <summary>
-/// A class that implements an item of cargo.
+/// A class that implements a data model of an item of cargo.
 /// </summary>
-internal class CargoItem : ICargoItem
+internal class CargoItemData : ICargoItemData
 {
     public override string ToString()
         => $"{Ware} ({Amount})";

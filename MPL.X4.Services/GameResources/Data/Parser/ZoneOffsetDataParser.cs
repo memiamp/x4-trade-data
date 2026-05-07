@@ -1,32 +1,33 @@
 ﻿using System.Xml;
 using Microsoft.Extensions.Logging;
-using MPL.X4.Services.Models;
+using MPL.X4.Models;
+using MPL.X4.Parser;
 
-namespace MPL.X4.Services.DataParser;
+namespace MPL.X4.GameResources.Data.Parser;
 
 /// <summary>
-/// A class that implements a data parser for an <see cref="IZoneOffset"/>.
+/// A class that implements a data parser for an <see cref="IZoneOffseDatat"/>.
 /// </summary>
 /// <param name="logger">An <see cref="ILogger{TCategoryName}"/> that is the logger to use.</param>
 /// <param name="offsetParser">An <see cref="IDataParser{IOffset}"/> that is the offset parser to use.</param>
-internal class ZoneOffsetParser(
-                                ILogger<ZoneOffsetParser> logger,
-                                IDataParser<IOffset> offsetParser)
-    : DataParserBase<IZoneOffset>(logger)
+internal class ZoneOffsetDataParser(
+                                ILogger<ZoneOffsetDataParser> logger,
+                                IDataParser<IOffsetData> offsetParser)
+    : DataParserBase<IZoneOffsetData>(logger)
 {
-    private protected override async Task<IZoneOffset> OnParse(IXmlReaderWrapper reader)
+    private protected override async Task<IZoneOffsetData> OnParse(IXmlReaderWrapper reader)
     {
         var macro = string.Empty;
-        ISectorPosition position = ISectorPosition.GetDefault();
-        ISectorRotation rotation = ISectorRotation.GetDefault();
+        var position = IPosition3D.GetDefault();
+        var rotation = IRotation3D.GetDefault();
 
         while (await reader.ReadAsync())
         {
             if (reader.CheckNodeMatches(Constants.SaveGameFile.ElementName.Offset, XmlNodeType.Element, 1))
             {
-                var offsetSubtree = await reader.ReadSubtree();
+                var subtree = await reader.ReadSubtree();
 
-                var offset = await offsetParser.Parse(offsetSubtree);
+                var offset = await offsetParser.Parse(subtree);
 
                 position = offset.Position;
                 rotation = offset.Rotation;
@@ -38,7 +39,7 @@ internal class ZoneOffsetParser(
             }
         }
 
-        return new ZoneOffset
+        return new ZoneOffsetData
         {
             MacroName = macro,
             Position = position,

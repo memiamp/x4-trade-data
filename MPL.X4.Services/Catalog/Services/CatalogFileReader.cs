@@ -1,9 +1,8 @@
 ﻿using System.Runtime.CompilerServices;
 using System.Text;
 using Microsoft.Extensions.Logging;
-using MPL.X4.Services.Models;
 
-namespace MPL.X4.Services;
+namespace MPL.X4.Catalog.Services;
 
 /// <summary>
 /// A class that implements a X4 catalog file reader.
@@ -204,6 +203,9 @@ internal class CatalogFileReader(
             throw new EndOfStreamException("Could not read the requested number of bytes.");
         }
     }
+
+    Task<IEnumerable<ICatalogIndexEntry>> ICatalogFileReader.GetIndex(string catalogPath, bool recursiveSearch)
+        => ((ICatalogFileReader)this).ParseIndexes(catalogPath, null, null, recursiveSearch);
 
     Task<IEnumerable<ICatalogIndexEntry>> ICatalogFileReader.ParseIndex(string catalogPath, int catalogId, string? fileFilter, string? fileExtension)
     {

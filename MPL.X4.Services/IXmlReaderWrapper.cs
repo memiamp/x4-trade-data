@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Xml;
 
-namespace MPL.X4.Services;
+namespace MPL.X4;
 
 /// <summary>
 /// An interface that defines the behaviour of a wrapper around a <see cref="XmlReader"/>.

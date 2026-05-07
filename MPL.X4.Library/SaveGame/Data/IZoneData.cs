@@ -1,9 +1,9 @@
-﻿namespace MPL.X4;
+﻿namespace MPL.X4.SaveGame.Data;
 
 /// <summary>
-/// An interface that defines a zone.
+/// An interface that defines a data model of a zone.
 /// </summary>
-public interface IZone
+public interface IZoneData
 {
     /// <summary>
     /// Gets the code of the zone.
@@ -13,7 +13,7 @@ public interface IZone
     /// <summary>
     /// Gets the gates in the zone.
     /// </summary>
-    IEnumerable<IGate> Gates { get; }
+    IEnumerable<IGateData> Gates { get; }
 
     /// <summary>
     /// Gets the identifier of the zone.
@@ -28,20 +28,20 @@ public interface IZone
     /// <summary>
     /// Gets the lockboxes in the zone.
     /// </summary>
-    IEnumerable<ILockbox> Lockboxes { get; }
+    IEnumerable<ILockboxData> Lockboxes { get; }
 
     /// <summary>
     /// Gets the position of the zone.
     /// </summary>
-    ISectorPosition Position { get; }
+    IPosition3D Position { get; }
 
     /// <summary>
     /// Gets the ships in the zone.
     /// </summary>
-    IEnumerable<IShip> Ships { get; }
+    IEnumerable<IShipData> Ships { get; }
 
     /// <summary>
     /// Gets the stations in the zone.
     /// </summary>
-    IEnumerable<IStation> Stations { get; }
+    IEnumerable<IStationData> Stations { get; }
 }

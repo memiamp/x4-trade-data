@@ -1,10 +1,8 @@
-﻿using MPL.X4.Data;
-
-namespace MPL.X4.Services.Data;
+﻿namespace MPL.X4.GameResources.Data;
 
 /// <summary>
-/// A class that implements a data model of a collection of factions.
+/// A class that implements a dictionary of faction data models.
 /// </summary>
-internal class FactionsData : DictionaryCollection<string, IFactionData>, IFactionsData
+internal class FactionDataDictionary : DictionaryCollection<string, IFactionData>, IFactionDataDictionary
 {
 }

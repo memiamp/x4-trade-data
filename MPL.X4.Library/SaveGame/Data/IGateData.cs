@@ -1,9 +1,9 @@
-﻿namespace MPL.X4;
+﻿namespace MPL.X4.SaveGame.Data;
 
 /// <summary>
-/// An interface that defines a gate.
+/// An interface that defines a data model of a gate.
 /// </summary>
-public interface IGate
+public interface IGateData
 {
     /// <summary>
     /// Gets the code of the gate.
@@ -23,5 +23,5 @@ public interface IGate
     /// <summary>
     /// Gets the position of the gate.
     /// </summary>
-    ISectorPosition Position { get; }
+    IPosition3D Position { get; }
 }

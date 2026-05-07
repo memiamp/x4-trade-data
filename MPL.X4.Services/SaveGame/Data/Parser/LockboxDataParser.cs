@@ -1,26 +1,27 @@
 ﻿using System.Xml;
 using Microsoft.Extensions.Logging;
-using MPL.X4.Services.Models;
+using MPL.X4.DataParser;
+using MPL.X4.Parser;
 
-namespace MPL.X4.Services.DataParser;
+namespace MPL.X4.SaveGame.Data.Parser;
 
 /// <summary>
-/// A class that implements a data parser for a <see cref="ILockbox"/>.
+/// A class that implements a data parser for a <see cref="ILockboxData"/>.
 /// </summary>
 /// <param name="logger">An <see cref="ILogger{TCategoryName}"/> that is the logger to use.</param>
-/// <param name="positionParser">An <see cref="IDataParser{ISectorPosition}"/> that is the position parser to use.</param>
-internal class LockboxParser(
-                             ILogger<LockboxParser> logger,
-                             IDataParser<ISectorPosition> positionParser)
-    : PositionalDataParserBase<ILockbox>(logger, positionParser)
+/// <param name="positionParser">An <see cref="IDataParser{IPosition3D}"/> that is the position parser to use.</param>
+internal class LockboxDataParser(
+                                 ILogger<LockboxDataParser> logger,
+                                 IDataParser<IPosition3D> positionParser)
+    : PositionalDataParserBase<ILockboxData>(logger, positionParser)
 {
-    private protected override async Task<ILockbox> OnParse(IXmlReaderWrapper reader)
+    private protected override async Task<ILockboxData> OnParse(IXmlReaderWrapper reader)
     //private protected override async Task<ILockbox> OnParse(IXmlReaderWrapper reader, ISectorPosition positionOffset)
     {
         var lockCount = 0;
-        var position = new SectorPosition();
+        var position = new Position3D();
         //var position = new SectorPosition(positionOffset);
-        Lockbox? returnValue;
+        LockboxData? returnValue;
         List<string> wares = [];
 
         if (reader.TryGetAttribute(Constants.SaveGameFile.AttributeName.Code, out string? code) &&
@@ -29,7 +30,7 @@ internal class LockboxParser(
         {
             var isKnown = GetIsKnownToPlayer(reader);
 
-            returnValue = new Lockbox
+            returnValue = new LockboxData
             {
                 Code = code,
                 Id = id,

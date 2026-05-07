@@ -38,7 +38,7 @@ public class TextResourceReference : ITextResourceReference
     }
 
     public override string ToString()
-      => $"{_pageId},{_textId}";
+        => $"{_pageId},{_textId}";
 
     int ITextResourceReference.PageId => _pageId;
 

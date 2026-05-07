@@ -1,15 +1,15 @@
 ﻿namespace MPL.X4;
 
 /// <summary>
-/// An interface that defines a sector position.
+/// An interface that defines a 3D position.
 /// </summary>
-public interface ISectorPosition
+public interface IPosition3D
 {
     /// <summary>
-    /// Gets the default sector position.
+    /// Gets the default position.
     /// </summary>
-    public static ISectorPosition GetDefault()
-        => new SectorPosition
+    public static IPosition3D GetDefault()
+        => new Position3D
         {
             X = 0,
             Y = 0,

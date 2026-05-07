@@ -1,12 +1,12 @@
-﻿namespace MPL.X4;
+﻿namespace MPL.X4.SaveGame.Data;
 
 /// <summary>
-/// An interface that defines a save game.
+/// An interface that defines a data model of a save game.
 /// </summary>
-public interface ISaveGame
+public interface ISaveGameData
 {
     /// <summary>
     /// Gets the universe from the save game.
     /// </summary>
-    IUniverse Universe { get; }
+    IUniverseData Universe { get; }
 }

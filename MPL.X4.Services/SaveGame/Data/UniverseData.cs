@@ -1,12 +1,12 @@
-﻿namespace MPL.X4.Services.Models;
+﻿namespace MPL.X4.SaveGame.Data;
 
 /// <summary>
-/// A class that implements a universe.
+/// A class that implements a data model of a universe.
 /// </summary>
-internal class Universe : IUniverse
+internal class UniverseData : IUniverseData
 {
     public override string ToString()
         => $"Sectors {Sectors.Count()}";
 
-    public required IEnumerable<ISector> Sectors { get; init; }
+    public required IEnumerable<ISectorData> Sectors { get; init; }
 }

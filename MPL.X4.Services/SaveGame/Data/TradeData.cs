@@ -1,9 +1,9 @@
-﻿namespace MPL.X4.Services.Models;
+﻿namespace MPL.X4.SaveGame.Data;
 
 /// <summary>
-/// A class that implements a trade.
+/// A class that implements a data model of a trade.
 /// </summary>
-internal class Trade : ITrade
+internal class TradeData : ITradeData
 {
     public override string ToString()
         => $"{Ware} {Price} - Buy {AmountToBuy} Sell {AmountToSell} - {Id}";

@@ -1,14 +1,14 @@
-﻿namespace MPL.X4.Services.Models;
+﻿namespace MPL.X4.SaveGame.Data;
 
 /// <summary>
-/// A class that implements a ship.
+/// A class that implements a data model of a ship.
 /// </summary>
-internal class Ship : IShip
+internal class ShipData : IShipData
 {
     public override string ToString()
         => $"{Owner} {Class} {Macro} {Code} - {Position} - IsKnown {IsKnown} - {Id}";
 
-    public required ICargo Cargo { get; set; }
+    public required ICargoData Cargo { get; set; }
 
     public required string Class { get; init; }
 
@@ -24,5 +24,5 @@ internal class Ship : IShip
 
     public required string Owner { get; init; }
 
-    public required ISectorPosition Position { get; init; }
+    public required IPosition3D Position { get; init; }
 }

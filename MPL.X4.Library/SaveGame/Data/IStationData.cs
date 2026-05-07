@@ -1,9 +1,9 @@
-﻿namespace MPL.X4;
+﻿namespace MPL.X4.SaveGame.Data;
 
 /// <summary>
-/// An interface that defines a station.
+/// An interface that defines a data model of a station.
 /// </summary>
-public interface IStation
+public interface IStationData
 {
     /// <summary>
     /// Gets the code of the station.
@@ -33,10 +33,10 @@ public interface IStation
     /// <summary>
     /// Gets the position of the station.
     /// </summary>
-    ISectorPosition Position { get; }
+    IPosition3D Position { get; }
 
     /// <summary>
     /// Gets the trades on offer at the station.
     /// </summary>
-    IEnumerable<ITrade> Trades { get; }
+    IEnumerable<ITradeData> Trades { get; }
 }

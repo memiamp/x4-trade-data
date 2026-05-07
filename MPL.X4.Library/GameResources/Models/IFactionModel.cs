@@ -1,9 +1,9 @@
-﻿namespace MPL.X4.Models;
+﻿namespace MPL.X4.GameResources.Models;
 
 /// <summary>
-/// An interface that defines a faction.
+/// An interface that defines a faction model.
 /// </summary>
-public interface IFaction
+public interface IFactionModel
 {
     /// <summary>
     /// Gets the acronym of the faction.
@@ -13,7 +13,7 @@ public interface IFaction
     /// <summary>
     /// Gets the colour of the faction.
     /// </summary>
-    IColour Colour { get; }
+    IColourModel Colour { get; }
 
     /// <summary>
     /// Gets the identifier of the faction.

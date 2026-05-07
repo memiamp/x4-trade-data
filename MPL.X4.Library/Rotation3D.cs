@@ -1,15 +1,15 @@
 ﻿namespace MPL.X4;
 
 /// <summary>
-/// A class that implements a sector rotation.
+/// A class that implements a 3D rotation.
 /// </summary>
-public class SectorRotation() : ISectorRotation
+public class Rotation3D() : IRotation3D
 {
     /// <summary>
-    /// Creates a new instance of the <see cref="SectorRotation"/> class by copying the values from the specified <paramref name="source"/>.
+    /// Creates a new instance of the <see cref="Rotation3D"/> class by copying the values from the specified <paramref name="source"/>.
     /// </summary>
-    /// <param name="source">An <see cref="ISectorRotation"/> to copy values from.</param>
-    public SectorRotation(ISectorRotation source)
+    /// <param name="source">An <see cref="IRotation3D"/> to copy values from.</param>
+    public Rotation3D(IRotation3D source)
         : this()
     {
         Pitch = source.Pitch;

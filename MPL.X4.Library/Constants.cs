@@ -43,26 +43,25 @@ public static class Constants
     }
 
     /// <summary>
+    /// Constants relating to file extensions
+    /// </summary>
+    public static class FileExtensions
+    {
+        public const string GzipFile = ".gz";
+    }
+
+    /// <summary>
     /// Constants relating to X4 resource files.
     /// </summary>
     public static class ResourceFile
     {
         public static class AttributeName
         {
-            public const string ColourAlpha = "a";
-            public const string ColourBlue = "b";
-            public const string ColourGlow = "glow";
-            public const string ColourGreen = "g";
-            public const string ColourId = "id";
-            public const string ColourRed = "r";
             public const string FactionId = "id";
             public const string Macro = "macro";
-            public const string MappingId = "id";
             public const string Name = "name";
-            public const string PageId = "id";
             public const string Ref = "ref";
             public const string ShortName = "shortname";
-            public const string TextId = "id";
         }
 
         public static class AttributeValue
@@ -75,18 +74,11 @@ public static class Constants
 
         public static class ElementName
         {
-            public const string Colour = "color";
-            public const string Colours = "colors";
             public const string Connection = "connection";
-            public const string Dataset = "dataset";
             public const string Faction = "faction";
             public const string Identification = "identification";
             public const string Macro = "macro";
-            public const string Mapping = "mapping";
-            public const string Mappings = "mappings";
             public const string Offset = "offset";
-            public const string Page = "page";
-            public const string TextEntry = "t";
         }
 
         public static class PageId
@@ -186,18 +178,40 @@ public static class Constants
         public static class AttributeName
         {
             public const string Amount = "amount";
+            public const string ColourAlpha = "a";
+            public const string ColourBlue = "b";
+            public const string ColourGlow = "glow";
+            public const string ColourGreen = "g";
+            public const string ColourId = "id";
+            public const string ColourRed = "r";
+            public const string Description = "descr";
+            public const string Macro = "macro";
+            public const string MappingId = "id";
+            public const string PageId = "id";
+            public const string Reference = "ref";
+            public const string TextId = "id";
+            public const string Title = "title";
             public const string Ware = "ware";
         }
 
         public static class ElementName
         {
             public const string Cargo = "cargo";
+            public const string Colour = "color";
+            public const string Colours = "colors";
+            public const string Dataset = "dataset";
+            public const string Defaults = "defaults";
             public const string Engine = "engine";
             public const string Faction = "faction";
             public const string Factions = "factions";
+            public const string Macros = "macros";
+            public const string Mapping = "mapping";
+            public const string Mappings = "mappings";
             public const string Modification = "modification";
+            public const string Page = "page";
             public const string Paint = "paint";
             public const string Ship = "ship";
+            public const string TextEntry = "t";
             public const string Ware = "ware";
             public const string Wares = "wares";
         }

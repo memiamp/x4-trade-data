@@ -1,26 +1,26 @@
-﻿namespace MPL.X4.Services.Models;
+﻿namespace MPL.X4.SaveGame.Data;
 
 /// <summary>
-/// A class that implements a zone.
+/// A class that implements a data model for a zone.
 /// </summary>
-internal class Zone : IZone
+internal class ZoneData : IZoneData
 {
     public override string ToString()
         => $"{Code} {Position} - Gates {Gates.Count()} Lockboxes {Lockboxes.Count()} Ships {Ships.Count()} Stations {Stations.Count()} - {Id}";
 
     public required string Code { get; init; }
 
-    public required IEnumerable<IGate> Gates { get; init; }
+    public required IEnumerable<IGateData> Gates { get; init; }
 
     public required string Id { get; init; }
 
     public required bool IsKnown { get; init; }
   
-    public required IEnumerable<ILockbox> Lockboxes { get; init; }
+    public required IEnumerable<ILockboxData> Lockboxes { get; init; }
 
-    public required ISectorPosition Position { get; init; }
+    public required IPosition3D Position { get; init; }
 
-    public required IEnumerable<IShip> Ships { get; init; }
+    public required IEnumerable<IShipData> Ships { get; init; }
 
-    public required IEnumerable<IStation> Stations { get; init; }
+    public required IEnumerable<IStationData> Stations { get; init; }
 }

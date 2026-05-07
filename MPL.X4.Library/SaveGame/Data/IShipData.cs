@@ -1,14 +1,14 @@
-﻿namespace MPL.X4;
+﻿namespace MPL.X4.SaveGame.Data;
 
 /// <summary>
-/// An interface that defines a ship.
+/// An interface that defines a data model of a ship.
 /// </summary>
-public interface IShip
+public interface IShipData
 {
     /// <summary>
     /// Gets the ship cargo.
     /// </summary>
-    ICargo Cargo { get; }
+    ICargoData Cargo { get; }
 
     /// <summary>
     /// Gets the class of the ship.
@@ -48,5 +48,5 @@ public interface IShip
     /// <summary>
     /// Gets the position of the ship.
     /// </summary>
-    ISectorPosition Position { get; }
+    IPosition3D Position { get; }
 }

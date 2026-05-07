@@ -1,4 +1,4 @@
-﻿namespace MPL.X4.Services.Models;
+﻿namespace MPL.X4.Catalog;
 
 /// <summary>
 /// A class that implements a catalog index file entry.

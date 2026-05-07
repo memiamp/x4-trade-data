@@ -1,12 +1,12 @@
-﻿namespace MPL.X4.Services.Models;
+﻿namespace MPL.X4.SaveGame.Data;
 
 /// <summary>
-/// A class that implements a cargo.
+/// A class that implements a data model of a cargo.
 /// </summary>
-internal class Cargo : ICargo
+internal class CargoData : ICargoData
 {
     public override string ToString()
         => $"Cargo count: {Items.Count()}";
 
-    public required IEnumerable<ICargoItem> Items { get; init; }
+    public required IEnumerable<ICargoItemData> Items { get; init; }
 }

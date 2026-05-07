@@ -1,9 +1,9 @@
 ﻿using System.Xml;
 using Microsoft.Extensions.Logging;
-using MPL.X4.Services.DataParser;
-using MPL.X4.Services.Models;
+using MPL.X4.Parser;
+using MPL.X4.SaveGame.Data;
 
-namespace MPL.X4.Services;
+namespace MPL.X4;
 
 /// <summary>
 /// A class that implements a loader of save games.
@@ -13,13 +13,13 @@ namespace MPL.X4.Services;
 /// <param name="xmlReaderFactory">An <see cref="IXmlReaderWrapperFactory"/> that is the XmlReader factory to use.</param>
 internal class SaveGameLoader(
                               ILogger<SaveGameLoader> logger,
-                              IDataParser<IUniverse> universeParser,
+                              IDataParser<IUniverseData> universeParser,
                               IXmlReaderWrapperFactory xmlReaderFactory)
     : ISaveGameLoader
 {
-    async Task<ISaveGame> ISaveGameLoader.LoadFrom(string sourcePath)
+    async Task<ISaveGameData> ISaveGameLoader.LoadFrom(string sourcePath)
     {
-        ISaveGame? returnValue = null;
+        ISaveGameData? returnValue = null;
 
         using var reader = xmlReaderFactory.CreateXmlReader(sourcePath);
 
@@ -30,7 +30,7 @@ internal class SaveGameLoader(
                 using var universeSubtree = await reader.ReadSubtree();
 
                 var universe = await universeParser.Parse(universeSubtree);
-                returnValue = new SaveGame
+                returnValue = new SaveGameData
                 {
                     Universe = universe
                 };

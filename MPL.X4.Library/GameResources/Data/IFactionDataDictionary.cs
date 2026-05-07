@@ -1,8 +1,8 @@
-﻿namespace MPL.X4.Data;
+﻿namespace MPL.X4.GameResources.Data;
 
 /// <summary>
-/// An interface that defines the data model of a collection of factions.
+/// An interface that defines a dictionary of faction data models.
 /// </summary>
-public interface IFactionsData : IDictionaryCollection<string, IFactionData>
+public interface IFactionDataDictionary : IDictionaryCollection<string, IFactionData>
 {
 }

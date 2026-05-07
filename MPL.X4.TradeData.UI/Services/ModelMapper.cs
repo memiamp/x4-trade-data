@@ -1,5 +1,4 @@
-﻿using System.Xml.Linq;
-using MPL.X4.TradeData.Services;
+﻿using MPL.X4.GameResources.Data;
 using MPL.X4.TradeData.UI.Models;
 
 namespace MPL.X4.TradeData.UI.Services;
@@ -9,18 +8,19 @@ namespace MPL.X4.TradeData.UI.Services;
 /// </summary>
 internal class ModelMapper : IModelMapper
 {
-    Sector IModelMapper.MapSector(ISector source, IResourceData resourceData)
+    Sector IModelMapper.MapSector(ISector source, IGameResourceData resourceData)
         => new()
         {
             AbandonedShipCount = source.Ships.Count(x => x.Owner == Constants.SaveGameFile.AttributeValue.Owner.Ownerless),
             Code = source.Code,
             LockboxCount = source.Lockboxes.Count(),
-            Name = resourceData.LookupSectorNameFromMacro(source.Macro),
+            Name = source.Macro,
+            //Name = resourceData.LookupSectorNameFromMacro(source.Macro),
             ShipCount = source.Ships.Count(),
             StationCount = source.Stations.Count()
         };
 
-    IEnumerable<Sector> IModelMapper.MapSectors(IEnumerable<ISector> source, IResourceData resourceData)
+    IEnumerable<Sector> IModelMapper.MapSectors(IEnumerable<ISector> source, IGameResourceData resourceData)
         => source.Select(x => ((IModelMapper)this).MapSector(x, resourceData));
 
     ShipClass IModelMapper.MapShipClass(string source)
@@ -33,7 +33,7 @@ internal class ModelMapper : IModelMapper
             _ => ShipClass.Unknown
         };
 
-    SpecialItem IModelMapper.MapSpecialItem(string sectorMacro, ILockbox source, IResourceData resourceData)
+    SpecialItem IModelMapper.MapSpecialItem(string sectorMacro, ILockbox source, IGameResourceData resourceData)
     {
         var comments = $"Lock count: {source.LockCount}";
 
@@ -47,7 +47,8 @@ internal class ModelMapper : IModelMapper
             Code = source.Code,
             Comments = comments,
             Description = $"{source.Type}",
-            SectorName = resourceData.LookupSectorNameFromMacro(sectorMacro),
+            SectorName = sectorMacro,
+            //SectorName = resourceData.LookupSectorNameFromMacro(sectorMacro),
             Type = SpecialItemType.Lockbox,
             X = $"{source.Position.X:0}",
             Y = $"{source.Position.Y:0}",
@@ -55,7 +56,7 @@ internal class ModelMapper : IModelMapper
         };
     }
 
-    SpecialItem IModelMapper.MapSpecialItem(string sectorMacro, IShip source, IResourceData resourceData)
+    SpecialItem IModelMapper.MapSpecialItem(string sectorMacro, IShip source, IGameResourceData resourceData)
     {
         var comments = string.Empty;
 
@@ -82,7 +83,8 @@ internal class ModelMapper : IModelMapper
             Code = source.Code,
             Comments = comments,
             Description = $"{((IModelMapper)this).MapShipClass(source.Class)} - {source.Macro}",
-            SectorName = resourceData.LookupSectorNameFromMacro(sectorMacro),
+            SectorName = sectorMacro,
+            //SectorName = resourceData.LookupSectorNameFromMacro(sectorMacro),
             Type = SpecialItemType.Ship,
             X = $"{source.Position.X:0}",
             Y = $"{source.Position.Y:0}",
@@ -90,7 +92,7 @@ internal class ModelMapper : IModelMapper
         };
     }
 
-    IEnumerable<SpecialItem> IModelMapper.MapSpecialItems(IEnumerable<ISector> source, IResourceData resourceData)
+    IEnumerable<SpecialItem> IModelMapper.MapSpecialItems(IEnumerable<ISector> source, IGameResourceData resourceData)
     {
         var returnValue = new List<SpecialItem>();
 
@@ -122,7 +124,7 @@ internal class ModelMapper : IModelMapper
         return returnValue;
     }
 
-    TradeOffer IModelMapper.MapTradeOffer(ISector sector, IStation station, ITrade trade, IResourceData resourceData)
+    TradeOffer IModelMapper.MapTradeOffer(ISector sector, IStation station, ITrade trade, IGameResourceData resourceData)
     {
         var tradeType = (trade.AmountToBuy, trade.AmountToSell) switch
         {
@@ -138,9 +140,11 @@ internal class ModelMapper : IModelMapper
             _ => 0
         };
 
-        var sectorName = resourceData.LookupSectorNameFromMacro(sector.Macro);
+        var sectorName = sector.Macro;
+        //var sectorName = resourceData.LookupSectorNameFromMacro(sector.Macro);
         var stationName = station.NameId is not null
-                                                     ? resourceData.Lookup(station.NameId)
+                                                     ? station.NameId?.ToString() ?? station.Code
+                                                     //? resourceData.Lookup(station.NameId)
                                                      : station.Code;
 
         return new TradeOffer()
@@ -156,7 +160,7 @@ internal class ModelMapper : IModelMapper
         };
     }
 
-    IEnumerable<TradeOffer> IModelMapper.MapTradeOffers(IEnumerable<ISector> source, IResourceData resourceData)
+    IEnumerable<TradeOffer> IModelMapper.MapTradeOffers(IEnumerable<ISector> source, IGameResourceData resourceData)
         => source
                  .SelectMany(x => x.Stations,
                              (sector, station) => new

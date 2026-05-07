@@ -1,24 +1,25 @@
 ﻿using System.Xml;
 using Microsoft.Extensions.Logging;
-using MPL.X4.Services.Models;
+using MPL.X4.DataParser;
+using MPL.X4.Parser;
 
-namespace MPL.X4.Services.DataParser;
+namespace MPL.X4.SaveGame.Data.Parser;
 
 /// <summary>
-/// A class that implements a data parser for a <see cref="IStation"/>.
+/// A class that implements a data parser for a <see cref="IStationData"/>.
 /// </summary>
 /// <param name="logger">An <see cref="ILogger{TCategoryName}"/> that is the logger to use.</param>
 /// <param name="positionParser">An <see cref="IDataParser{ISectorPosition}"/> that is the position parser to use.</param>
-/// <param name="tradeParser">An <see cref="IDataParser{ITrade}"/> that is the trade parser to use.</param>
-internal class StationParser(
-                             ILogger<StationParser> logger,
-                             IDataParser<ISectorPosition> positionParser,
-                             IDataParser<ITrade> tradeParser)
-    : PositionalDataParserBase<IStation>(logger, positionParser)
+/// <param name="tradeParser">An <see cref="IDataParser{ITradeData}"/> that is the trade parser to use.</param>
+internal class StationDataParser(
+                                 ILogger<StationDataParser> logger,
+                                 IDataParser<IPosition3D> positionParser,
+                                 IDataParser<ITradeData> tradeParser)
+    : PositionalDataParserBase<IStationData>(logger, positionParser)
 {
-    private async Task<IEnumerable<ITrade>> LoadProductionTrades(IXmlReaderWrapper reader)
+    private async Task<IEnumerable<ITradeData>> LoadProductionTrades(IXmlReaderWrapper reader)
     {
-        List<ITrade> returnValue = [];
+        List<ITradeData> returnValue = [];
 
         while (await reader.ReadAsync())
         {
@@ -32,9 +33,9 @@ internal class StationParser(
         return returnValue;
     }
 
-    private async Task<IEnumerable<ITrade>> LoadTrades(IXmlReaderWrapper reader)
+    private async Task<IEnumerable<ITradeData>> LoadTrades(IXmlReaderWrapper reader)
     {
-        IEnumerable<ITrade> returnValue = [];
+        IEnumerable<ITradeData> returnValue = [];
 
         while (await reader.ReadAsync())
         {
@@ -48,13 +49,13 @@ internal class StationParser(
         return returnValue;
     }
 
-    private protected override async Task<IStation> OnParse(IXmlReaderWrapper reader)
+    private protected override async Task<IStationData> OnParse(IXmlReaderWrapper reader)
     //private protected override async Task<IStation> OnParse(IXmlReaderWrapper reader, ISectorPosition positionOffset)
     {
-        SectorPosition position = new();
+        Position3D position = new();
         //SectorPosition position = new(positionOffset);
-        Station? returnValue;
-        List<ITrade> trades = [];
+        StationData? returnValue;
+        List<ITradeData> trades = [];
 
         if (reader.TryGetAttribute(Constants.SaveGameFile.AttributeName.Code, out string? code) &&
             reader.TryGetAttribute(Constants.SaveGameFile.AttributeName.Id, out string? id) &&
@@ -66,7 +67,7 @@ internal class StationParser(
                 ? new TextResourceReference(baseName)
                 : null;
 
-            returnValue = new Station
+            returnValue = new StationData
             {
                 Code = code,
                 Id = id,

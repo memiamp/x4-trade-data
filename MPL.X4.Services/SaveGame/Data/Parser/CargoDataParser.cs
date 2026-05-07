@@ -1,21 +1,21 @@
 ﻿using System.Xml;
 using Microsoft.Extensions.Logging;
-using MPL.X4.Services.Models;
+using MPL.X4.Parser;
 
-namespace MPL.X4.Services.DataParser;
+namespace MPL.X4.SaveGame.Data.Parser;
 
 /// <summary>
-/// A class that implements a data parser for a <see cref="ICargo"/>.
+/// A class that implements a data parser for a <see cref="ICargoData"/>.
 /// </summary>
 /// <param name="logger">An <see cref="ILogger{TCategoryName}"/> that is the logger to use.</param>
-internal class CargoParser(
-                           ILogger<CargoParser> logger)
-    : DataParserBase<ICargo>(logger)
+internal class CargoDataParser(
+                               ILogger<CargoDataParser> logger)
+    : DataParserBase<ICargoData>(logger)
 {
-    private protected override async Task<ICargo> OnParse(IXmlReaderWrapper reader)
+    private protected override async Task<ICargoData> OnParse(IXmlReaderWrapper reader)
     {
-        var cargoItems = new List<ICargoItem>();
-        var returnValue = new Cargo
+        var cargoItems = new List<ICargoItemData>();
+        var returnValue = new CargoData
         {
             Items = cargoItems
         };
@@ -26,7 +26,7 @@ internal class CargoParser(
                 reader.TryGetAttribute(Constants.XmlDataFile.AttributeName.Amount, out int? amount) &&
                 reader.TryGetAttribute(Constants.XmlDataFile.AttributeName.Ware, out string? ware))
             {
-                var cargoItem = new CargoItem
+                var cargoItem = new CargoItemData
                 {
                     Amount = amount.Value,
                     Ware = ware

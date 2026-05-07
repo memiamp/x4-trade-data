@@ -1,9 +1,9 @@
-﻿namespace MPL.X4.Services.Models;
+﻿namespace MPL.X4.SaveGame.Data;
 
 /// <summary>
-/// A class that implements a station.
+/// A class that implements a data model of a station.
 /// </summary>
-internal class Station : IStation
+internal class StationData : IStationData
 {
     public override string ToString()
         => $"{Owner} {NameId} {Code} - Trades {Trades.Count()} IsKnown {IsKnown} - {Id}";
@@ -18,7 +18,7 @@ internal class Station : IStation
 
     public required string Owner { get; init; }
 
-    public required ISectorPosition Position { get; init; }
+    public required IPosition3D Position { get; init; }
 
-    public required IEnumerable<ITrade> Trades { get; init; }
+    public required IEnumerable<ITradeData> Trades { get; init; }
 }

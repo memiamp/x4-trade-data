@@ -1,9 +1,9 @@
-﻿namespace MPL.X4;
+﻿namespace MPL.X4.SaveGame.Data;
 
 /// <summary>
-/// An interface that defines a lockbox.
+/// An interface that defines a data model of a lockbox.
 /// </summary>
-public interface ILockbox
+public interface ILockboxData
 {
     /// <summary>
     /// Gets the code of the lockbox.
@@ -28,7 +28,7 @@ public interface ILockbox
     /// <summary>
     /// Gets the position of the lockbox.
     /// </summary>
-    ISectorPosition Position { get; }
+    IPosition3D Position { get; }
 
     /// <summary>
     /// Gets the lockbox type.

@@ -1,4 +1,4 @@
-﻿namespace MPL.X4;
+﻿namespace MPL.X4.Catalog;
 
 /// <summary>
 /// An interface that defines a catalog index file entry.

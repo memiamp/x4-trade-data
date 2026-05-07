@@ -1,17 +1,17 @@
-﻿namespace MPL.X4;
+﻿namespace MPL.X4.GameResources.Data;
 
 /// <summary>
-/// An interface that defines an offset.
+/// An interface that defines an offset data model.
 /// </summary>
-public interface IOffset
+public interface IOffsetData
 {
     /// <summary>
     /// Gets the position.
     /// </summary>
-    ISectorPosition Position { get; }
+    IPosition3D Position { get; }
 
     /// <summary>
     /// Gets the rotation.
     /// </summary>
-    ISectorRotation Rotation { get; }
+    IRotation3D Rotation { get; }
 }

@@ -1,52 +1,54 @@
 ﻿using System.Xml;
 using Microsoft.Extensions.Logging;
-using MPL.X4.Services.Models;
+using MPL.X4.DataParser;
+using MPL.X4.GameResources.Data;
+using MPL.X4.Parser;
 
-namespace MPL.X4.Services.DataParser;
+namespace MPL.X4.SaveGame.Data.Parser;
 
-public interface IZoneParser : IDataParser<IZone>
+public interface IZoneDataParser : IDataParser<IZoneData>
 {
     /// <summary>
     /// Gets or sets the zone offsets.
     /// </summary>
-    Dictionary<string, IZoneOffset> ZoneOffsets { get; set; }
+    Dictionary<string, IZoneOffsetData> ZoneOffsets { get; set; }
 }
 /// <summary>
-/// A class that implements a data parser for a <see cref="IZone"/>.
+/// A class that implements a data parser for a <see cref="IZoneData"/>.
 /// </summary>
-/// <param name="gateParser">An <see cref="IDataParser{IGate}"/> that is the gate parser to use.</param>
-/// <param name="lockboxParser">An <see cref="IDataParser{ILockbox}"/> that is the lockbox parser to use.</param>
+/// <param name="gateParser">An <see cref="IDataParser{IGateData}"/> that is the gate parser to use.</param>
+/// <param name="lockboxParser">An <see cref="IDataParser{ILockboxData}"/> that is the lockbox parser to use.</param>
 /// <param name="logger">An <see cref="ILogger{TCategoryName}"/> that is the logger to use.</param>
-/// <param name="positionParser">An <see cref="IDataParser{ISectorPosition}"/> that is the position parser to use.</param>
-/// <param name="shipParser">An <see cref="IDataParser{IShip}"/> that is the ship parser to use.</param>
-/// <param name="stationParser">An <see cref="IDataParser{IStation}"/> that is the station parser to use.</param>
-internal class ZoneParser(
-                          IDataParser<IGate> gateParser,
-                          IDataParser<ILockbox> lockboxParser,
-                          ILogger<ZoneParser> logger,
-                          IDataParser<ISectorPosition> positionParser,
-                          IDataParser<IShip> shipParser,
-                          IDataParser<IStation> stationParser)
-    : PositionalDataParserBase<IZone>(logger, positionParser),
-      IZoneParser
+/// <param name="positionParser">An <see cref="IDataParser{IPosition3D}"/> that is the position parser to use.</param>
+/// <param name="shipParser">An <see cref="IDataParser{IShipData}"/> that is the ship parser to use.</param>
+/// <param name="stationParser">An <see cref="IDataParser{IStationData}"/> that is the station parser to use.</param>
+internal class ZoneDataParser(
+                              IDataParser<IGateData> gateParser,
+                              IDataParser<ILockboxData> lockboxParser,
+                              ILogger<ZoneDataParser> logger,
+                              IDataParser<IPosition3D> positionParser,
+                              IDataParser<IShipData> shipParser,
+                              IDataParser<IStationData> stationParser)
+    : PositionalDataParserBase<IZoneData>(logger, positionParser),
+      IZoneDataParser
 {
-    private Dictionary<string, IZoneOffset> _zoneOffsets = [];
+    private Dictionary<string, IZoneOffsetData> _zoneOffsets = [];
 
-    Dictionary<string, IZoneOffset> IZoneParser.ZoneOffsets 
+    Dictionary<string, IZoneOffsetData> IZoneDataParser.ZoneOffsets 
     {
         get => _zoneOffsets; 
         set => _zoneOffsets = value; 
     }
 
-    private protected override async Task<IZone> OnParse(IXmlReaderWrapper reader)
+    private protected override async Task<IZoneData> OnParse(IXmlReaderWrapper reader)
     //private protected override async Task<IZone> OnParse(IXmlReaderWrapper reader, ISectorPosition positionOffset)
     {
-        List<IGate> gates = [];
-        List<ILockbox> lockboxes = [];
+        List<IGateData> gates = [];
+        List<ILockboxData> lockboxes = [];
         //SectorPosition? offset = new(positionOffset);
-        Zone? returnValue;
-        List<IShip> ships = [];
-        List<IStation> stations = [];
+        ZoneData? returnValue;
+        List<IShipData> ships = [];
+        List<IStationData> stations = [];
         string? macro = string.Empty;
         if (reader.TryGetAttribute(Constants.SaveGameFile.AttributeName.Code, out string? code) &&
             reader.TryGetAttribute(Constants.SaveGameFile.AttributeName.Id, out string? id))
@@ -61,14 +63,14 @@ internal class ZoneParser(
                 }
             }
 
-            returnValue = new Zone
+            returnValue = new ZoneData
             {
                 Code = code,
                 Gates = gates,
                 Id = id,
                 IsKnown = isKnown,
                 Lockboxes = lockboxes,
-                Position = ISectorPosition.GetDefault(),
+                Position = IPosition3D.GetDefault(),
                 //Position = offset,
                 Ships = ships,
                 Stations = stations

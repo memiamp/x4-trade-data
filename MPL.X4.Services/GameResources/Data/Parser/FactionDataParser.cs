@@ -1,16 +1,15 @@
 ﻿using System.Xml;
 using Microsoft.Extensions.Logging;
-using MPL.X4.Data;
-using MPL.X4.Services.Data;
+using MPL.X4.Parser;
 
-namespace MPL.X4.Services.DataParser;
+namespace MPL.X4.GameResources.Data.Parser;
 
 /// <summary>
-/// A class that implements a data parser for a <see cref="IFactionData"/>.
+/// A class that implements a data parser for an <see cref="IFactionData"/>.
 /// </summary>
 /// <param name="logger">An <see cref="ILogger{TCategoryName}"/> that is the logger to use.</param>
-internal class FactionParser(
-                             ILogger<FactionParser> logger)
+internal class FactionDataParser(
+                                 ILogger<FactionDataParser> logger)
     : DataParserBase<IFactionData>(logger)
 {
     private protected override async Task<IFactionData> OnParse(IXmlReaderWrapper reader)
@@ -37,7 +36,7 @@ internal class FactionParser(
 
         while (await reader.ReadAsync())
         {
-            if (reader.CheckNodeMatches(Constants.ResourceFile.ElementName.Colour, XmlNodeType.Element, 1) &&
+            if (reader.CheckNodeMatches(Constants.XmlDataFile.ElementName.Colour, XmlNodeType.Element, 1) &&
                 reader.TryGetAttribute(Constants.ResourceFile.AttributeName.Ref, out string? colourReference))
             {
                 returnValue.ColourReference = colourReference;

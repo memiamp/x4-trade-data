@@ -1,10 +1,18 @@
-﻿namespace MPL.X4.Services;
+﻿namespace MPL.X4.Catalog.Services;
 
 /// <summary>
 /// An interface that defines the behaviour of a X4 catalog file reader.
 /// </summary>
 public interface ICatalogFileReader
 {
+    /// <summary>
+    /// Gets the indexes of all catalogs in <paramref name="catalogPath"/>.
+    /// </summary>
+    /// <param name="catalogPath">A <see cref="string"/> containing the path to the folder containing catalog files.</param>
+    /// <param name="recursiveSearch">A <see cref="bool"/> indicating whether to recursively search for catalog files under <paramref name="catalogPath"/>.</param>
+    /// <returns>A <see cref="Task{TResult}"/> representing the asynchronous operation.  Am <see cref="IEnumerable{T}"/> of <see cref="ICatalogIndexEntry"/> containing the result.</returns>
+    Task<IEnumerable<ICatalogIndexEntry>> GetIndex(string catalogPath, bool recursiveSearch = false);
+
     /// <summary>
     /// Parses the index of the specified <paramref name="catalogId"/> from <paramref name="catalogPath"/> and optionally filters it by <paramref name="fileFilter"/>.
     /// </summary>

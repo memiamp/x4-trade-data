@@ -1,12 +1,12 @@
-﻿namespace MPL.X4;
+﻿namespace MPL.X4.SaveGame.Data;
 
 /// <summary>
-/// An interface that defines a universe.
+/// An interface that defines a data model of a universe.
 /// </summary>
-public interface IUniverse
+public interface IUniverseData
 {
     /// <summary>
     /// Gets the sectors belonging to the universe.
     /// </summary>
-    IEnumerable<ISector> Sectors { get; }
+    IEnumerable<ISectorData> Sectors { get; }
 }

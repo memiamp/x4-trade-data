@@ -1,9 +1,9 @@
-﻿namespace MPL.X4.Services.Models;
+﻿namespace MPL.X4.SaveGame.Data;
 
 /// <summary>
-/// A class that implements a save game.
+/// A class that implements a data model of a save game.
 /// </summary>
-internal class SaveGame : ISaveGame
+internal class SaveGameData : ISaveGameData
 {
-    public required IUniverse Universe { get; init; }
+    public required IUniverseData Universe { get; init; }
 }

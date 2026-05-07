@@ -1,29 +1,28 @@
 ﻿using Microsoft.Extensions.Logging;
 
-namespace MPL.X4.Services.DataParser;
+namespace MPL.X4.Parser;
 
-internal class SectorPositionParser(
-                                    ILogger<SectorPositionParser> logger)
-    : DataParserBase<ISectorPosition>(logger)
+/// <summary>
+/// A class that implements a data parser for an <see cref="IPosition3D"/>.
+/// </summary>
+/// <param name="logger">An <see cref="ILogger{TCategoryName}"/> that is the logger to use.</param>
+internal class Position3DParser(
+                                ILogger<Position3DParser> logger)
+    : DataParserBase<IPosition3D>(logger)
 {
-    private protected override Task<ISectorPosition> OnParse(IXmlReaderWrapper reader)
-    //private protected override Task<ISectorPosition> OnParse(IXmlReaderWrapper reader, ISectorPosition positionOffset)
+    private protected override Task<IPosition3D> OnParse(IXmlReaderWrapper reader)
     {
         reader.TryGetAttribute(Constants.SaveGameFile.AttributeName.X, out double? x);
         reader.TryGetAttribute(Constants.SaveGameFile.AttributeName.Y, out double? y);
         reader.TryGetAttribute(Constants.SaveGameFile.AttributeName.Z, out double? z);
 
-        var returnValue = new SectorPosition
+        var returnValue = new Position3D
         {
             X = x ?? 0,
             Y = y ?? 0,
             Z = z ?? 0
-
-            //X = (x ?? 0) + positionOffset.X,
-            //Y = (y ?? 0) + positionOffset.Y,
-            //Z = (z ?? 0) + positionOffset.Z
         };
 
-        return Task.FromResult<ISectorPosition>(returnValue);
+        return Task.FromResult<IPosition3D>(returnValue);
     }
 }

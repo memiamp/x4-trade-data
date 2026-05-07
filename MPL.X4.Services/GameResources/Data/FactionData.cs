@@ -1,6 +1,4 @@
-﻿using MPL.X4.Data;
-
-namespace MPL.X4.Services.Data;
+﻿namespace MPL.X4.GameResources.Data;
 
 /// <summary>
 /// A class that implements a data model of a faction.

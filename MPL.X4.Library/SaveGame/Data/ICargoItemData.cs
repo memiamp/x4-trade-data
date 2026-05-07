@@ -1,9 +1,9 @@
-﻿namespace MPL.X4;
+﻿namespace MPL.X4.SaveGame.Data;
 
 /// <summary>
-/// An interface that defines an item of cargo.
+/// An interface that defines a data model of an item of cargo.
 /// </summary>
-public interface ICargoItem
+public interface ICargoItemData
 {
     /// <summary>
     /// Gets the amount.

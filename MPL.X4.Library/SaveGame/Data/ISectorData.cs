@@ -1,9 +1,9 @@
-﻿namespace MPL.X4;
+﻿namespace MPL.X4.SaveGame.Data;
 
 /// <summary>
-/// An interface that defines a sector.
+/// An interface that defines a data model of a sector.
 /// </summary>
-public interface ISector
+public interface ISectorData
 {
     /// <summary>
     /// Gets the code of the sector.
@@ -13,7 +13,7 @@ public interface ISector
     /// <summary>
     /// Gets the gates in the sector.
     /// </summary>
-    IEnumerable<IGate> Gates { get; }
+    IEnumerable<IGateData> Gates { get; }
 
     /// <summary>
     /// Gets the identifier of the sector.
@@ -28,7 +28,7 @@ public interface ISector
     /// <summary>
     /// Gets the lockboxes in the sector.
     /// </summary>
-    IEnumerable<ILockbox> Lockboxes { get; }
+    IEnumerable<ILockboxData> Lockboxes { get; }
 
     /// <summary>
     /// Gets the macro of the sector.
@@ -43,10 +43,10 @@ public interface ISector
     /// <summary>
     /// Gets the ships in the sector.
     /// </summary>
-    IEnumerable<IShip> Ships { get; }
+    IEnumerable<IShipData> Ships { get; }
 
     /// <summary>
     /// Gets the stations in the sector.
     /// </summary>
-    IEnumerable<IStation> Stations { get; }
+    IEnumerable<IStationData> Stations { get; }
 }

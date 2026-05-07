@@ -1,9 +1,9 @@
-﻿namespace MPL.X4.Services.Models;
+﻿namespace MPL.X4.SaveGame.Data;
 
 /// <summary>
-/// A class that implements a gate.
+/// A class that implements a data model of a gate.
 /// </summary>
-internal class Gate : IGate
+internal class GateData : IGateData
 {
     public override string ToString()
         => $"{Code} - IsKnown {IsKnown} - {Id}";
@@ -14,5 +14,5 @@ internal class Gate : IGate
 
     public required bool IsKnown { get; set; }
 
-    public required ISectorPosition Position { get; set; }
+    public required IPosition3D Position { get; set; }
 }

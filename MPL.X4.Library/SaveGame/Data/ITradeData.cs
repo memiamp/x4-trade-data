@@ -1,9 +1,9 @@
-﻿namespace MPL.X4;
+﻿namespace MPL.X4.SaveGame.Data;
 
 /// <summary>
-/// An interface that defines a trade.
+/// An interface that defines a data model of a trade.
 /// </summary>
-public interface ITrade
+public interface ITradeData
 {
     /// <summary>
     /// Gets the amount of the trade ware available to buy.

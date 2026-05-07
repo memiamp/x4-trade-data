@@ -1,4 +1,4 @@
-﻿namespace MPL.X4.Data;
+﻿namespace MPL.X4.GameResources.Data;
 
 /// <summary>
 /// An interface that defines the data model of a faction.

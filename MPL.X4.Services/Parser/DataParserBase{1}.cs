@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 
-namespace MPL.X4.Services.DataParser;
+namespace MPL.X4.Parser;
 
 /// <summary>
 /// A class that implements the base functionality of a data parser.
@@ -25,10 +25,8 @@ internal abstract class DataParserBase<TData>(
     /// Invoked to parse data from the specified <paramref name="reader"/>, using the specified <paramref name="positionOffset"/> to adjust any position data as needed.
     /// </summary>
     /// <param name="reader">An <see cref="IXmlReaderWrapper"/> that is the data reader.</param>
-    /// <param name="positionOffset">An <see cref="ISectorPosition"/> that is the position offset.</param>
     /// <returns>A <see cref="Task{TResult}"/> representing the asynchronous operation. A <typeparamref name="TData"/> that is the result.</returns>
     private protected abstract Task<TData> OnParse(IXmlReaderWrapper reader);
-    //private protected abstract Task<TData> OnParse(IXmlReaderWrapper reader, ISectorPosition positionOffset);
 
     /// <summary>
     /// Gets the logger.
@@ -37,8 +35,4 @@ internal abstract class DataParserBase<TData>(
 
     Task<TData> IDataParser<TData>.Parse(IXmlReaderWrapper reader)
         => OnParse(reader);
-        //=> ((IDataParser<TData>)this).Parse(reader, ISectorPosition.GetDefault());
-
-    //Task<TData> IDataParser<TData>.Parse(IXmlReaderWrapper reader, ISectorPosition positionOffset)
-    //    => OnParse(reader, positionOffset);
 }

@@ -1,0 +1,32 @@
+﻿namespace MPL.X4.GameResources.Data;
+
+/// <summary>
+/// An interface that defines the behaviour of game resource data.
+/// </summary>
+public interface IGameResourceData
+{
+    /// <summary>
+    /// Gets colour resource data.
+    /// </summary>
+    IColourResourceData Colours { get; }
+
+    /// <summary>
+    /// Gets faction resource data.
+    /// </summary>
+    IFactionDataDictionary Factions { get; }
+
+    /// <summary>
+    /// Gets sector macro name map.
+    /// </summary>
+    Dictionary<string, string> SectorMacros { get; }
+
+    /// <summary>
+    /// Gets text resource data.
+    /// </summary>
+    ITextResourcePageDictionary Text { get; }
+
+    /// <summary>
+    /// Gets zone offset resource data.
+    /// </summary>
+    IZoneOffsetDataDictionary ZoneOffsets { get; }
+}

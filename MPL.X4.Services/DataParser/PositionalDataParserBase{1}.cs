@@ -1,7 +1,8 @@
 ﻿using System.Xml;
 using Microsoft.Extensions.Logging;
+using MPL.X4.Parser;
 
-namespace MPL.X4.Services.DataParser;
+namespace MPL.X4.DataParser;
 
 /// <summary>
 /// A class that implements the base functionality of a positional data parser for <typeparamref name="TData"/>.
@@ -10,16 +11,16 @@ namespace MPL.X4.Services.DataParser;
 /// <param name="positionParser">An <see cref="IDataParser{ISectorPosition}"/> that is the position parser to use.</param>
 internal abstract class PositionalDataParserBase<TData>(
                                                         ILogger<PositionalDataParserBase<TData>> logger,
-                                                        IDataParser<ISectorPosition> positionParser)
+                                                        IDataParser<IPosition3D> positionParser)
     : DataParserBase<TData>(logger)
 {
     /// <summary>
     /// Updates the specified <paramref name="target"/> by modifying the position using the specified <paramref name="offset"/>.
     /// </summary>
-    /// <param name="offset">An <see cref="ISectorPosition"/> that is the offset position.</param>
-    /// <param name="target">An <see cref="SectorPosition"/> that is the position to be updated.</param>
+    /// <param name="offset">An <see cref="IPosition3D"/> that is the offset position.</param>
+    /// <param name="target">An <see cref="Position3D"/> that is the position to be updated.</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    private protected static void UpdatePosition(ISectorPosition offset, SectorPosition target)
+    private protected static void UpdatePosition(IPosition3D offset, Position3D target)
     {
         target.X += offset.X;
         target.Y += offset.Y;
@@ -32,7 +33,7 @@ internal abstract class PositionalDataParserBase<TData>(
     /// <param name="reader">An <see cref="IXmlReaderWrapper"/> that is the data reader.</param>
     /// <param name="position">An <see cref="SectorPosition"/> that is the position to update.</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    private protected async Task UpdatePosition(IXmlReaderWrapper reader, SectorPosition position)
+    private protected async Task UpdatePosition(IXmlReaderWrapper reader, Position3D position)
     {
         var offsetPosition = await positionParser.Parse(reader);
 
@@ -47,7 +48,7 @@ internal abstract class PositionalDataParserBase<TData>(
     /// <param name="reader">An <see cref="IXmlReaderWrapper"/> that is the data reader.</param>
     /// <param name="position">An <see cref="SectorPosition"/> that is the position to update.</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    private protected async Task UpdatePositionFromOffset(IXmlReaderWrapper reader, SectorPosition position)
+    private protected async Task UpdatePositionFromOffset(IXmlReaderWrapper reader, Position3D position)
     {
         var offsetSubtree = await reader.ReadSubtree();
         
@@ -64,5 +65,5 @@ internal abstract class PositionalDataParserBase<TData>(
     /// <summary>
     /// Gets the position parser.
     /// </summary>
-    private protected IDataParser<ISectorPosition> PositionParser => positionParser;
+    private protected IDataParser<IPosition3D> PositionParser => positionParser;
 }

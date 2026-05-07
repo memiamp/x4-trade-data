@@ -1,9 +1,9 @@
-﻿namespace MPL.X4;
+﻿namespace MPL.X4.GameResources.Data;
 
 /// <summary>
-/// An interface that defines a colour.
+/// An interface that defines the data model of a colour.
 /// </summary>
-public interface IColour
+public interface IColourData
 {
     /// <summary>
     /// Gets the alpha.

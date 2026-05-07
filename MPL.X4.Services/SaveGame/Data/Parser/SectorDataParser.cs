@@ -1,27 +1,27 @@
 ﻿using System.Xml;
 using Microsoft.Extensions.Logging;
-using MPL.X4.Services.Models;
+using MPL.X4.Parser;
 
-namespace MPL.X4.Services.DataParser;
+namespace MPL.X4.SaveGame.Data.Parser;
 
 /// <summary>
-/// A class that implements a data parser for a <see cref="ISector"/>.
+/// A class that implements a data parser for a <see cref="ISectorData"/>.
 /// </summary>
 /// <param name="logger">An <see cref="ILogger{TCategoryName}"/> that is the logger to use.</param>
 /// <param name="zoneParser">An <see cref="IDataParser{IZone}"/> that is the zone parser to use.</param>
-internal class SectorParser(
-                            ILogger<SectorParser> logger,
-                            IZoneParser zoneParser)
-                            //IDataParser<IZone> zoneParser)
-    : DataParserBase<ISector>(logger)
+internal class SectorDataParser(
+                                ILogger<SectorDataParser> logger,
+                                IZoneDataParser zoneParser)
+                                //IDataParser<IZone> zoneParser)
+    : DataParserBase<ISectorData>(logger)
 {
-    private protected override async Task<ISector> OnParse(IXmlReaderWrapper reader)
+    private protected override async Task<ISectorData> OnParse(IXmlReaderWrapper reader)
     {
-        List<IGate> gates = [];
-        List<ILockbox> lockboxes = [];
-        ISector? returnValue = null;
-        List<IShip> ships = [];
-        List<IStation> stations = [];
+        List<IGateData> gates = [];
+        List<ILockboxData> lockboxes = [];
+        ISectorData? returnValue = null;
+        List<IShipData> ships = [];
+        List<IStationData> stations = [];
 
         if (reader.TryGetAttribute(Constants.SaveGameFile.AttributeName.Code, out string? code) &&
             reader.TryGetAttribute(Constants.SaveGameFile.AttributeName.Id, out string? id) &&
@@ -30,7 +30,7 @@ internal class SectorParser(
         {
             var isKnown = GetIsKnownToPlayer(reader);
 
-            returnValue = new Sector
+            returnValue = new SectorData
             {
                 Code = code,
                 Gates = gates,

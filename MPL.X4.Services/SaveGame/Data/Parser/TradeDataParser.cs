@@ -1,20 +1,20 @@
 ﻿using System.Xml;
 using Microsoft.Extensions.Logging;
-using MPL.X4.Services.Models;
+using MPL.X4.Parser;
 
-namespace MPL.X4.Services.DataParser;
+namespace MPL.X4.SaveGame.Data.Parser;
 
 /// <summary>
-/// A class that implements a data parser for a <see cref="ITrade"/>.
+/// A class that implements a data parser for a <see cref="ITradeData"/>.
 /// </summary>
 /// <param name="logger">An <see cref="ILogger{TCategoryName}"/> that is the logger to use.</param>
-internal class TradeParser(
-                           ILogger<TradeParser> logger)
-    : DataParserBase<ITrade>(logger)
+internal class TradeDataParser(
+                               ILogger<TradeDataParser> logger)
+    : DataParserBase<ITradeData>(logger)
 {
-    private protected override Task<ITrade> OnParse(IXmlReaderWrapper reader)
+    private protected override Task<ITradeData> OnParse(IXmlReaderWrapper reader)
     {
-        Trade? returnValue;
+        TradeData? returnValue;
 
         if (reader.CheckNodeMatches(Constants.SaveGameFile.ElementName.Trade, XmlNodeType.Element) &&
             reader.TryGetAttribute(Constants.SaveGameFile.AttributeName.Id, out string? id) &&
@@ -40,7 +40,7 @@ internal class TradeParser(
                 amountToSell = amount.Value;
             }
 
-            returnValue = new Trade
+            returnValue = new TradeData
             {
                 AmountToBuy = amountToBuy,
                 AmountToSell = amountToSell,
@@ -55,6 +55,6 @@ internal class TradeParser(
             throw new ArgumentException("Could not load trade", nameof(reader));
         }
 
-        return Task.FromResult<ITrade>(returnValue);
+        return Task.FromResult<ITradeData>(returnValue);
     }
 }

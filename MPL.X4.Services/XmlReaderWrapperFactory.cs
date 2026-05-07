@@ -3,7 +3,7 @@ using System.Text;
 using System.Xml;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace MPL.X4.Services;
+namespace MPL.X4;
 
 /// <summary>
 /// A class that implements a factory for <see cref="IXmlReaderWrapper"/> instances.
@@ -27,7 +27,7 @@ internal class XmlReaderWrapperFactory(
         XmlReader? reader;
 
         var extension = Path.GetExtension(sourcePath);
-        if (extension.Equals(".gz", StringComparison.OrdinalIgnoreCase))
+        if (extension.Equals(Constants.FileExtensions.GzipFile, StringComparison.OrdinalIgnoreCase))
         {
             var fileStream = new FileStream(sourcePath, FileMode.Open, FileAccess.Read, FileShare.Read);
             var gzipStream = new GZipStream(fileStream, CompressionMode.Decompress);

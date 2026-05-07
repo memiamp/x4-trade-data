@@ -1,22 +1,21 @@
-﻿using System.Collections.Generic;
-using System.Diagnostics;
-using System.Xml;
+﻿using System.Xml;
 using Microsoft.Extensions.Logging;
-using MPL.X4.Services.Models;
+using MPL.X4.DataParser;
+using MPL.X4.Parser;
 
-namespace MPL.X4.Services.DataParser;
+namespace MPL.X4.SaveGame.Data.Parser;
 
 /// <summary>
-/// A class that implements a data parser for a <see cref="IShip"/>.
+/// A class that implements a data parser for a <see cref="IShipData"/>.
 /// </summary>
-/// <param name="cargoParser">An <see cref="IDataParser{ICargo}"/> that is the cargo parser to use.</param>
+/// <param name="cargoParser">An <see cref="IDataParser{ICargoData}"/> that is the cargo parser to use.</param>
 /// <param name="logger">An <see cref="ILogger{TCategoryName}"/> that is the logger to use.</param>
-/// <param name="positionParser">An <see cref="IDataParser{ISectorPosition}"/> that is the position parser to use.</param>
-internal class ShipParser(
-                          IDataParser<ICargo> cargoParser,
-                          ILogger<ShipParser> logger,
-                          IDataParser<ISectorPosition> positionParser)
-    : PositionalDataParserBase<IShip>(logger, positionParser)
+/// <param name="positionParser">An <see cref="IDataParser{IPosition3D}"/> that is the position parser to use.</param>
+internal class ShipDataParser(
+                              IDataParser<ICargoData> cargoParser,
+                              ILogger<ShipDataParser> logger,
+                              IDataParser<IPosition3D> positionParser)
+    : PositionalDataParserBase<IShipData>(logger, positionParser)
 {
     private async Task<IEnumerable<string>> ProcessModifications(IXmlReaderWrapper reader)
     {
@@ -48,15 +47,15 @@ internal class ShipParser(
         return returnValue;
     }
 
-    private protected override async Task<IShip> OnParse(IXmlReaderWrapper reader)
+    private protected override async Task<IShipData> OnParse(IXmlReaderWrapper reader)
     //private protected override async Task<IShip> OnParse(IXmlReaderWrapper reader, ISectorPosition positionOffset)
     {
-        var cargoItems = new List<ICargoItem>();
+        var cargoItems = new List<ICargoItemData>();
         var modifications = new List<string>();
 
-        SectorPosition position = new();
+        Position3D position = new();
         //SectorPosition position = new(positionOffset);
-        Ship? returnValue;
+        ShipData? returnValue;
 
         if (reader.TryGetAttribute(Constants.SaveGameFile.AttributeName.Class, out string? shipClass) &&
             reader.TryGetAttribute(Constants.SaveGameFile.AttributeName.Owner, out string? owner) &&
@@ -66,9 +65,9 @@ internal class ShipParser(
         {
             var isKnown = GetIsKnownToPlayer(reader);
 
-            returnValue = new Ship
+            returnValue = new ShipData
             {
-                Cargo = new Cargo
+                Cargo = new CargoData
                 {
                     Items = cargoItems
                 },
