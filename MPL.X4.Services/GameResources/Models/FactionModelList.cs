@@ -3,6 +3,8 @@
 /// <summary>
 /// A class that implements a list of faction models.
 /// </summary>
-internal class FactionModelList : List<IFactionModel>, IFactionModelList
+internal class FactionModelList : ModelWithIdListBase<IFactionModel>, IFactionModelList
 {
+    private protected override IFactionModel GetDefault()
+        => FactionModel.GetDefault();
 }

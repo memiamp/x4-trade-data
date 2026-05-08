@@ -16,14 +16,14 @@ public interface IGameResourceModels
     IFactionModelList Factions { get; }
 
     /// <summary>
-    /// Gets sector macro name map.
+    /// Gets sector names.
     /// </summary>
-    //Dictionary<string, string> SectorMacros { get; }
+    ISectorNameModelList SectorNames { get; }
 
     /// <summary>
-    /// Gets text resource data.
+    /// Gets text resource models.
     /// </summary>
-   //ITextResourcePageDictionary Text { get; }
+    ITextResourceModelList Text { get; }
 
     /// <summary>
     /// Gets zone offset resource data.

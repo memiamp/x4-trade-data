@@ -9,7 +9,7 @@ internal class GameResourceData : IGameResourceData
 
     public required IFactionDataDictionary Factions { get; init; }
 
-    public required Dictionary<string, string> SectorMacros { get; init; }
+    public required ISectorNameDataDictionary SectorNames { get; init; }
 
     public required ITextResourcePageDictionary Text { get; init; }
 

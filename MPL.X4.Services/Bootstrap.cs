@@ -49,6 +49,7 @@ public static class Bootstrap
         servicesCollection.AddTransient<IDataParser<ISectorData>, SectorDataParser>();
         servicesCollection.AddTransient<IDataParser<IPosition3D>, Position3DParser>();
         servicesCollection.AddTransient<IDataParser<IRotation3D>, Rotation3DParser>();
+        servicesCollection.AddTransient<IDataParser<ISectorNameDataDictionary>, SectorNameDataDictionaryParser>();
         servicesCollection.AddTransient<IDataParser<IShipData>, ShipDataParser>();
         servicesCollection.AddTransient<IDataParser<IStationData>, StationDataParser>();
         servicesCollection.AddTransient<IDataParser<ITextResourceItem>, TextResourceItemParser>();
@@ -67,5 +68,8 @@ public static class Bootstrap
         servicesCollection.AddTransient<IModelParser<IFactionDataDictionary, IFactionModelList>, FactionModelListParser>();
         servicesCollection.AddTransient<IModelParser<ColourModelSource, IColourModel>, ColourModelParser>();
         servicesCollection.AddTransient<IModelParser<IColourResourceData, IColourModelList>, ColourModelListParser>();
+        servicesCollection.AddTransient<IModelParser<ISectorNameData, ISectorNameModel>, SectorNameModelParser>();
+        servicesCollection.AddTransient<IModelParser<ISectorNameDataDictionary, ISectorNameModelList>, SectorNameModelListParser>();
+        servicesCollection.AddTransient<IModelParser<ITextResourcePageDictionary, ITextResourceModelList>, TextResourceModelListParser>();
     }
 }

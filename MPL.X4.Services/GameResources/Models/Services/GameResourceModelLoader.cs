@@ -18,21 +18,26 @@ internal class GameResourceModelLoader(
     IGameResourceModels IGameResourceModelLoader.LoadGameResourceModels(IGameResourceData data)
     {
         using var scopedServiceProvider = serviceProvider.CreateScope();
+        var modelParser = serviceProvider.GetRequiredService<IModelParser>();
 
         var parsingScope = serviceProvider.GetRequiredService<IGameResourceModelParsingScope>();
-        parsingScope.TextResources = data.Text;
-
-        var modelParser = serviceProvider.GetRequiredService<IModelParser>();
+        
+        var texts = modelParser.Parse<ITextResourcePageDictionary, ITextResourceModelList>(data.Text);
+        parsingScope.TextResources = texts;
 
         var colours = modelParser.Parse<IColourResourceData, IColourModelList>(data.Colours);
         parsingScope.Colours = colours;
 
-        var factions = modelParser.Parse<IFactionDataDictionary, IFactionModelList>(data.Factions, colours, data);
+        var factions = modelParser.Parse<IFactionDataDictionary, IFactionModelList>(data.Factions);
+
+        var sectorNames = modelParser.Parse<ISectorNameDataDictionary, ISectorNameModelList>(data.SectorNames);
 
         return new GameResourceModels
         {
             Colours = colours,
-            Factions = factions
+            Factions = factions,
+            SectorNames = sectorNames,
+            Text = texts
         };
     }
 }

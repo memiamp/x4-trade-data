@@ -5,10 +5,10 @@ namespace MPL.X4.GameResources.Models;
 /// <summary>
 /// A class that implements a model of a colour.
 /// </summary>
-internal class ColourModel : IColourModel
+internal class ColourModel : ModelWithIdBase, IColourModel
 {
     /// <summary>
-    /// Gets the default colour model.
+    /// Gets the default model.
     /// </summary>
     /// <returns>An <see cref="IColourModel"/> that is the result.</returns>
     internal static IColourModel GetDefault()
@@ -25,6 +25,4 @@ internal class ColourModel : IColourModel
     public required Color Colour { get; init; }
 
     public required float Glow { get; init; }
-
-    public required string Id { get; init; }
 }

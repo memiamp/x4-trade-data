@@ -20,11 +20,11 @@ public interface IGameResourceDataParser
     Task<IFactionDataDictionary> ReadFactions(IXmlReaderWrapper reader);
 
     /// <summary>
-    /// Parses the sector macro map from the specified <paramref name="reader"/>.
+    /// Parses the sector names from the specified <paramref name="reader"/>.
     /// </summary>
     /// <param name="reader">An <see cref="IXmlReaderWrapper"/> containing the resource data to parse.</param>
-    /// <returns>A <see cref="Task{TResult}"/> representing the asynchronous operation.  An <see cref="Dictionary{TKey, TValue}"/> containing the result.</returns>
-    Task<Dictionary<string, string>> ReadSectorMacroMap(IXmlReaderWrapper reader);
+    /// <returns>A <see cref="Task{TResult}"/> representing the asynchronous operation.  An <see cref="ISectorNameDataDictionary"/> containing the result.</returns>
+    Task<ISectorNameDataDictionary> ReadSectorNames(IXmlReaderWrapper reader);
 
     /// <summary>
     /// Reads text resource data from the specified <paramref name="reader"/>.

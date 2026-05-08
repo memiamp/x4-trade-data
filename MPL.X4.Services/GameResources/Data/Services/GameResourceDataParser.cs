@@ -14,100 +14,7 @@ internal class GameResourceDataParser(
                                       ILogger<GameResourceDataParser> logger)
     : IGameResourceDataParser
 {
-    private static async Task<string> ReadDataset(IXmlReaderWrapper reader)
-    {
-        var returnValue = string.Empty;
-
-        while (await reader.ReadAsync())
-        {
-            if (reader.CheckNodeMatches(Constants.ResourceFile.ElementName.Identification, XmlNodeType.Element) &&
-                reader.TryGetAttribute(Constants.ResourceFile.AttributeName.Name, out string? name))
-            {
-                returnValue = name;
-                break;
-            }
-        }
-
-        return returnValue;
-    }
-
-    private static async Task<Dictionary<string, string>> ReadDefaultsInternal(IXmlReaderWrapper reader)
-    {
-        Dictionary<string, string> returnValue = [];
-
-        while (await reader.ReadAsync())
-        {
-            if (reader.CheckNodeMatches(Constants.XmlDataFile.ElementName.Dataset, XmlNodeType.Element, 1) &&
-                reader.TryGetAttribute(Constants.XmlDataFile.AttributeName.Macro, out string? macro))
-            {
-                using var subtree = await reader.ReadSubtree();
-
-                macro = macro.ToLower();
-                var name = await ReadDataset(subtree);
-
-                if (!string.IsNullOrWhiteSpace(name))
-                {
-                    returnValue[macro] = name;
-                }
-            }
-        }
-
-        return returnValue;
-    }
-
-    /*
-     * 
-     *   private static async Task<Dictionary<string, string>> ReadMappings(IXmlReaderWrapper reader)
-        {
-            Dictionary<string, string> returnValue = [];
-
-            while (await reader.ReadAsync())
-            {
-                if (reader.CheckNodeMatches(Constants.ResourceFile.ElementName.Mapping, XmlNodeType.Element) &&
-                    reader.TryGetAttribute(Constants.ResourceFile.AttributeName.MappingId, out string? id) &&
-                    reader.TryGetAttribute(Constants.ResourceFile.AttributeName.Ref, out string? reference))
-                {
-                    returnValue.Add(id, reference);
-                }
-            }
-
-            return returnValue;
-        }
-
-
-
-            Dictionary<string, IColour> colours = [];
-            Dictionary<string, string> mappings = [];
-            Dictionary<string, IColour> returnValue = [];
-
-            while (await reader.ReadAsync())
-            {
-                if (reader.CheckNodeMatches(Constants.ResourceFile.ElementName.Colours, XmlNodeType.Element))
-                {
-                    using var colourSubtree = await reader.ReadSubtree();
-
-                    colours = await ReadColours(colourSubtree);
-                }
-                else if (reader.CheckNodeMatches(Constants.ResourceFile.ElementName.Mappings, XmlNodeType.Element))
-                {
-                    using var mappingSubtree = await reader.ReadSubtree();
-
-                    mappings = await ReadMappings(mappingSubtree);
-                }
-            }
-
-            if (colours.Count > 0 &&
-                mappings.Count > 0)
-            {
-                returnValue = mappings
-                                      .ToDictionary(
-                                                    kvp => kvp.Key,
-                                                    kvp => colours[kvp.Value]);
-            }
-
-            return returnValue;
-     * (*/
-    async Task<IColourResourceData> IGameResourceDataParser.ReadColourResources(IXmlReaderWrapper reader)
+     async Task<IColourResourceData> IGameResourceDataParser.ReadColourResources(IXmlReaderWrapper reader)
     {
         var colours = new ColourDataDictionary();
         var mappings = new MappingDataDictionary();
@@ -135,7 +42,7 @@ internal class GameResourceDataParser(
         }
 
         logger.LogDebug("{Count} colours parsed", colours.Count);
-        logger.LogDebug("{Count} cplour mappings parsed", mappings.Count);
+        logger.LogDebug("{Count} colour mappings parsed", mappings.Count);
 
         return new ColourResourceData
         {
@@ -167,9 +74,9 @@ internal class GameResourceDataParser(
         return returnValue;
     }
 
-    async Task<Dictionary<string, string>> IGameResourceDataParser.ReadSectorMacroMap(IXmlReaderWrapper reader)
+    async Task<ISectorNameDataDictionary> IGameResourceDataParser.ReadSectorNames(IXmlReaderWrapper reader)
     {
-        Dictionary<string, string> returnValue = [];
+        ISectorNameDataDictionary returnValue = new SectorNameDataDictionary();
 
         while (await reader.ReadAsync())
         {
@@ -177,14 +84,13 @@ internal class GameResourceDataParser(
             {
                 using var subtree = await reader.ReadSubtree();
 
-                var data = await ReadDefaultsInternal(subtree);
+                returnValue = await dataParser.Parse<ISectorNameDataDictionary>(subtree);
 
-                foreach (var (key, value) in data)
-                {
-                    returnValue[key] = value;
-                }
+                break;
             }
         }
+
+        logger.LogDebug("{Count} sector names parsed", returnValue.Count);
 
         return returnValue;
     }

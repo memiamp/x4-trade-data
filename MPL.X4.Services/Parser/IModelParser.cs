@@ -11,7 +11,6 @@ public interface IModelParser
     /// <typeparam name="TData">The type of the data to be parsed.</typeparam>
     /// <typeparam name="TModel">The type of the model.</typeparam>
     /// <param name="source">A <typeparamref name="TData"/> that is the source to parse.</param>
-    /// <param name="parserParameters">A <see langword="params"/> array of <see cref="object"/> containing any parameters to be supplied to the parser.</param>
     /// <returns>A <typeparamref name="TModel"/> that is the result.</returns>
-    TModel Parse<TData, TModel>(TData source, params object[] parserParameters);
+    TModel Parse<TData, TModel>(TData source);
 }

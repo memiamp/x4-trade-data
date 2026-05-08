@@ -16,9 +16,9 @@ public interface IGameResourceData
     IFactionDataDictionary Factions { get; }
 
     /// <summary>
-    /// Gets sector macro name map.
+    /// Gets sector name data.
     /// </summary>
-    Dictionary<string, string> SectorMacros { get; }
+    ISectorNameDataDictionary SectorNames { get; }
 
     /// <summary>
     /// Gets text resource data.

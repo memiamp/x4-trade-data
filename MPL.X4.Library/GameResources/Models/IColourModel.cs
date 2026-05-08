@@ -5,7 +5,7 @@ namespace MPL.X4.GameResources.Models;
 /// <summary>
 /// An interface that defines a colour model.
 /// </summary>
-public interface IColourModel
+public interface IColourModel : IModelWithId
 {
     /// <summary>
     /// Gets the colour.
@@ -16,9 +16,4 @@ public interface IColourModel
     /// Gets the colour glow.
     /// </summary>
     float Glow { get; }
-
-    /// <summary>
-    /// Gets the identifier of the colour.
-    /// </summary>
-    string Id { get; }
 }

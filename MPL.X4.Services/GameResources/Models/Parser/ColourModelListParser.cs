@@ -19,11 +19,6 @@ internal class ColourModelListParser(
     {
         var returnValue = new ColourModelList();
 
-        //var colourModels = source.Colours
-        //                                 .ToDictionary(
-        //                                               kvp => kvp.Key,
-        //                                               kvp => modelParser.Parse<IColourData, IColourModel>(kvp.Value));
-
         var mappedColours = source.Mappings
                                            .Join(
                                                  source.Colours,
@@ -38,17 +33,3 @@ internal class ColourModelListParser(
         return returnValue;
     }
 }
-
-///// <summary>
-///// A class that implements a parser to an <see cref="IColourModelList"/> from an <see cref="IColourDataDictionary"/>.
-///// </summary>
-///// <param name="logger">An <see cref="ILogger{TCategoryName}"/> that is the logger to use.</param>
-///// <param name="modelParser">An <see cref="IModelParser"/> that is the model parser to use.</param>
-//internal class ColourModelListParser(
-//                                      ILogger<ColourModelListParser> logger,
-//                                      IModelParser modelParser)
-//    : ModelListParser<IColourData, IColourDataDictionary, string, IColourModel, IColourModelList>(logger, modelParser)
-//{
-//    private protected override IColourModelList CreateTarget()
-//        => new ColourModelList();
-//}

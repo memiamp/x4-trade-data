@@ -25,7 +25,7 @@ internal partial class GameResourceDataProvider(
 
         var colours = await gameResourceDataLoader.LoadColourResourcesFromIndex(index);
         var factions = await gameResourceDataLoader.LoadFactionsFromIndex(index);
-        var sectorNameMacros = await gameResourceDataLoader.LoadSectorNameMacroMapFromIndex(index);
+        var sectorNames = await gameResourceDataLoader.LoadSectorNamesFromIndex(index);
         var textResource = await gameResourceDataLoader.LoadTextResourcesFromCatalogs(catalogFilePath);
         var zoneOffsets = await gameResourceDataLoader.LoadZoneOffsetsFromIndex(index);
 
@@ -33,7 +33,7 @@ internal partial class GameResourceDataProvider(
         {
             Colours = colours,
             Factions = factions,
-            SectorMacros = sectorNameMacros,
+            SectorNames = sectorNames,
             Text = textResource,
             ZoneOffsets = zoneOffsets
         };

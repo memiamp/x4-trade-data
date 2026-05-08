@@ -36,18 +36,18 @@ public interface IGameResourceDataLoader
     Task<IFactionDataDictionary> LoadFactionsFromIndex(IEnumerable<ICatalogIndexEntry> index);
 
     /// <summary>
-    /// Loads a map of macro to sector name mapping from catalogs in the specified <paramref name="catalogsFilePath"/>.
+    /// Loads sector names from catalogs in the specified <paramref name="catalogsFilePath"/>.
     /// </summary>
     /// <param name="catalogsFilePath">A <see cref="string"/> containing the path to the catalog files.</param>
-    /// <returns>A <see cref="Task{TResult}"/> representing the asynchronous operation.  An <see cref="Dictionary{TKey, TValue}"/> that is the result.</returns>
-    Task<Dictionary<string, string>> LoadSectorNameMacroMapFromCatalogs(string catalogsFilePath);
+    /// <returns>A <see cref="Task{TResult}"/> representing the asynchronous operation.  An <see cref="ISectorNameDataDictionary"/> that is the result.</returns>
+    Task<ISectorNameDataDictionary> LoadSectorNamesFromCatalogs(string catalogsFilePath);
 
     /// <summary>
-    /// Loads a map of macro to sector name mapping from entries in the specified <paramref name="index"/>.
+    /// Loads sector names from entries in the specified <paramref name="index"/>.
     /// </summary>
     /// <param name="index">An <see cref="IEnumerable{ICatalogIndexEntry}"/> that is the catalog file index.</param>
-    /// <returns>A <see cref="Task{TResult}"/> representing the asynchronous operation.  An <see cref="Dictionary{TKey, TValue}"/> that is the result.</returns>
-    Task<Dictionary<string, string>> LoadSectorNameMacroMapFromIndex(IEnumerable<ICatalogIndexEntry> index);
+    /// <returns>A <see cref="Task{TResult}"/> representing the asynchronous operation.  An <see cref="ISectorNameDataDictionary"/> that is the result.</returns>
+    Task<ISectorNameDataDictionary> LoadSectorNamesFromIndex(IEnumerable<ICatalogIndexEntry> index);
 
     /// <summary>
     /// Loads text resource data from catalogs in the specified <paramref name="catalogsFilePath"/>.

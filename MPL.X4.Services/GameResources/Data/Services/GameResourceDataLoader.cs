@@ -30,15 +30,8 @@ internal class GameResourceDataLoader(
 
             var data = await resourceDataParser.ReadColourResources(reader);
 
-            foreach (var kvp in data.Colours)
-            {
-                colours[kvp.Key] = kvp.Value;
-            }
-
-            foreach (var kvp in data.Mappings)
-            {
-                mappings[kvp.Key] = kvp.Value;
-            }
+            colours.Merge(data.Colours);
+            mappings.Merge(data.Mappings);
         }
 
         return new ColourResourceData
@@ -65,21 +58,18 @@ internal class GameResourceDataLoader(
         return returnValue;
     }
 
-    private async Task<Dictionary<string, string>> LoadSectorNameMacroMapInternal(IEnumerable<ICatalogIndexEntry> index)
+    private async Task<ISectorNameDataDictionary> LoadSectorNameMacroMapInternal(IEnumerable<ICatalogIndexEntry> index)
     {
-        var returnValue = new Dictionary<string, string>();
+        SectorNameDataDictionary returnValue = [];
 
-        var mapDefinitions = catalogFileReader.ReadTextFiles(index);
-        await foreach (var mapDefinition in mapDefinitions)
+        var files = catalogFileReader.ReadTextFiles(index);
+        await foreach (var file in files)
         {
-            using var reader = xmlReaderWrapperFactory.CreateXmlReaderFromXmlString(mapDefinition);
+            using var reader = xmlReaderWrapperFactory.CreateXmlReaderFromXmlString(file);
 
-            var data = await resourceDataParser.ReadSectorMacroMap(reader);
+            var data = await resourceDataParser.ReadSectorNames(reader);
 
-            foreach (var (key, value) in data)
-            {
-                returnValue[key] = value;
-            }
+            returnValue.Merge(data);
         }
 
         return returnValue;
@@ -138,18 +128,18 @@ internal class GameResourceDataLoader(
         return await LoadFactionsInternal(entries);
     }
 
-    async Task<Dictionary<string, string>> IGameResourceDataLoader.LoadSectorNameMacroMapFromCatalogs(string catalogsFilePath)
+    async Task<ISectorNameDataDictionary> IGameResourceDataLoader.LoadSectorNamesFromCatalogs(string catalogsFilePath)
     {
-        logger.LogInformation("Loading sector macro map from catalogs at {CatalogsFilePath}", catalogsFilePath);
+        logger.LogInformation("Loading sector names from catalogs at {CatalogsFilePath}", catalogsFilePath);
 
         var entries = await catalogFileReader.ParseIndexes(catalogsFilePath, Constants.CatalogFile.FileName.MapDefinitionXml, Constants.CatalogFile.FileExtensions.XmlData, true);
    
         return await LoadSectorNameMacroMapInternal(entries);
     }
 
-    async Task<Dictionary<string, string>> IGameResourceDataLoader.LoadSectorNameMacroMapFromIndex(IEnumerable<ICatalogIndexEntry> index)
+    async Task<ISectorNameDataDictionary> IGameResourceDataLoader.LoadSectorNamesFromIndex(IEnumerable<ICatalogIndexEntry> index)
     {
-        logger.LogInformation("Loading sector macro map from supplied index");
+        logger.LogInformation("Loading sector names from supplied index");
 
         var entries = index.Where(x => x.FilePath.Contains(Constants.CatalogFile.FileName.MapDefinitionXml, StringComparison.OrdinalIgnoreCase));
 

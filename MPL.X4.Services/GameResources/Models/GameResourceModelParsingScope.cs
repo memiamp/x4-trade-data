@@ -1,6 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using Microsoft.Extensions.Logging;
-using MPL.X4.GameResources.Data;
 
 namespace MPL.X4.GameResources.Models;
 
@@ -14,24 +13,20 @@ internal class GameResourceModelParsingScope(
 {
     string IGameResourceModelParsingScope.Lookup(ITextResourceReference source)
     {
-        if (((IGameResourceModelParsingScope)this).TextResources.TryGetValue(source.PageId, out var page))
-        {
-            if (page.TryGetValue(source.TextId, out var returnValue))
-            {
-                return returnValue.Text;
-            }
+        var id = $"{source.PageId}|{source.TextId}";
 
-            logger.LogWarning("Could not find text entry {TextId} in page {PageId} in text resource data", source.TextId, source.PageId);
-            throw new ArgumentException("The specified text identifier is invalid", nameof(source));
+        if (((IGameResourceModelParsingScope)this).TextResources.TryGetValue(id, out var returnValue))
+        {
+            return returnValue.Text;
         }
 
-        logger.LogWarning("Could not find page {PageId} in text resource data", source.PageId);
-        throw new ArgumentException("The specified page identifier is invalid", nameof(source));
+        logger.LogWarning("Could not lookup text resource {TextResourceId} in text resource data", id);
+        throw new ArgumentException("The specified text resource identifiers are invalid", nameof(source));
     }
 
     [AllowNull]
     IColourModelList IGameResourceModelParsingScope.Colours { get; set; }
 
     [AllowNull]
-    ITextResourcePageDictionary IGameResourceModelParsingScope.TextResources { get; set; }
+    ITextResourceModelList IGameResourceModelParsingScope.TextResources { get; set; }
 }

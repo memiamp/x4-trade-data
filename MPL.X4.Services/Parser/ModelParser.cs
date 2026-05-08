@@ -13,7 +13,7 @@ internal class ModelParser(
                            IServiceProvider serviceProvider)
     : IModelParser
 {
-    TModel IModelParser.Parse<TData, TModel>(TData source, params object[] parserParameters)
+    TModel IModelParser.Parse<TData, TModel>(TData source)
     {
         var parser = serviceProvider.GetService<IModelParser<TData, TModel>>();
 

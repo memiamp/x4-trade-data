@@ -3,6 +3,6 @@
 /// <summary>
 /// An interface that defines a list of faction models.
 /// </summary>
-public interface IFactionModelList : IList<IFactionModel>
+public interface IFactionModelList : IModelWithIdList<IFactionModel>
 {
 }

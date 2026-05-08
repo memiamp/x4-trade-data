@@ -3,7 +3,7 @@
 /// <summary>
 /// An interface that defines a faction model.
 /// </summary>
-public interface IFactionModel
+public interface IFactionModel : IModelWithId
 {
     /// <summary>
     /// Gets the acronym of the faction.
@@ -14,11 +14,6 @@ public interface IFactionModel
     /// Gets the colour of the faction.
     /// </summary>
     IColourModel Colour { get; }
-
-    /// <summary>
-    /// Gets the identifier of the faction.
-    /// </summary>
-    string Id { get; }
 
     /// <summary>
     /// Gets the name of the faction.

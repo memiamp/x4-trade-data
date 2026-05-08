@@ -23,5 +23,5 @@ internal interface IGameResourceModelParsingScope
     /// <summary>
     /// Gets or sets the text resources.
     /// </summary>
-    ITextResourcePageDictionary TextResources { get; set; }
+    ITextResourceModelList TextResources { get; set; }
 }

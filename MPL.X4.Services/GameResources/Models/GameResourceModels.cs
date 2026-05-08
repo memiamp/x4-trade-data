@@ -9,9 +9,9 @@ internal class GameResourceModels : IGameResourceModels
 
     public required IFactionModelList Factions { get; init; }
 
-    //public required Dictionary<string, string> SectorMacros { get; init; }
+    public required ISectorNameModelList SectorNames { get; init; }
 
-    //public required ITextResourcePageDictionary Text { get; init; }
+    public required ITextResourceModelList Text { get; init; }
 
     //public required IZoneOffsetDataDictionary ZoneOffsets { get; init; }
 }
