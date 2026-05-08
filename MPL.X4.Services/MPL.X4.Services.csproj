@@ -15,4 +15,9 @@
     <ProjectReference Include="..\MPL.X4.Library\MPL.X4.Library.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="SaveGame\Data\Services\" />
+    <Folder Include="Services\Xml\" />
+  </ItemGroup>
+
 </Project>

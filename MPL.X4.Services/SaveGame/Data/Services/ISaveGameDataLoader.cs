@@ -1,11 +1,11 @@
 ﻿using MPL.X4.SaveGame.Data;
 
-namespace MPL.X4;
+namespace MPL.X4.SaveGame.Data.Services;
 
 /// <summary>
-/// An interface that defines the behaviour of a loader of save games.
+/// An interface that defines the behaviour of a loader of save game data.
 /// </summary>
-public interface ISaveGameLoader
+public interface ISaveGameDataLoader
 {
     /// <summary>
     /// Loads a save game from the specified <paramref name="sourcePath"/>.

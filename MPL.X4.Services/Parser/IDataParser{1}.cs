@@ -1,4 +1,6 @@
-﻿namespace MPL.X4.Parser;
+﻿using MPL.X4.Services.Xml;
+
+namespace MPL.X4.Parser;
 
 /// <summary>
 /// An interface that defines the behaviour of a data parser.

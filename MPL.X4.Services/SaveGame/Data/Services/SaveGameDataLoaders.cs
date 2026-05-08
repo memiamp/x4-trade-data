@@ -2,22 +2,23 @@
 using Microsoft.Extensions.Logging;
 using MPL.X4.Parser;
 using MPL.X4.SaveGame.Data;
+using MPL.X4.Services.Xml;
 
-namespace MPL.X4;
+namespace MPL.X4.SaveGame.Data.Services;
 
 /// <summary>
-/// A class that implements a loader of save games.
+/// A class that implements a loader of save game data.
 /// </summary>
+/// <param name="dataParser">An <see cref="IDataParser"/> that is the data parser to use.</param>
 /// <param name="logger">An <see cref="ILogger{TCategoryName}"/> that is the logger to use.</param>
-/// <param name="universeParser">An <see cref="IDataParser{IUniverse}"/> that is the universe parser to use.</param>
 /// <param name="xmlReaderFactory">An <see cref="IXmlReaderWrapperFactory"/> that is the XmlReader factory to use.</param>
-internal class SaveGameLoader(
-                              ILogger<SaveGameLoader> logger,
-                              IDataParser<IUniverseData> universeParser,
-                              IXmlReaderWrapperFactory xmlReaderFactory)
-    : ISaveGameLoader
+internal class SaveGameDataLoader(
+                                  IDataParser dataParser,
+                                  ILogger<SaveGameDataLoader> logger,
+                                  IXmlReaderWrapperFactory xmlReaderFactory)
+    : ISaveGameDataLoader
 {
-    async Task<ISaveGameData> ISaveGameLoader.LoadFrom(string sourcePath)
+    async Task<ISaveGameData> ISaveGameDataLoader.LoadFrom(string sourcePath)
     {
         ISaveGameData? returnValue = null;
 
@@ -25,11 +26,11 @@ internal class SaveGameLoader(
 
         while (await reader.ReadAsync())
         {
-            if (reader.CheckNodeMatches(Constants.SaveGameFile.ElementName.Universe, XmlNodeType.Element))
+            if (reader.CheckNodeMatches(Constants.XmlDataFile.ElementName.Universe, XmlNodeType.Element))
             {
                 using var universeSubtree = await reader.ReadSubtree();
 
-                var universe = await universeParser.Parse(universeSubtree);
+                var universe = await dataParser.Parse<IUniverseData>(universeSubtree);
                 returnValue = new SaveGameData
                 {
                     Universe = universe

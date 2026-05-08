@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Logging;
 using MPL.X4.GameResources.Data.Services;
 using MPL.X4.GameResources.Models.Services;
+using MPL.X4.SaveGame.Data.Services;
 
 namespace MPL.X4.TradeData.TestApp;
 
@@ -36,5 +37,9 @@ internal static class Program
         var modelService = sp.GetRequiredService<IGameResourceModelLoader>();
         var modelData = modelService.LoadGameResourceModels(resourceData);
         Console.WriteLine("Models loaded");
+
+        var saveGameService = sp.GetRequiredService<ISaveGameDataLoader>();
+        var saveGame = saveGameService.LoadFrom(@"E:\Shared\X4\save\save_007.xml.gz");
+        Console.WriteLine("Save game loaded");
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System.Xml;
 using Microsoft.Extensions.Logging;
 using MPL.X4.Parser;
+using MPL.X4.Services.Xml;
 
 namespace MPL.X4.DataParser;
 
@@ -19,12 +20,13 @@ internal abstract class PositionalDataParserBase<TData>(
     /// </summary>
     /// <param name="offset">An <see cref="IPosition3D"/> that is the offset position.</param>
     /// <param name="target">An <see cref="Position3D"/> that is the position to be updated.</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    private protected static void UpdatePosition(IPosition3D offset, Position3D target)
+    /// <returns>An <see cref="IPosition3D"/> that is the result.</returns>
+    private protected static IPosition3D UpdatePosition(IPosition3D offset, Position3D target)
     {
-        target.X += offset.X;
-        target.Y += offset.Y;
-        target.Z += offset.Z;
+        return new Position3D(
+                              target.X + offset.X,
+                              target.Y + offset.Y,
+                              target.Z + offset.Z);
     }
 
     /// <summary>
@@ -32,14 +34,12 @@ internal abstract class PositionalDataParserBase<TData>(
     /// </summary>
     /// <param name="reader">An <see cref="IXmlReaderWrapper"/> that is the data reader.</param>
     /// <param name="position">An <see cref="SectorPosition"/> that is the position to update.</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    private protected async Task UpdatePosition(IXmlReaderWrapper reader, Position3D position)
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.  An <see cref="IPosition3D"/> that is the result.</returns>
+    private protected async Task<IPosition3D> UpdatePosition(IXmlReaderWrapper reader, Position3D position)
     {
         var offsetPosition = await positionParser.Parse(reader);
 
-        position.X += offsetPosition.X;
-        position.Y += offsetPosition.Y;
-        position.Z += offsetPosition.Z;
+        return UpdatePosition(offsetPosition, position);
     }
 
     /// <summary>
@@ -54,7 +54,7 @@ internal abstract class PositionalDataParserBase<TData>(
         
         while (await offsetSubtree.ReadAsync())
         {
-            if (offsetSubtree.CheckNodeMatches(Constants.SaveGameFile.ElementName.Position, XmlNodeType.Element, 1))
+            if (offsetSubtree.CheckNodeMatches(Constants.XmlDataFile.ElementName.Position, XmlNodeType.Element, 1))
             {
                 await UpdatePosition(offsetSubtree, position);
                 break;

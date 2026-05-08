@@ -6,12 +6,22 @@
 public interface IOffsetData
 {
     /// <summary>
-    /// Gets the position.
+    /// Gets the offset macro.
     /// </summary>
-    IPosition3D Position { get; }
+    string Macro { get; }
 
     /// <summary>
-    /// Gets the rotation.
+    /// Gets the name of the offset.
     /// </summary>
-    IRotation3D Rotation { get; }
+    string Name{ get; }
+
+    /// <summary>
+    /// Gets the offset.
+    /// </summary>
+    ITransform3D Offset { get; }
+
+    /// <summary>
+    /// Gets the reference type of the offset.
+    /// </summary>
+    string ReferenceType { get; }
 }

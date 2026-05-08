@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using MPL.X4.Catalog;
 using MPL.X4.Catalog.Services;
+using MPL.X4.Services.Xml;
 
 namespace MPL.X4.GameResources.Data.Services;
 
@@ -58,7 +59,7 @@ internal class GameResourceDataLoader(
         return returnValue;
     }
 
-    private async Task<ISectorNameDataDictionary> LoadSectorNameMacroMapInternal(IEnumerable<ICatalogIndexEntry> index)
+    private async Task<ISectorNameDataDictionary> LoadSectorNamesInternal(IEnumerable<ICatalogIndexEntry> index)
     {
         SectorNameDataDictionary returnValue = [];
 
@@ -75,16 +76,16 @@ internal class GameResourceDataLoader(
         return returnValue;
     }
 
-    private async Task<IZoneOffsetDataDictionary> LoadZoneOffsetsInternal(IEnumerable<ICatalogIndexEntry> index)
+    private async Task<IOffsetDataDictionary> LoadOffsetsInternal(IEnumerable<ICatalogIndexEntry> index)
     {
-        ZoneOffsetDataDictionary returnValue = [];
+        OffsetDataDictionary returnValue = [];
 
         var files = catalogFileReader.ReadTextFiles(index);
         await foreach (var file in files)
         {
             using var reader = xmlReaderWrapperFactory.CreateXmlReaderFromXmlString(file);
 
-            var data = await resourceDataParser.ReadZoneOffsets(reader);
+            var data = await resourceDataParser.ReadOffsets(reader);
 
             returnValue.Merge(data);
         }
@@ -128,13 +129,31 @@ internal class GameResourceDataLoader(
         return await LoadFactionsInternal(entries);
     }
 
+    async Task<IOffsetDataDictionary> IGameResourceDataLoader.LoadOffsetsFromCatalogs(string catalogsFilePath)
+    {
+        logger.LogInformation("Loading offset data from catalogs at {CatalogsFilePath}", catalogsFilePath);
+
+        var entries = await catalogFileReader.ParseIndexes(catalogsFilePath, "maps/", Constants.CatalogFile.FileExtensions.XmlData, true);
+
+        return await LoadOffsetsInternal(entries);
+    }
+
+    async Task<IOffsetDataDictionary> IGameResourceDataLoader.LoadOffsetsFromIndex(IEnumerable<ICatalogIndexEntry> index)
+    {
+        logger.LogInformation("Loading offset data from supplied index");
+
+        var entries = index.Where(x => x.FilePath.StartsWith("maps/", StringComparison.OrdinalIgnoreCase));
+
+        return await LoadOffsetsInternal(entries);
+    }
+
     async Task<ISectorNameDataDictionary> IGameResourceDataLoader.LoadSectorNamesFromCatalogs(string catalogsFilePath)
     {
         logger.LogInformation("Loading sector names from catalogs at {CatalogsFilePath}", catalogsFilePath);
 
         var entries = await catalogFileReader.ParseIndexes(catalogsFilePath, Constants.CatalogFile.FileName.MapDefinitionXml, Constants.CatalogFile.FileExtensions.XmlData, true);
    
-        return await LoadSectorNameMacroMapInternal(entries);
+        return await LoadSectorNamesInternal(entries);
     }
 
     async Task<ISectorNameDataDictionary> IGameResourceDataLoader.LoadSectorNamesFromIndex(IEnumerable<ICatalogIndexEntry> index)
@@ -143,7 +162,7 @@ internal class GameResourceDataLoader(
 
         var entries = index.Where(x => x.FilePath.Contains(Constants.CatalogFile.FileName.MapDefinitionXml, StringComparison.OrdinalIgnoreCase));
 
-        return await LoadSectorNameMacroMapInternal(entries);
+        return await LoadSectorNamesInternal(entries);
     }
 
     async Task<ITextResourcePageDictionary> IGameResourceDataLoader.LoadTextResourcesFromCatalogs(string catalogsFilePath)
@@ -156,23 +175,5 @@ internal class GameResourceDataLoader(
         using var reader = xmlReaderWrapperFactory.CreateXmlReaderFromXmlString(languageFile);
 
         return await resourceDataParser.ReadTextResources(reader);
-    }
-
-    async Task<IZoneOffsetDataDictionary> IGameResourceDataLoader.LoadZoneOffsetsFromCatalogs(string catalogsFilePath)
-    {
-        logger.LogInformation("Loading zone offset data from catalogs at {CatalogsFilePath}", catalogsFilePath);
-
-        var entries = await catalogFileReader.ParseIndexes(catalogsFilePath, "maps/", Constants.CatalogFile.FileExtensions.XmlData, true);
-
-        return await LoadZoneOffsetsInternal(entries);
-    }
-
-    async Task<IZoneOffsetDataDictionary> IGameResourceDataLoader.LoadZoneOffsetsFromIndex(IEnumerable<ICatalogIndexEntry> index)
-    {
-        logger.LogInformation("Loading zone offset data from supplied index");
-
-        var entries = index.Where(x => x.FilePath.StartsWith("maps/", StringComparison.OrdinalIgnoreCase));
-
-        return await LoadZoneOffsetsInternal(entries);
     }
 }

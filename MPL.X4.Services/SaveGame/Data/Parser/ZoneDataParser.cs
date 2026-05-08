@@ -3,6 +3,7 @@ using Microsoft.Extensions.Logging;
 using MPL.X4.DataParser;
 using MPL.X4.GameResources.Data;
 using MPL.X4.Parser;
+using MPL.X4.Services.Xml;
 
 namespace MPL.X4.SaveGame.Data.Parser;
 
@@ -11,7 +12,7 @@ public interface IZoneDataParser : IDataParser<IZoneData>
     /// <summary>
     /// Gets or sets the zone offsets.
     /// </summary>
-    Dictionary<string, IZoneOffsetData> ZoneOffsets { get; set; }
+    Dictionary<string, IOffsetData> ZoneOffsets { get; set; }
 }
 /// <summary>
 /// A class that implements a data parser for a <see cref="IZoneData"/>.
@@ -32,9 +33,9 @@ internal class ZoneDataParser(
     : PositionalDataParserBase<IZoneData>(logger, positionParser),
       IZoneDataParser
 {
-    private Dictionary<string, IZoneOffsetData> _zoneOffsets = [];
+    private Dictionary<string, IOffsetData> _zoneOffsets = [];
 
-    Dictionary<string, IZoneOffsetData> IZoneDataParser.ZoneOffsets 
+    Dictionary<string, IOffsetData> IZoneDataParser.ZoneOffsets 
     {
         get => _zoneOffsets; 
         set => _zoneOffsets = value; 

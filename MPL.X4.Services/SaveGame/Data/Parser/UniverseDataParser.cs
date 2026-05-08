@@ -1,6 +1,7 @@
 ﻿using System.Xml;
 using Microsoft.Extensions.Logging;
 using MPL.X4.Parser;
+using MPL.X4.Services.Xml;
 
 namespace MPL.X4.SaveGame.Data.Parser;
 
@@ -20,8 +21,8 @@ internal class UniverseDataParser(
 
         while (await reader.ReadAsync())
         {
-            if (reader.CheckNodeMatches(Constants.SaveGameFile.ElementName.Component, XmlNodeType.Element) &&
-                reader.TryGetAttribute(Constants.SaveGameFile.AttributeName.Class, x => x == Constants.SaveGameFile.AttributeValue.Class.Sector))
+            if (reader.CheckNodeMatches(Constants.XmlDataFile.ElementName.Component, XmlNodeType.Element, 1) &&
+                reader.TryGetAttribute(Constants.XmlDataFile.AttributeName.Class, x => x == Constants.XmlDataFile.AttributeValue.Class.Sector))
             {
                 using var sectorSubtree = await reader.ReadSubtree();
 

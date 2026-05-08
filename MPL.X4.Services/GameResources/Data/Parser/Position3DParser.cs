@@ -1,6 +1,8 @@
 ﻿using Microsoft.Extensions.Logging;
+using MPL.X4.Parser;
+using MPL.X4.Services.Xml;
 
-namespace MPL.X4.Parser;
+namespace MPL.X4.GameResources.Data.Parser;
 
 /// <summary>
 /// A class that implements a data parser for an <see cref="IPosition3D"/>.
@@ -12,9 +14,9 @@ internal class Position3DParser(
 {
     private protected override Task<IPosition3D> OnParse(IXmlReaderWrapper reader)
     {
-        reader.TryGetAttribute(Constants.SaveGameFile.AttributeName.X, out double? x);
-        reader.TryGetAttribute(Constants.SaveGameFile.AttributeName.Y, out double? y);
-        reader.TryGetAttribute(Constants.SaveGameFile.AttributeName.Z, out double? z);
+        reader.TryGetAttribute(Constants.XmlDataFile.AttributeName.X, out double? x);
+        reader.TryGetAttribute(Constants.XmlDataFile.AttributeName.Y, out double? y);
+        reader.TryGetAttribute(Constants.XmlDataFile.AttributeName.Z, out double? z);
 
         var returnValue = new Position3D
         {

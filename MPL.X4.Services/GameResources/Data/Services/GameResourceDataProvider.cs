@@ -7,12 +7,10 @@ namespace MPL.X4.GameResources.Data.Services;
 /// A class that implements a resource data provider.
 /// </summary>
 /// <param name="catalogFileReader">An <see cref="ICatalogFileReader"/> that is the catalog file reader to use.</param>
-/// <param name="gameResourceDataAccessor">An <see cref="IGameResourceDataAccessor"/> that is the resource data accessor to use.</param>
 /// <param name="gameResourceDataLoader">An <see cref="IGameResourceDataLoader"/> that is the resource data loader service.</param>
 /// <param name="logger">An <see cref="ILogger{TCategoryName}"/> that is the logger to use.</param>
 internal partial class GameResourceDataProvider(
                                                 ICatalogFileReader catalogFileReader,
-                                                IGameResourceDataAccessor gameResourceDataAccessor,
                                                 IGameResourceDataLoader gameResourceDataLoader,
                                                 ILogger<GameResourceDataProvider> logger)
     : IGameResourceDataProvider
@@ -25,19 +23,17 @@ internal partial class GameResourceDataProvider(
 
         var colours = await gameResourceDataLoader.LoadColourResourcesFromIndex(index);
         var factions = await gameResourceDataLoader.LoadFactionsFromIndex(index);
+        var offsets = await gameResourceDataLoader.LoadOffsetsFromIndex(index);
         var sectorNames = await gameResourceDataLoader.LoadSectorNamesFromIndex(index);
         var textResource = await gameResourceDataLoader.LoadTextResourcesFromCatalogs(catalogFilePath);
-        var zoneOffsets = await gameResourceDataLoader.LoadZoneOffsetsFromIndex(index);
 
-        gameResourceDataAccessor.Instance = new GameResourceData
+        return new GameResourceData
         {
             Colours = colours,
             Factions = factions,
+            Offsets = offsets,
             SectorNames = sectorNames,
-            Text = textResource,
-            ZoneOffsets = zoneOffsets
+            Text = textResource
         };
-
-        return gameResourceDataAccessor.Instance;
     }
 }

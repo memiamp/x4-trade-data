@@ -1,4 +1,6 @@
-﻿namespace MPL.X4;
+﻿using System.Numerics;
+
+namespace MPL.X4;
 
 /// <summary>
 /// An interface that defines a 3D rotation.
@@ -13,7 +15,7 @@ public interface IRotation3D
         {
             Pitch = 0,
             Roll = 0,
-            Yaw = 0,
+            Yaw = 0
         };
 
     /// <summary>

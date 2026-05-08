@@ -3,7 +3,7 @@ using System.Text;
 using System.Xml;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace MPL.X4;
+namespace MPL.X4.Services.Xml;
 
 /// <summary>
 /// A class that implements a factory for <see cref="IXmlReaderWrapper"/> instances.

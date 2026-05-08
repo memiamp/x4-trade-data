@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Logging;
 using MPL.X4.DataParser;
 using MPL.X4.Parser;
+using MPL.X4.Services.Xml;
 
 namespace MPL.X4.SaveGame.Data.Parser;
 
@@ -86,7 +87,7 @@ internal class StationDataParser(
 
         while (await reader.ReadAsync())
         {
-            if (reader.CheckNodeMatches(Constants.SaveGameFile.ElementName.Position, XmlNodeType.Element, 2))
+            if (reader.CheckNodeMatches(Constants.XmlDataFile.ElementName.Position, XmlNodeType.Element, 2))
             {
                 await UpdatePosition(reader, position);
             }

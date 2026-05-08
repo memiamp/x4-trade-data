@@ -114,14 +114,8 @@ public static class Constants
             public const string Owner = "owner";
             public const string Ref = "ref";
             public const string Seller = "seller";
-            public const string Pitch = "pitch";
             public const string Price = "price";
-            public const string Roll = "roll";
             public const string Ware = "ware";
-            public const string X = "x";
-            public const string Y = "y";
-            public const string Yaw = "yaw";
-            public const string Z = "z";
         }
 
         public static class AttributeValue
@@ -162,11 +156,8 @@ public static class Constants
             public const string Connection = "connection";
             public const string Macro = "macro";
             public const string Offset = "offset";
-            public const string Position = "position";
             public const string Production = "production";
-            public const string Rotation = "rotation";
             public const string Trade = "trade";
-            public const string Universe = "universe";
         }
     }
 
@@ -178,6 +169,7 @@ public static class Constants
         public static class AttributeName
         {
             public const string Amount = "amount";
+            public const string Class = "class";
             public const string ColourAlpha = "a";
             public const string ColourBlue = "b";
             public const string ColourGlow = "glow";
@@ -187,11 +179,55 @@ public static class Constants
             public const string Description = "descr";
             public const string Macro = "macro";
             public const string MappingId = "id";
+            public const string Name = "name";
             public const string PageId = "id";
+            public const string Pitch = "pitch";
+            public const string QW = "qw";
+            public const string QX = "qx";
+            public const string QY = "qy";
+            public const string QZ = "qz";
             public const string Reference = "ref";
+            public const string Roll = "roll";
             public const string TextId = "id";
             public const string Title = "title";
             public const string Ware = "ware";
+            public const string X = "x";
+            public const string Y = "y";
+            public const string Yaw = "yaw";
+            public const string Z = "z";
+        }
+
+
+        public static class AttributeValue
+        {
+            public static class Class
+            {
+                //public const string Gate = "gate";
+                //public const string Lock = "lock";
+                //public const string Lockbox = "lockbox";
+                public const string Sector = "sector";
+                //public const string Ship = "ship";
+                //public const string Station = "station";
+                //public const string Zone = "zone";
+            }
+
+            //public static class KnownTo
+            //{
+            //    public const string Player = "player";
+            //}
+
+            //public static class Owner
+            //{
+            //    public const string Ownerless = "ownerless";
+            //}
+
+            //public static class ShipClass
+            //{
+            //    public const string ExtraLarge = "ship_xl";
+            //    public const string Large = "ship_l";
+            //    public const string Medium = "ship_m";
+            //    public const string Small = "ship_s";
+            //}
         }
 
         public static class ElementName
@@ -199,19 +235,27 @@ public static class Constants
             public const string Cargo = "cargo";
             public const string Colour = "color";
             public const string Colours = "colors";
+            public const string Component = "component";
+            public const string Connection = "connection";
             public const string Dataset = "dataset";
             public const string Defaults = "defaults";
             public const string Engine = "engine";
             public const string Faction = "faction";
             public const string Factions = "factions";
+            public const string Macro = "macro";
             public const string Macros = "macros";
             public const string Mapping = "mapping";
             public const string Mappings = "mappings";
             public const string Modification = "modification";
+            public const string Offset = "offset";
             public const string Page = "page";
             public const string Paint = "paint";
+            public const string Position = "position";
+            public const string Quaternion = "quaternion";
+            public const string Rotation = "rotation";
             public const string Ship = "ship";
             public const string TextEntry = "t";
+            public const string Universe = "universe";
             public const string Ware = "ware";
             public const string Wares = "wares";
         }

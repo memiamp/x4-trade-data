@@ -16,6 +16,11 @@ public interface IGameResourceData
     IFactionDataDictionary Factions { get; }
 
     /// <summary>
+    /// Gets offset resource data.
+    /// </summary>
+    IOffsetDataDictionary Offsets { get; }
+
+    /// <summary>
     /// Gets sector name data.
     /// </summary>
     ISectorNameDataDictionary SectorNames { get; }
@@ -24,9 +29,4 @@ public interface IGameResourceData
     /// Gets text resource data.
     /// </summary>
     ITextResourcePageDictionary Text { get; }
-
-    /// <summary>
-    /// Gets zone offset resource data.
-    /// </summary>
-    IZoneOffsetDataDictionary ZoneOffsets { get; }
 }

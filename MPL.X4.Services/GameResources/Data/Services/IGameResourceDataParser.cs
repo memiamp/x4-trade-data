@@ -1,4 +1,6 @@
-﻿namespace MPL.X4.GameResources.Data.Services;
+﻿using MPL.X4.Services.Xml;
+
+namespace MPL.X4.GameResources.Data.Services;
 
 /// <summary>
 /// An interface that defines the behaviour of a game resource data parser.
@@ -20,6 +22,13 @@ public interface IGameResourceDataParser
     Task<IFactionDataDictionary> ReadFactions(IXmlReaderWrapper reader);
 
     /// <summary>
+    /// Reads offset data from the specified <paramref name="reader"/>.
+    /// </summary>
+    /// <param name="reader">An <see cref="IXmlReaderWrapper"/> containing the resource data to parse.</param>
+    /// <returns>A <see cref="Task{TResult}"/> representing the asynchronous operation.  A <see cref="IOffsetDataDictionary"/> containing the result.</returns>
+    Task<IOffsetDataDictionary> ReadOffsets(IXmlReaderWrapper reader);
+
+    /// <summary>
     /// Parses the sector names from the specified <paramref name="reader"/>.
     /// </summary>
     /// <param name="reader">An <see cref="IXmlReaderWrapper"/> containing the resource data to parse.</param>
@@ -32,11 +41,4 @@ public interface IGameResourceDataParser
     /// <param name="reader">An <see cref="IXmlReaderWrapper"/> containing the resource data to parse.</param>
     /// <returns>A <see cref="Task{TResult}"/> representing the asynchronous operation.  A <see cref="ITextResourcePageDictionary"/> containing the result.</returns>
     Task<ITextResourcePageDictionary> ReadTextResources(IXmlReaderWrapper reader);
-
-    /// <summary>
-    /// Reads zone offset data from the specified <paramref name="reader"/>.
-    /// </summary>
-    /// <param name="reader">An <see cref="IXmlReaderWrapper"/> containing the resource data to parse.</param>
-    /// <returns>A <see cref="Task{TResult}"/> representing the asynchronous operation.  A <see cref="IZoneOffsetDataDictionary"/> containing the result.</returns>
-    Task<IZoneOffsetDataDictionary> ReadZoneOffsets(IXmlReaderWrapper reader);
 }

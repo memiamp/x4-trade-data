@@ -1,6 +1,8 @@
 ﻿using Microsoft.Extensions.Logging;
+using MPL.X4.Parser;
+using MPL.X4.Services.Xml;
 
-namespace MPL.X4.Parser;
+namespace MPL.X4.GameResources.Data.Parser;
 
 /// <summary>
 /// A class that implements a data parser for an <see cref="IRotation3D"/>.
@@ -12,9 +14,9 @@ internal class Rotation3DParser(
 {
     private protected override Task<IRotation3D> OnParse(IXmlReaderWrapper reader)
     {
-        reader.TryGetAttribute(Constants.SaveGameFile.AttributeName.Pitch, out double? pitch);
-        reader.TryGetAttribute(Constants.SaveGameFile.AttributeName.Roll, out double? roll);
-        reader.TryGetAttribute(Constants.SaveGameFile.AttributeName.Yaw, out double? yaw);
+        reader.TryGetAttribute(Constants.XmlDataFile.AttributeName.Pitch, out double? pitch);
+        reader.TryGetAttribute(Constants.XmlDataFile.AttributeName.Roll, out double? roll);
+        reader.TryGetAttribute(Constants.XmlDataFile.AttributeName.Yaw, out double? yaw);
 
         var returnValue = new Rotation3D
         {

@@ -1,6 +1,6 @@
 ﻿using MPL.X4.GameResources.Data;
 
-namespace MPL.X4.Models;
+namespace MPL.X4.GameResources.Data;
 
 /// <summary>
 /// A class that implements an offset data model.
@@ -8,9 +8,13 @@ namespace MPL.X4.Models;
 internal class OffsetData : IOffsetData
 {
     public override string ToString()
-        => $"{Position} {Rotation}";
+        => $"{Name} ({Macro}) - {ReferenceType} - {Offset}";
 
-    public required IPosition3D Position { get; init; }
+    public required string Macro { get; init; }
 
-    public required IRotation3D Rotation { get; init; }
+    public required string Name{ get; init; }
+
+    public required ITransform3D Offset{ get; init; }
+
+    public required string ReferenceType { get; init; }
 }

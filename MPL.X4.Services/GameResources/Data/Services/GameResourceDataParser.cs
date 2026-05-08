@@ -1,6 +1,7 @@
 ﻿using System.Xml;
 using Microsoft.Extensions.Logging;
 using MPL.X4.Parser;
+using MPL.X4.Services.Xml;
 
 namespace MPL.X4.GameResources.Data.Services;
 
@@ -74,6 +75,29 @@ internal class GameResourceDataParser(
         return returnValue;
     }
 
+    async Task<IOffsetDataDictionary> IGameResourceDataParser.ReadOffsets(IXmlReaderWrapper reader)
+    {
+        OffsetDataDictionary returnValue = [];
+
+        logger.LogDebug("Parsing offset data");
+
+        while (await reader.ReadAsync())
+        {
+            if (reader.CheckNodeMatches(Constants.XmlDataFile.ElementName.Macros, XmlNodeType.Element))
+            {
+                using var subtree = await reader.ReadSubtree();
+
+                var data = await dataParser.Parse<IOffsetDataDictionary>(subtree);
+
+                returnValue.Merge(data);
+            }
+        }
+
+        logger.LogDebug("{Count} offsets parsed", returnValue.Count);
+
+        return returnValue;
+    }
+
     async Task<ISectorNameDataDictionary> IGameResourceDataParser.ReadSectorNames(IXmlReaderWrapper reader)
     {
         ISectorNameDataDictionary returnValue = new SectorNameDataDictionary();
@@ -114,29 +138,6 @@ internal class GameResourceDataParser(
         }
 
         logger.LogDebug("{Count} pages parsed", returnValue.Count);
-
-        return returnValue;
-    }
-
-    async Task<IZoneOffsetDataDictionary> IGameResourceDataParser.ReadZoneOffsets(IXmlReaderWrapper reader)
-    {
-        ZoneOffsetDataDictionary returnValue = [];
-
-        logger.LogDebug("Parsing zone offset data");
-
-        while (await reader.ReadAsync())
-        {
-            if (reader.CheckNodeMatches(Constants.XmlDataFile.ElementName.Macros, XmlNodeType.Element))
-            {
-                using var subtree = await reader.ReadSubtree();
-
-                var data = await dataParser.Parse<IZoneOffsetDataDictionary>(subtree);
-
-                returnValue.Merge(data);
-            }
-        }
-
-        logger.LogDebug("{Count} zone offsets parsed", returnValue.Count);
 
         return returnValue;
     }

@@ -1,6 +1,6 @@
 ﻿using System.Xml;
 
-namespace MPL.X4;
+namespace MPL.X4.Services.Xml;
 
 /// <summary>
 /// An interface that defines the behaviour of a factory for <see cref="IXmlReaderWrapper"/> instances.
