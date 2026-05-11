@@ -8,10 +8,12 @@ namespace MPL.X4.GameResources.Data.Parser;
 /// <summary>
 /// A class that implements a data parser for a <see cref="ISectorNameDataDictionary"/>.
 /// </summary>
+/// <param name="dataParser">An <see cref="IDataParser"/> that is the data parser to use.</param>
 /// <param name="logger">An <see cref="ILogger{TCategoryName}"/> that is the logger to use.</param>
 internal class SectorNameDataDictionaryParser(
+                                              IDataParser dataParser,
                                               ILogger<SectorNameDataDictionaryParser> logger)
-    : DataParserBase<ISectorNameDataDictionary>(logger)
+    : DataParserBase<ISectorNameDataDictionary>(dataParser, logger)
 {
     private protected override async Task<ISectorNameDataDictionary> OnParse(IXmlReaderWrapper reader)
     {
@@ -30,7 +32,7 @@ internal class SectorNameDataDictionaryParser(
                     var data = new SectorNameData
                     {
                         Id = macro.ToLower(),
-                        NameResource = new TextResourceReference(name)
+                        NameResource = TextResourceReference.Parse(name)
                     };
 
                     returnValue[data.Id] = data;
@@ -47,8 +49,8 @@ internal class SectorNameDataDictionaryParser(
 
         while (await reader.ReadAsync())
         {
-            if (reader.CheckNodeMatches(Constants.ResourceFile.ElementName.Identification, XmlNodeType.Element) &&
-                reader.TryGetAttribute(Constants.ResourceFile.AttributeName.Name, out string? name))
+            if (reader.CheckNodeMatches(Constants.XmlDataFile.ElementName.Identification, XmlNodeType.Element) &&
+                reader.TryGetAttribute(Constants.XmlDataFile.AttributeName.Name, out string? name))
             {
                 returnValue = name;
                 break;

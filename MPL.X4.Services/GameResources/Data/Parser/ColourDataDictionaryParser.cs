@@ -13,7 +13,7 @@ namespace MPL.X4.GameResources.Data.Parser;
 internal class ColourDataDictionaryParser(
                                           IDataParser dataParser,
                                           ILogger<ColourDataDictionaryParser> logger)
-    : DataParserBase<IColourDataDictionary>(logger)
+    : DataParserBase<IColourDataDictionary>(dataParser, logger)
 {
     private protected override async Task<IColourDataDictionary> OnParse(IXmlReaderWrapper reader)
     {
@@ -25,7 +25,7 @@ internal class ColourDataDictionaryParser(
             {
                 using var subtree = await reader.ReadSubtree();
 
-                var data = await dataParser.Parse<IColourData>(subtree);
+                var data = await DataParser.Parse<IColourData>(subtree);
 
                 returnValue.Add(data.Id, data);
             }

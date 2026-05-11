@@ -3,10 +3,10 @@
 /// <summary>
 /// A class that implements a data model for a zone.
 /// </summary>
-internal class ZoneData : IZoneData
+internal class ZoneData : HasTransformDataBase, IZoneData
 {
     public override string ToString()
-        => $"{Code} {Position} - Gates {Gates.Count()} Lockboxes {Lockboxes.Count()} Ships {Ships.Count()} Stations {Stations.Count()} - {Id}";
+        => $"{Code} {Transform} - Gates {Gates.Count()} Lockboxes {Lockboxes.Count()} Ships {Ships.Count()} Stations {Stations.Count()} - {Id}";
 
     public required string Code { get; init; }
 
@@ -18,7 +18,7 @@ internal class ZoneData : IZoneData
   
     public required IEnumerable<ILockboxData> Lockboxes { get; init; }
 
-    public required IPosition3D Position { get; init; }
+    public required string Macro { get; init; }
 
     public required IEnumerable<IShipData> Ships { get; init; }
 

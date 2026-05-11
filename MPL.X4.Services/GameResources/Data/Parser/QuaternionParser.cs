@@ -7,10 +7,12 @@ namespace MPL.X4.GameResources.Data.Parser;
 /// <summary>
 /// A class that implements a data parser for an <see cref="IQuaternion"/>.
 /// </summary>
+/// <param name="dataParser">An <see cref="IDataParser"/> that is the data parser to use.</param>
 /// <param name="logger">An <see cref="ILogger{TCategoryName}"/> that is the logger to use.</param>
 internal class QuaternionParser(
+                                IDataParser dataParser,
                                 ILogger<QuaternionParser> logger)
-    : DataParserBase<IQuaternion>(logger)
+    : DataParserBase<IQuaternion>(dataParser, logger)
 {
     private protected override Task<IQuaternion> OnParse(IXmlReaderWrapper reader)
     {

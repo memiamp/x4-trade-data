@@ -1,46 +1,54 @@
-﻿namespace MPL.X4;
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace MPL.X4;
 
 /// <summary>
 /// A class that implements a X4 text resource reference.
 /// </summary>
-public class TextResourceReference : ITextResourceReference
+/// <param name="PageId">An <see cref="int"/> indicating the page identifier of the resource.</param>
+/// <param name="TextId">An <see cref="int"/> indicating the text identifier of the resource.</param>
+public record struct TextResourceReference(int PageId, int TextId) : ITextResourceReference
 {
-    private readonly int _pageId;
-    private readonly int _textId;
-
     /// <summary>
-    /// Creates a new instance of the <see cref="TextResourceReference"/> class with the specified parameters.
+    /// Parses the specified <paramref name="rawReference"/> as a <see cref="TextResourceReference"/>.
     /// </summary>
-    /// <param name="rawReference">A <see cref="string"/> containing the raw resource reference.</param>
+    /// <param name="rawReference">A <see cref="string"/> containing the raw reference text.</param>
+    /// <returns>A <see cref="TextResourceReference"/> that is the result.</returns>
     /// <exception cref="ArgumentException">Thrown when the specified <paramref name="rawReference"/> is invalid.</exception>
-    public TextResourceReference(string rawReference)
+    public static TextResourceReference Parse(string rawReference)
     {
-        var parts = rawReference.Trim('{', '}').Split(',', StringSplitOptions.RemoveEmptyEntries);
-        if (parts.Length != 2 ||
-            !int.TryParse(parts[0], out _pageId) ||
-            !int.TryParse(parts[1], out _textId))
+        if (!TryParse(rawReference, out var returnValue))
         {
-            throw new ArgumentException("The specified raw reference is invalid", nameof(rawReference));
+            throw new ArgumentException("The specified value is not a valid text resource reference", nameof(rawReference));
         }
+
+        return returnValue.Value;
     }
+
+    public override readonly string ToString() => $"{PageId},{TextId}";
 
     /// <summary>
-    /// Creates a new instance of the <see cref="TextResourceReference"/> class with the specified parameters.
+    /// Tries to parse the specified <paramref name="rawReference"/> as a <see cref="TextResourceReference"/>.
     /// </summary>
-    /// <param name="pageId">An <see cref="int"/> that is the page identifier.</param>
-    /// <param name="textId">An <see cref="int"/> that is the text identifier.</param>
-    public TextResourceReference(
-                                 int pageId,
-                                 int textId)
+    /// <param name="rawReference">A <see cref="string"/> containing the raw reference text.</param>
+    /// <param name="value">A nullable <see cref="TextResourceReference"/> that will be set to the parsed value, or <see langword="null"/>.</param>
+    /// <returns>A <see cref="bool"/> indicating success.</returns>
+    public static bool TryParse(string rawReference, [NotNullWhen(true)] out TextResourceReference? value)
     {
-        _pageId = pageId;
-        _textId = textId;
+        var parts = rawReference
+                                .Trim(Constants.TextResource.TrimChars)
+                                .Split(Constants.TextResource.SplitChar, StringSplitOptions.RemoveEmptyEntries);
+        if (parts.Length == 2 &&
+            int.TryParse(parts[0], out int pageId) &&
+            int.TryParse(parts[1], out int textId))
+        {
+            value = new TextResourceReference(pageId, textId);
+        }
+        else
+        {
+            value = null;
+        }
+
+        return value is not null;
     }
-
-    public override string ToString()
-        => $"{_pageId},{_textId}";
-
-    int ITextResourceReference.PageId => _pageId;
-
-    int ITextResourceReference.TextId => _textId;
 }

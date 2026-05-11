@@ -78,8 +78,7 @@ public static class Bootstrap
         servicesCollection.AddTransient<IDataParser<IStationData>, StationDataParser>();
         servicesCollection.AddTransient<IDataParser<ITradeData>, TradeDataParser>();
         servicesCollection.AddTransient<IDataParser<IUniverseData>, UniverseDataParser>();
-        //servicesCollection.AddTransient<IDataParser<IZone>, ZoneParser>();
-        servicesCollection.AddSingleton<IZoneDataParser, ZoneDataParser>();
+        servicesCollection.AddTransient<IDataParser<IZoneData>, ZoneDataParser>();
     }
 
     /// <summary>

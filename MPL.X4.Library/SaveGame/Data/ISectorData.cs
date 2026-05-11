@@ -11,11 +11,6 @@ public interface ISectorData
     string Code { get; }
 
     /// <summary>
-    /// Gets the gates in the sector.
-    /// </summary>
-    IEnumerable<IGateData> Gates { get; }
-
-    /// <summary>
     /// Gets the identifier of the sector.
     /// </summary>
     string Id { get; }
@@ -24,11 +19,6 @@ public interface ISectorData
     /// Gets an indication of whether the sector is known to the player.
     /// </summary>
     bool IsKnown { get; }
-
-    /// <summary>
-    /// Gets the lockboxes in the sector.
-    /// </summary>
-    IEnumerable<ILockboxData> Lockboxes { get; }
 
     /// <summary>
     /// Gets the macro of the sector.
@@ -41,12 +31,7 @@ public interface ISectorData
     string Owner { get; }
 
     /// <summary>
-    /// Gets the ships in the sector.
+    /// Gets the zones in the sector.
     /// </summary>
-    IEnumerable<IShipData> Ships { get; }
-
-    /// <summary>
-    /// Gets the stations in the sector.
-    /// </summary>
-    IEnumerable<IStationData> Stations { get; }
+    IEnumerable<IZoneData> Zones { get; }
 }

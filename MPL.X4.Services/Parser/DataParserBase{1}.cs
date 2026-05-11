@@ -7,8 +7,10 @@ namespace MPL.X4.Parser;
 /// A class that implements the base functionality of a data parser.
 /// </summary>
 /// <typeparam name="TData">The type of the data to be parsed.</typeparam>
+/// <param name="dataParser">An <see cref="IDataParser"/> that is the data parser to use.</param>
 /// <param name="logger">An <see cref="ILogger{TCategoryName}"/> that is the logger to use.</param>
 internal abstract class DataParserBase<TData>(
+                                              IDataParser dataParser,
                                               ILogger<DataParserBase<TData>> logger)
     : IDataParser<TData>
 {
@@ -19,8 +21,8 @@ internal abstract class DataParserBase<TData>(
     /// <returns>A <see cref="bool"/> indicating the result.</returns>
     private protected static bool GetIsKnownToPlayer(IXmlReaderWrapper reader)
         => reader.TryGetAttribute(
-                                  Constants.SaveGameFile.AttributeName.KnownTo,
-                                  x => x == Constants.SaveGameFile.AttributeValue.KnownTo.Player);
+                                  Constants.XmlDataFile.AttributeName.KnownTo,
+                                  x => x == Constants.XmlDataFile.AttributeValue.KnownTo.Player);
 
     /// <summary>
     /// Invoked to parse data from the specified <paramref name="reader"/>, using the specified <paramref name="positionOffset"/> to adjust any position data as needed.
@@ -28,6 +30,11 @@ internal abstract class DataParserBase<TData>(
     /// <param name="reader">An <see cref="IXmlReaderWrapper"/> that is the data reader.</param>
     /// <returns>A <see cref="Task{TResult}"/> representing the asynchronous operation. A <typeparamref name="TData"/> that is the result.</returns>
     private protected abstract Task<TData> OnParse(IXmlReaderWrapper reader);
+
+    /// <summary>
+    /// Gets the data parser.
+    /// </summary>
+    private protected IDataParser DataParser => dataParser;
 
     /// <summary>
     /// Gets the logger.

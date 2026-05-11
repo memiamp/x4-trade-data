@@ -11,9 +11,9 @@ namespace MPL.X4.SaveGame.Data.Parser;
 /// <param name="sectorParser">An <see cref="IDataParser{ISector}"/> that is the sector parser to use.</param>
 /// <param name="logger">An <see cref="ILogger{TCategoryName}"/> that is the logger to use.</param>
 internal class UniverseDataParser(
-                                  IDataParser<ISectorData> sectorParser,
+                                  IDataParser dataParser,
                                   ILogger<UniverseDataParser> logger)
-    : DataParserBase<IUniverseData>(logger)
+    : DataParserBase<IUniverseData>(dataParser, logger)
 {
     private protected override async Task<IUniverseData> OnParse(IXmlReaderWrapper reader)
     {
@@ -21,14 +21,14 @@ internal class UniverseDataParser(
 
         while (await reader.ReadAsync())
         {
-            if (reader.CheckNodeMatches(Constants.XmlDataFile.ElementName.Component, XmlNodeType.Element, 1) &&
+            if (reader.CheckNodeMatches(Constants.XmlDataFile.ElementName.Component, XmlNodeType.Element, 7) &&
                 reader.TryGetAttribute(Constants.XmlDataFile.AttributeName.Class, x => x == Constants.XmlDataFile.AttributeValue.Class.Sector))
             {
-                using var sectorSubtree = await reader.ReadSubtree();
+                using var subtree = await reader.ReadSubtree();
 
-                var sector = await sectorParser.Parse(sectorSubtree);
+                var data = await DataParser.Parse<ISectorData>(subtree);
 
-                sectors.Add(sector);
+                sectors.Add(data);
             }
         }
 

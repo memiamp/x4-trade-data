@@ -3,7 +3,7 @@
 /// <summary>
 /// An interface that defines a data model of a zone.
 /// </summary>
-public interface IZoneData
+public interface IZoneData : IHasTransform
 {
     /// <summary>
     /// Gets the code of the zone.
@@ -31,9 +31,9 @@ public interface IZoneData
     IEnumerable<ILockboxData> Lockboxes { get; }
 
     /// <summary>
-    /// Gets the position of the zone.
+    /// Gets the zone macro.
     /// </summary>
-    IPosition3D Position { get; }
+    string Macro { get; }
 
     /// <summary>
     /// Gets the ships in the zone.

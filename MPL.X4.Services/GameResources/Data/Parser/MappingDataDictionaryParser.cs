@@ -13,7 +13,7 @@ namespace MPL.X4.GameResources.Data.Parser;
 internal class MappingDataDictionaryParser(
                                            IDataParser dataParser,
                                            ILogger<MappingDataDictionaryParser> logger)
-    : DataParserBase<IMappingDataDictionary>(logger)
+    : DataParserBase<IMappingDataDictionary>(dataParser, logger)
 {
     private protected override async Task<IMappingDataDictionary> OnParse(IXmlReaderWrapper reader)
     {
@@ -25,7 +25,7 @@ internal class MappingDataDictionaryParser(
             {
                 using var subtree = await reader.ReadSubtree();
 
-                var data = await dataParser.Parse<IMappingData>(subtree);
+                var data = await DataParser.Parse<IMappingData>(subtree);
 
                 returnValue.Add(data.Id, data);
             }

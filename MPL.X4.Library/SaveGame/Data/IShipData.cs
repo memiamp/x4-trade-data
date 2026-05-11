@@ -3,7 +3,7 @@
 /// <summary>
 /// An interface that defines a data model of a ship.
 /// </summary>
-public interface IShipData
+public interface IShipData : IHasTransform
 {
     /// <summary>
     /// Gets the ship cargo.
@@ -44,9 +44,4 @@ public interface IShipData
     /// Gets the owner of the ship.
     /// </summary>
     string Owner { get; }
-
-    /// <summary>
-    /// Gets the position of the ship.
-    /// </summary>
-    IPosition3D Position { get; }
 }

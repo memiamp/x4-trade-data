@@ -3,7 +3,7 @@
 /// <summary>
 /// An interface that defines a data model of a lockbox.
 /// </summary>
-public interface ILockboxData
+public interface ILockboxData : IHasTransform
 {
     /// <summary>
     /// Gets the code of the lockbox.
@@ -24,11 +24,6 @@ public interface ILockboxData
     /// Gets the number of locks on the lockbox.
     /// </summary>
     int LockCount { get; }
-
-    /// <summary>
-    /// Gets the position of the lockbox.
-    /// </summary>
-    IPosition3D Position { get; }
 
     /// <summary>
     /// Gets the lockbox type.

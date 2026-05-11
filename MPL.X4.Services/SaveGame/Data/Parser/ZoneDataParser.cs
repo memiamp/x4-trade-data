@@ -1,136 +1,109 @@
 ﻿using System.Xml;
 using Microsoft.Extensions.Logging;
-using MPL.X4.DataParser;
-using MPL.X4.GameResources.Data;
 using MPL.X4.Parser;
 using MPL.X4.Services.Xml;
 
 namespace MPL.X4.SaveGame.Data.Parser;
 
-public interface IZoneDataParser : IDataParser<IZoneData>
-{
-    /// <summary>
-    /// Gets or sets the zone offsets.
-    /// </summary>
-    Dictionary<string, IOffsetData> ZoneOffsets { get; set; }
-}
+using ZoneElements = (
+                      IEnumerable<IGateData> Gates,
+                      IEnumerable<ILockboxData> Lockboxes,
+                      IEnumerable<IShipData> Ships,
+                      IEnumerable<IStationData> Stations,
+                      ITransform3D Transform);
+
 /// <summary>
 /// A class that implements a data parser for a <see cref="IZoneData"/>.
 /// </summary>
-/// <param name="gateParser">An <see cref="IDataParser{IGateData}"/> that is the gate parser to use.</param>
-/// <param name="lockboxParser">An <see cref="IDataParser{ILockboxData}"/> that is the lockbox parser to use.</param>
+/// <param name="dataParser">An <see cref="IDataParser"/> that is the data parser to use.</param>
 /// <param name="logger">An <see cref="ILogger{TCategoryName}"/> that is the logger to use.</param>
-/// <param name="positionParser">An <see cref="IDataParser{IPosition3D}"/> that is the position parser to use.</param>
-/// <param name="shipParser">An <see cref="IDataParser{IShipData}"/> that is the ship parser to use.</param>
-/// <param name="stationParser">An <see cref="IDataParser{IStationData}"/> that is the station parser to use.</param>
 internal class ZoneDataParser(
-                              IDataParser<IGateData> gateParser,
-                              IDataParser<ILockboxData> lockboxParser,
-                              ILogger<ZoneDataParser> logger,
-                              IDataParser<IPosition3D> positionParser,
-                              IDataParser<IShipData> shipParser,
-                              IDataParser<IStationData> stationParser)
-    : PositionalDataParserBase<IZoneData>(logger, positionParser),
-      IZoneDataParser
+                              IDataParser dataParser,
+                              ILogger<ZoneDataParser> logger)
+    : DataParserBase<IZoneData>(dataParser, logger)
 {
-    private Dictionary<string, IOffsetData> _zoneOffsets = [];
-
-    Dictionary<string, IOffsetData> IZoneDataParser.ZoneOffsets 
-    {
-        get => _zoneOffsets; 
-        set => _zoneOffsets = value; 
-    }
-
     private protected override async Task<IZoneData> OnParse(IXmlReaderWrapper reader)
-    //private protected override async Task<IZone> OnParse(IXmlReaderWrapper reader, ISectorPosition positionOffset)
     {
-        List<IGateData> gates = [];
-        List<ILockboxData> lockboxes = [];
-        //SectorPosition? offset = new(positionOffset);
-        ZoneData? returnValue;
-        List<IShipData> ships = [];
-        List<IStationData> stations = [];
-        string? macro = string.Empty;
-        if (reader.TryGetAttribute(Constants.SaveGameFile.AttributeName.Code, out string? code) &&
-            reader.TryGetAttribute(Constants.SaveGameFile.AttributeName.Id, out string? id))
-        {
-            var isKnown = GetIsKnownToPlayer(reader);
-
-            if (reader.TryGetAttribute(Constants.SaveGameFile.AttributeName.Macro, out macro))
-            {
-                if (_zoneOffsets.TryGetValue(macro, out var zoneOffset))
-                {
-                    //UpdatePosition(zoneOffset.Position, offset);
-                }
-            }
-
-            returnValue = new ZoneData
-            {
-                Code = code,
-                Gates = gates,
-                Id = id,
-                IsKnown = isKnown,
-                Lockboxes = lockboxes,
-                Position = IPosition3D.GetDefault(),
-                //Position = offset,
-                Ships = ships,
-                Stations = stations
-            };
-        }
-        else
+        if (!reader.TryGetAttribute(Constants.XmlDataFile.AttributeName.Code, out string? code) ||
+            !reader.TryGetAttribute(Constants.XmlDataFile.AttributeName.ZoneId, out string? id))
         {
             logger.LogWarning("Could not load zone");
             throw new ArgumentException("Could not load zone", nameof(reader));
         }
 
+        var isKnown = GetIsKnownToPlayer(reader);
+        reader.TryGetAttribute(Constants.XmlDataFile.AttributeName.Macro, out string? macro);
+
+        var (gates, lockboxes, ships, stations, transform) = await ParseElements(reader);
+
+        return new ZoneData
+        {
+            Code = code,
+            Gates = gates,
+            Id = id,
+            IsKnown = isKnown,
+            Lockboxes = lockboxes,
+            Macro = macro ?? string.Empty,
+            Ships = ships,
+            Stations = stations,
+            Transform = transform
+        };
+    }
+
+    private async Task<ZoneElements> ParseElements(IXmlReaderWrapper reader)
+    {
+        List<IGateData> gates = [];
+        List<ILockboxData> lockboxes = [];
+        List<IShipData> ships = [];
+        List<IStationData> stations = [];
+        ITransform3D transform = ITransform3D.GetDefault();
+
         while (await reader.ReadAsync())
         {
-            if (reader.CheckNodeMatches(Constants.SaveGameFile.ElementName.Offset, XmlNodeType.Element, 1))
+            if (reader.CheckNodeMatches(Constants.XmlDataFile.ElementName.Offset, XmlNodeType.Element, 1))
             {
-                //await UpdatePositionFromOffset(reader, offset);
+                using var subtree = await reader.ReadSubtree();
+
+                transform = await DataParser.Parse<ITransform3D>(subtree);
             }
-            else if (reader.CheckNodeMatches(Constants.SaveGameFile.ElementName.Component, XmlNodeType.Element) &&
-                     reader.TryGetAttribute(Constants.SaveGameFile.AttributeName.Class, x => x == Constants.SaveGameFile.AttributeValue.Class.Gate))
+            else if (reader.CheckNodeMatches(Constants.XmlDataFile.ElementName.Component, XmlNodeType.Element) &&
+                     reader.TryGetAttribute(Constants.XmlDataFile.AttributeName.Class, x => x == Constants.XmlDataFile.AttributeValue.Class.Gate))
             {
-                using var gateSubtree = await reader.ReadSubtree();
+                using var subtree = await reader.ReadSubtree();
 
-                var gate = await gateParser.Parse(gateSubtree);
-                //var gate = await gateParser.Parse(gateSubtree, offset);
+                var data = await DataParser.Parse<IGateData>(subtree);
 
-                gates.Add(gate);
+                gates.Add(data);
             }
-            else if (reader.CheckNodeMatches(Constants.SaveGameFile.ElementName.Component, XmlNodeType.Element) &&
-                     reader.TryGetAttribute(Constants.SaveGameFile.AttributeName.Class, x => x == Constants.SaveGameFile.AttributeValue.Class.Lockbox))
+            else if (reader.CheckNodeMatches(Constants.XmlDataFile.ElementName.Component, XmlNodeType.Element) &&
+                     reader.TryGetAttribute(Constants.XmlDataFile.AttributeName.Class, x => x == Constants.XmlDataFile.AttributeValue.Class.Lockbox))
             {
-                using var lockboxSubtree = await reader.ReadSubtree();
+                using var subtree = await reader.ReadSubtree();
 
-                var lockbox = await lockboxParser.Parse(lockboxSubtree);
-                //var lockbox = await lockboxParser.Parse(lockboxSubtree, offset);
+                var data = await DataParser.Parse<ILockboxData>(subtree);
 
-                lockboxes.Add(lockbox);
+                lockboxes.Add(data);
             }
-            else if (reader.CheckNodeMatches(Constants.SaveGameFile.ElementName.Component, XmlNodeType.Element) &&
-                     reader.TryGetAttribute(Constants.SaveGameFile.AttributeName.Class, x => x.StartsWith(Constants.SaveGameFile.AttributeValue.Class.Ship), out string? _))
+            else if (reader.CheckNodeMatches(Constants.XmlDataFile.ElementName.Component, XmlNodeType.Element, 3) &&
+                     reader.TryGetAttribute(Constants.XmlDataFile.AttributeName.Class, x => x.StartsWith(Constants.XmlDataFile.AttributeValue.Class.Ship)))
             {
-                using var shipSubtree = await reader.ReadSubtree();
+                using var subtree = await reader.ReadSubtree();
 
-                var ship = await shipParser.Parse(shipSubtree);
-                //var ship = await shipParser.Parse(shipSubtree, offset);
+                var data = await DataParser.Parse<IShipData>(subtree);
 
-                ships.AddRange(ship);
+                ships.AddRange(data);
             }
-            else if (reader.CheckNodeMatches(Constants.SaveGameFile.ElementName.Component, XmlNodeType.Element) &&
-                     reader.TryGetAttribute(Constants.SaveGameFile.AttributeName.Class, x => x == Constants.SaveGameFile.AttributeValue.Class.Station))
+            else if (reader.CheckNodeMatches(Constants.XmlDataFile.ElementName.Component, XmlNodeType.Element) &&
+                     reader.TryGetAttribute(Constants.XmlDataFile.AttributeName.Class, x => x == Constants.XmlDataFile.AttributeValue.Class.Station))
             {
-                using var stationSubtree = await reader.ReadSubtree();
+                using var subtree = await reader.ReadSubtree();
 
-                var station = await stationParser.Parse(stationSubtree);
-                //var station = await stationParser.Parse(stationSubtree, offset);
+                var data = await DataParser.Parse<IStationData>(subtree);
 
-                stations.Add(station);
+                stations.Add(data);
             }
         }
 
-        return returnValue;
+        return (gates, lockboxes, ships, stations, transform);
     }
 }

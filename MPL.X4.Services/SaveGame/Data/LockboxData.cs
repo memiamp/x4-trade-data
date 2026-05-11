@@ -3,22 +3,20 @@
 /// <summary>
 /// A class that implements a data model of a lockbox.
 /// </summary>
-internal class LockboxData : ILockboxData
+internal class LockboxData : HasTransformDataBase, ILockboxData
 {
     public override string ToString()
         => $"{Type} {Code} - IsKnown {IsKnown} - {Id}";
 
-    public required string Code { get; set; }
+    public required string Code { get; init; }
 
-    public required string Id { get; set; }
+    public required string Id { get; init; }
 
-    public required bool IsKnown { get; set; }
+    public required bool IsKnown { get; init; }
 
-    public required int LockCount { get; set; }
+    public required int LockCount { get; init; }
 
-    public required IPosition3D Position { get; set; }
-
-    public required string Type { get; set; }
+    public required string Type { get; init; }
 
     public required IEnumerable<string> Wares { get; init; }
 }

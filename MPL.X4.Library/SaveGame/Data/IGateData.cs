@@ -3,7 +3,7 @@
 /// <summary>
 /// An interface that defines a data model of a gate.
 /// </summary>
-public interface IGateData
+public interface IGateData : IHasTransform
 {
     /// <summary>
     /// Gets the code of the gate.
@@ -21,7 +21,7 @@ public interface IGateData
     bool IsKnown { get; }
 
     /// <summary>
-    /// Gets the position of the gate.
+    /// Gets the macro of the gate.
     /// </summary>
-    IPosition3D Position { get; }
+    string Macro { get; }
 }

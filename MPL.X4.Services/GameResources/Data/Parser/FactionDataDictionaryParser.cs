@@ -13,7 +13,7 @@ namespace MPL.X4.GameResources.Data.Parser;
 internal class FactionDataDictionaryParser(
                                            IDataParser dataParser,
                                            ILogger<FactionDataDictionaryParser> logger)
-    : DataParserBase<IFactionDataDictionary>(logger)
+    : DataParserBase<IFactionDataDictionary>(dataParser, logger)
 {
     private protected override async Task<IFactionDataDictionary> OnParse(IXmlReaderWrapper reader)
     {
@@ -21,11 +21,11 @@ internal class FactionDataDictionaryParser(
 
         while (await reader.ReadAsync())
         {
-            if (reader.CheckNodeMatches(Constants.ResourceFile.ElementName.Faction, XmlNodeType.Element, 1))
+            if (reader.CheckNodeMatches(Constants.XmlDataFile.ElementName.Faction, XmlNodeType.Element, 1))
             {
                 using var subtree = await reader.ReadSubtree();
 
-                var data = await dataParser.Parse<IFactionData>(subtree);
+                var data = await DataParser.Parse<IFactionData>(subtree);
 
                 returnValue.Add(data.Id, data);
             }

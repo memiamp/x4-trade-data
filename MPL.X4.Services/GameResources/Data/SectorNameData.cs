@@ -8,7 +8,7 @@ internal class SectorNameData : ISectorNameData
     public override string ToString()
         => $"{Id} - {NameResource}";
 
-    public required string Id { get; set; }
+    public required string Id { get; init; }
 
-    public required ITextResourceReference NameResource{ get; set; }
+    public required ITextResourceReference NameResource { get; init; }
 }

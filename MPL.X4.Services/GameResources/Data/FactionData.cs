@@ -8,11 +8,11 @@ internal class FactionData : IFactionData
     public override string ToString()
         => $"{Id} - Name {NameResource?.ToString()} Acronym {AcronymResource?.ToString()} ColourReference {ColourReference}";
 
-    public ITextResourceReference? AcronymResource { get; set; }
+    public ITextResourceReference? AcronymResource { get; init; }
 
-    public string? ColourReference { get; set; }
+    public string? ColourReference { get; init; }
 
-    public required string Id { get; set; }
+    public required string Id { get; init; }
 
-    public ITextResourceReference? NameResource { get; set; }
+    public ITextResourceReference? NameResource { get; init; }
 }

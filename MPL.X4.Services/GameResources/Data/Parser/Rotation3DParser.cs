@@ -7,10 +7,12 @@ namespace MPL.X4.GameResources.Data.Parser;
 /// <summary>
 /// A class that implements a data parser for an <see cref="IRotation3D"/>.
 /// </summary>
+/// <param name="dataParser">An <see cref="IDataParser"/> that is the data parser to use.</param>
 /// <param name="logger">An <see cref="ILogger{TCategoryName}"/> that is the logger to use.</param>
 internal class Rotation3DParser(
+                                IDataParser dataParser,
                                 ILogger<Rotation3DParser> logger)
-    : DataParserBase<IRotation3D>(logger)
+    : DataParserBase<IRotation3D>(dataParser, logger)
 {
     private protected override Task<IRotation3D> OnParse(IXmlReaderWrapper reader)
     {

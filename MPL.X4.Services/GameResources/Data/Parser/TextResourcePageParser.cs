@@ -8,12 +8,12 @@ namespace MPL.X4.GameResources.Data.Parser;
 /// <summary>
 /// A class that implements a data parser for a <see cref="ITextResourcePage"/>.
 /// </summary>
+/// <param name="dataParser">An <see cref="IDataParser"/> that is the data parser to use.</param>
 /// <param name="logger">An <see cref="ILogger{TCategoryName}"/> that is the logger to use.</param>
-/// <param name="textResourceItemParser">An <see cref="IDataParser{ITextResourceItem}"/> that is the text resource item parser to use.</param>
 internal class TextResourcePageParser(
                                       IDataParser dataParser,
                                       ILogger<TextResourcePageParser> logger)
-    : DataParserBase<ITextResourcePage>(logger)
+    : DataParserBase<ITextResourcePage>(dataParser, logger)
 {
     private protected override async Task<ITextResourcePage> OnParse(IXmlReaderWrapper reader)
     {
@@ -42,7 +42,7 @@ internal class TextResourcePageParser(
         {
             if (reader.CheckNodeMatches(Constants.XmlDataFile.ElementName.TextEntry, XmlNodeType.Element))
             {
-                var textItem = await dataParser.Parse<ITextResourceItem>(reader);
+                var textItem = await DataParser.Parse<ITextResourceItem>(reader);
                 returnValue.Add(textItem.Id, textItem);
             }
         }

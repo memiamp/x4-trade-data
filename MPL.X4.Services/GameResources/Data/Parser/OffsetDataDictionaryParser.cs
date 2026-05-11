@@ -13,7 +13,7 @@ namespace MPL.X4.GameResources.Data.Parser;
 internal class OffsetDataDictionaryParser(
                                           IDataParser dataParser,
                                           ILogger<OffsetDataDictionaryParser> logger)
-    : DataParserBase<IOffsetDataDictionary>(logger)
+    : DataParserBase<IOffsetDataDictionary>(dataParser, logger)
 {
     private async Task<IOffsetData?> ReadOffsetData(IXmlReaderWrapper reader)
     {
@@ -32,7 +32,7 @@ internal class OffsetDataDictionaryParser(
                 {
                     var subtree = await reader.ReadSubtree();
 
-                    offset = await dataParser.Parse<ITransform3D>(subtree);
+                    offset = await DataParser.Parse<ITransform3D>(subtree);
                 }
                 else if (reader.CheckNodeMatches(Constants.XmlDataFile.ElementName.Macro, XmlNodeType.Element, 1) &&
                          reader.TryGetAttribute(Constants.XmlDataFile.AttributeName.Reference, out string? reference))

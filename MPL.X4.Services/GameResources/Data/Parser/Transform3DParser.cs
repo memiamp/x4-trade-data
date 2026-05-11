@@ -14,7 +14,7 @@ namespace MPL.X4.GameResources.Data.Parser;
 internal class Transform3DParser(
                                  IDataParser dataParser,
                                  ILogger<Transform3DParser> logger)
-    : DataParserBase<ITransform3D>(logger)
+    : DataParserBase<ITransform3D>(dataParser, logger)
 {
     private protected override async Task<ITransform3D> OnParse(IXmlReaderWrapper reader)
     {
@@ -26,15 +26,15 @@ internal class Transform3DParser(
         {
             if (reader.CheckNodeMatches(Constants.XmlDataFile.ElementName.Position, XmlNodeType.Element, 1))
             {
-                position = await dataParser.Parse<IPosition3D>(reader);
+                position = await DataParser.Parse<IPosition3D>(reader);
             }
             else if (reader.CheckNodeMatches(Constants.XmlDataFile.ElementName.Quaternion, XmlNodeType.Element, 1))
             {
-                quaternion = await dataParser.Parse<IQuaternion>(reader);
+                quaternion = await DataParser.Parse<IQuaternion>(reader);
             }
             else if (reader.CheckNodeMatches(Constants.XmlDataFile.ElementName.Rotation, XmlNodeType.Element, 1))
             {
-                rotation = await dataParser.Parse<IRotation3D>(reader);
+                rotation = await DataParser.Parse<IRotation3D>(reader);
             }
         }
         

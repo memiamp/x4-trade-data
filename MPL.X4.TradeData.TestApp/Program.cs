@@ -29,7 +29,7 @@ internal static class Program
     private static async Task Main()
     {
         var sp = BuildServices();
-
+        /*
         var dataService = sp.GetRequiredService<IGameResourceDataProvider>();
         var resourceData = await dataService.LoadFromCatalog(@"E:\Shared\X4\GameData");
         Console.WriteLine("Resources loaded");
@@ -37,9 +37,9 @@ internal static class Program
         var modelService = sp.GetRequiredService<IGameResourceModelLoader>();
         var modelData = modelService.LoadGameResourceModels(resourceData);
         Console.WriteLine("Models loaded");
-
+        */
         var saveGameService = sp.GetRequiredService<ISaveGameDataLoader>();
-        var saveGame = saveGameService.LoadFrom(@"E:\Shared\X4\save\save_007.xml.gz");
+        var saveGame = await saveGameService.LoadFrom(@"E:\Shared\X4\save\save_007.xml.gz");
         Console.WriteLine("Save game loaded");
     }
 }
