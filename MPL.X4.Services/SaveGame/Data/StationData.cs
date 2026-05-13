@@ -3,7 +3,7 @@
 /// <summary>
 /// A class that implements a data model of a station.
 /// </summary>
-internal class StationData : HasTransformDataBase, IStationData
+internal class StationData : HasTransformBase, IStationData
 {
     public override string ToString()
         => $"{Owner} {Name ?? NameResource?.ToString() ?? BaseNameResource?.ToString() ?? "Unknown"} {Code} - Trades {Trades.Count()} IsKnown {IsKnown} - {Id}";

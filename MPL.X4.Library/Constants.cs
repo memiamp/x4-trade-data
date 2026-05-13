@@ -141,6 +141,11 @@ public static class Constants
             //    public const string Ownerless = "ownerless";
             //}
 
+            public static class Reference
+            {
+                public const string Sectors = "sectors";
+                public const string Zones = "zones";
+            }
             //public static class ShipClass
             //{
             //    public const string ExtraLarge = "ship_xl";

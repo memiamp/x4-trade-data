@@ -10,6 +10,9 @@ using MPL.X4.Parser;
 using MPL.X4.SaveGame.Data;
 using MPL.X4.SaveGame.Data.Parser;
 using MPL.X4.SaveGame.Data.Services;
+using MPL.X4.SaveGame.Models;
+using MPL.X4.SaveGame.Models.Parser;
+using MPL.X4.SaveGame.Models.Services;
 using MPL.X4.Services.Xml;
 
 namespace MPL.X4;
@@ -26,8 +29,6 @@ public static class Bootstrap
 
     private static void AddGameResourceServices(IServiceCollection servicesCollection)
     {
-        //servicesCollection.AddSingleton<IGameResourceDataAccessor, GameResourceDataAccessor>();
-  
         // Data model services
         servicesCollection.AddTransient<IGameResourceDataLoader, GameResourceDataLoader>();
         servicesCollection.AddTransient<IGameResourceDataParser, GameResourceDataParser>();
@@ -58,6 +59,9 @@ public static class Bootstrap
         servicesCollection.AddTransient<IModelParser<IFactionDataDictionary, IFactionModelList>, FactionModelListParser>();
         servicesCollection.AddTransient<IModelParser<ColourModelSource, IColourModel>, ColourModelParser>();
         servicesCollection.AddTransient<IModelParser<IColourResourceData, IColourModelList>, ColourModelListParser>();
+        servicesCollection.AddTransient<IModelParser<IEnumerable<IOffsetData>, IOffsetModelList>, OffsetModelListParser>();
+        servicesCollection.AddTransient<IModelParser<IOffsetData, IOffsetModel>, OffsetModelParser>();
+        servicesCollection.AddTransient<IModelParser<IOffsetDataDictionary, IOffsetModelReference>, OffsetModelReferenceParser>();
         servicesCollection.AddTransient<IModelParser<ISectorNameData, ISectorNameModel>, SectorNameModelParser>();
         servicesCollection.AddTransient<IModelParser<ISectorNameDataDictionary, ISectorNameModelList>, SectorNameModelListParser>();
         servicesCollection.AddTransient<IModelParser<ITextResourcePageDictionary, ITextResourceModelList>, TextResourceModelListParser>();
@@ -67,6 +71,10 @@ public static class Bootstrap
     {
         // Save game services
         servicesCollection.AddTransient<ISaveGameDataLoader, SaveGameDataLoader>();
+
+        // Model services
+        servicesCollection.AddTransient<ISaveGameModelLoader, SaveGameModelLoader>();
+        servicesCollection.AddScoped<ISaveGameModelParsingScope, SaveGameModelParsingScope>();
 
         // Data parsers
         servicesCollection.AddTransient<IDataParser, X4.Parser.DataParser>();
@@ -79,6 +87,14 @@ public static class Bootstrap
         servicesCollection.AddTransient<IDataParser<ITradeData>, TradeDataParser>();
         servicesCollection.AddTransient<IDataParser<IUniverseData>, UniverseDataParser>();
         servicesCollection.AddTransient<IDataParser<IZoneData>, ZoneDataParser>();
+
+        // Model parsers
+        servicesCollection.AddTransient<IModelParser<IEnumerable<ISectorData>, ISectorModelList>, SectorModelListParser>();
+        servicesCollection.AddTransient<IModelParser<IGateData, IGateModel>, GateModelParser>();
+        servicesCollection.AddTransient<IModelParser<ILockboxData, ILockboxModel>, LockboxModelParser>();
+        servicesCollection.AddTransient<IModelParser<ISaveGameData, ISaveGameModels>, SaveGameModelsParser>();
+        servicesCollection.AddTransient<IModelParser<ISectorData, ISectorModel>, SectorModelParser>();
+        servicesCollection.AddTransient<IModelParser<IUniverseData, IUniverseModel>, UniverseModelParser>();
     }
 
     /// <summary>

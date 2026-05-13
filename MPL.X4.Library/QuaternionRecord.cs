@@ -1,14 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace MPL.X4;
+﻿namespace MPL.X4;
 
 /// <summary>
 /// A record that implements a quaternion.
 /// </summary>
+/// <param name="W">A <see cref="double"/> indicating the W value.</param>
+/// <param name="X">A <see cref="double"/> indicating the X value.</param>
+/// <param name="Y">A <see cref="double"/> indicating the Y value.</param>
+/// <param name="Z">A <see cref="double"/> indicating the Z value.</param>
 public readonly record struct QuaternionRecord(
                                                double W,
                                                double X,

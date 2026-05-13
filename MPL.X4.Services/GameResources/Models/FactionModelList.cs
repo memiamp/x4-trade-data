@@ -5,6 +5,4 @@
 /// </summary>
 internal class FactionModelList : ModelWithIdListBase<IFactionModel>, IFactionModelList
 {
-    private protected override IFactionModel GetDefault()
-        => FactionModel.GetDefault();
 }

@@ -1,4 +1,4 @@
-﻿namespace MPL.X4.GameResources.Models;
+﻿namespace MPL.X4;
 
 /// <summary>
 /// An interface that defines a model that supports an identifier.

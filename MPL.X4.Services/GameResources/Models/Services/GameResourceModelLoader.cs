@@ -15,7 +15,7 @@ internal class GameResourceModelLoader(
                                        IServiceProvider serviceProvider)
     : IGameResourceModelLoader
 {
-    IGameResourceModels IGameResourceModelLoader.LoadGameResourceModels(IGameResourceData data)
+    IGameResourceModels IGameResourceModelLoader.LoadModels(IGameResourceData data)
     {
         using var scopedServiceProvider = serviceProvider.CreateScope();
         var modelParser = serviceProvider.GetRequiredService<IModelParser>();
@@ -30,12 +30,15 @@ internal class GameResourceModelLoader(
 
         var factions = modelParser.Parse<IFactionDataDictionary, IFactionModelList>(data.Factions);
 
+        var offsets = modelParser.Parse<IOffsetDataDictionary, IOffsetModelReference>(data.Offsets);
+
         var sectorNames = modelParser.Parse<ISectorNameDataDictionary, ISectorNameModelList>(data.SectorNames);
 
         return new GameResourceModels
         {
             Colours = colours,
             Factions = factions,
+            Offsets = offsets,
             SectorNames = sectorNames,
             Text = texts
         };

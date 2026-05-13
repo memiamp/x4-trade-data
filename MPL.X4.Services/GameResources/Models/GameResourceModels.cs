@@ -9,9 +9,9 @@ internal class GameResourceModels : IGameResourceModels
 
     public required IFactionModelList Factions { get; init; }
 
+    public required IOffsetModelReference Offsets { get; init; }
+
     public required ISectorNameModelList SectorNames { get; init; }
-
+    
     public required ITextResourceModelList Text { get; init; }
-
-    //public required IZoneOffsetDataDictionary ZoneOffsets { get; init; }
 }

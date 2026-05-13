@@ -3,10 +3,10 @@
 /// <summary>
 /// A class that implements a data model of a lockbox.
 /// </summary>
-internal class LockboxData : HasTransformDataBase, ILockboxData
+internal class LockboxData : HasTransformBase, ILockboxData
 {
     public override string ToString()
-        => $"{Type} {Code} - IsKnown {IsKnown} - {Id}";
+        => $"{Macro} {Code} - IsKnown {IsKnown} - {Id}";
 
     public required string Code { get; init; }
 
@@ -16,7 +16,7 @@ internal class LockboxData : HasTransformDataBase, ILockboxData
 
     public required int LockCount { get; init; }
 
-    public required string Type { get; init; }
+    public required string Macro { get; init; }
 
     public required IEnumerable<string> Wares { get; init; }
 }

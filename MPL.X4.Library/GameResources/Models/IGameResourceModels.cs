@@ -1,7 +1,7 @@
 ﻿namespace MPL.X4.GameResources.Models;
 
 /// <summary>
-/// An interface that defines the behaviour of game resource data.
+/// An interface that defines the behaviour of game resource models.
 /// </summary>
 public interface IGameResourceModels
 {
@@ -16,6 +16,11 @@ public interface IGameResourceModels
     IFactionModelList Factions { get; }
 
     /// <summary>
+    /// Gets the offset resource models.
+    /// </summary>
+    IOffsetModelReference Offsets { get; }
+
+    /// <summary>
     /// Gets sector names.
     /// </summary>
     ISectorNameModelList SectorNames { get; }
@@ -24,9 +29,4 @@ public interface IGameResourceModels
     /// Gets text resource models.
     /// </summary>
     ITextResourceModelList Text { get; }
-
-    /// <summary>
-    /// Gets zone offset resource data.
-    /// </summary>
-    //IZoneOffsetDataDictionary ZoneOffsets { get; }
 }

@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 
-namespace MPL.X4.GameResources.Models;
+namespace MPL.X4;
 
 /// <summary>
 /// An interface that defines a list of <typeparamref name="TModel"/> models that support an identifier.
@@ -17,13 +17,6 @@ public interface IModelWithIdList<TModel> : IList<TModel>
     /// <exception cref="ArgumentException">Thrown when the specified <paramref name="id"/> does not exist.</exception>
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="id"/> is null or empty.</exception>
     TModel GetValue(string id);
-
-    /// <summary>
-    /// Gets the value from the list with the specified <paramref name="id"/>, or returns the default value.
-    /// </summary>
-    /// <param name="id">A <see cref="string"/> containing the identifier to get.</param>
-    /// <returns>An <see cref="TModel"/> that is the result.</returns>
-    TModel GetValueOrDefault(string? id);
 
     /// <summary>
     /// Tries to get the value from the list with the specified <paramref name="id"/>.

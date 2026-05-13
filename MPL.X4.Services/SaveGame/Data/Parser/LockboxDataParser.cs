@@ -24,7 +24,7 @@ internal class LockboxDataParser(
     {
         if (!reader.TryGetAttribute(Constants.XmlDataFile.AttributeName.Code, out string? code) ||
             !reader.TryGetAttribute(Constants.XmlDataFile.AttributeName.LockboxId, out string? id) ||
-            !reader.TryGetAttribute(Constants.XmlDataFile.AttributeName.Macro, out string? type))
+            !reader.TryGetAttribute(Constants.XmlDataFile.AttributeName.Macro, out string? macro))
         {
             Logger.LogWarning("Could not load lockbox");
             throw new ArgumentException("Could not load lockbox", nameof(reader));
@@ -40,8 +40,8 @@ internal class LockboxDataParser(
             Id = id,
             IsKnown = isKnown,
             LockCount = lockCount,
+            Macro = macro,
             Transform = transform,
-            Type = type,
             Wares = wares
         };
     }

@@ -12,9 +12,9 @@ internal class OffsetData : IOffsetData
 
     public required string Macro { get; init; }
 
-    public required string Name{ get; init; }
+    public required string Name { get; init; }
 
-    public required ITransform3D Offset{ get; init; }
+    public required ITransform3D Offset { get; init; }
 
     public required string ReferenceType { get; init; }
 }

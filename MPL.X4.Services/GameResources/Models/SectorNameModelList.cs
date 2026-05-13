@@ -5,6 +5,4 @@
 /// </summary>
 internal class SectorNameModelList : ModelWithIdListBase<ISectorNameModel>, ISectorNameModelList
 {
-    private protected override ISectorNameModel GetDefault()
-        => SectorNameModel.GetDefault();
 }

@@ -5,6 +5,4 @@
 /// </summary>
 internal class TextResourceModelList : ModelWithIdListBase<ITextResourceModel>, ITextResourceModelList
 {
-    private protected override ITextResourceModel GetDefault()
-        => TextResourceModel.GetDefault();
 }

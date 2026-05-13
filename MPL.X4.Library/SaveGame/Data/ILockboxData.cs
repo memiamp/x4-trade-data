@@ -26,9 +26,9 @@ public interface ILockboxData : IHasTransform
     int LockCount { get; }
 
     /// <summary>
-    /// Gets the lockbox type.
+    /// Gets the lockbox macro.
     /// </summary>
-    string Type { get; }
+    string Macro { get; }
 
     /// <summary>
     /// Gets explicit wares in the lockbox.

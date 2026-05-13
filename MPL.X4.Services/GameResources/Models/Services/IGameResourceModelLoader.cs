@@ -12,5 +12,5 @@ public interface IGameResourceModelLoader
     /// </summary>
     /// <param name="data">An <see cref="IGameResourceData"/> to load models from.</param>
     /// <returns>An <see cref="IGameResourceModels"/> that is the result.</returns>
-    IGameResourceModels LoadGameResourceModels(IGameResourceData data);
+    IGameResourceModels LoadModels(IGameResourceData data);
 }

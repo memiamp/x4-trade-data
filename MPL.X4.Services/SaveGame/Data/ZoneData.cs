@@ -3,7 +3,7 @@
 /// <summary>
 /// A class that implements a data model for a zone.
 /// </summary>
-internal class ZoneData : HasTransformDataBase, IZoneData
+internal class ZoneData : HasTransformBase, IZoneData
 {
     public override string ToString()
         => $"{Code} {Transform} - Gates {Gates.Count()} Lockboxes {Lockboxes.Count()} Ships {Ships.Count()} Stations {Stations.Count()} - {Id}";

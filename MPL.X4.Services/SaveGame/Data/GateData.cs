@@ -3,7 +3,7 @@
 /// <summary>
 /// A class that implements a data model of a gate.
 /// </summary>
-internal class GateData : HasTransformDataBase, IGateData
+internal class GateData : HasTransformBase, IGateData
 {
     public override string ToString()
         => $"{Code} {Macro} - IsKnown {IsKnown} - {Id}";

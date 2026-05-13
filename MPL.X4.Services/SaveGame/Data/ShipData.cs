@@ -3,7 +3,7 @@
 /// <summary>
 /// A class that implements a data model of a ship.
 /// </summary>
-internal class ShipData : HasTransformDataBase, IShipData
+internal class ShipData : HasTransformBase, IShipData
 {
     public override string ToString()
         => $"{Owner} {Class} {Macro} {Code} - IsKnown {IsKnown} - {Id}";
