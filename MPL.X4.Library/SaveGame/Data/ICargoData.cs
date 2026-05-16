@@ -6,7 +6,7 @@
 public interface ICargoData
 {
     /// <summary>
-    /// Gets the items in the cargo.
+    /// Gets the ware items in the cargo.
     /// </summary>
-    IEnumerable<ICargoItemData> Items { get; }
+    IEnumerable<IWareItemData> Items { get; }
 }

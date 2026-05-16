@@ -1,9 +1,9 @@
 ﻿namespace MPL.X4.GameResources.Models;
 
 /// <summary>
-/// A class that implements a sector name model.
+/// A class that implements a macro name model.
 /// </summary>
-internal class SectorNameModel : ModelWithIdBase, ISectorNameModel
+internal class MacroNameModel : ModelWithIdBase, IMacroNameModel
 {
     public override string ToString()
         => $"{Name} - {Id}";

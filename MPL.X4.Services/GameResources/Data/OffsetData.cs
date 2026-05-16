@@ -1,6 +1,4 @@
-﻿using MPL.X4.GameResources.Data;
-
-namespace MPL.X4.GameResources.Data;
+﻿namespace MPL.X4.GameResources.Data;
 
 /// <summary>
 /// A class that implements an offset data model.

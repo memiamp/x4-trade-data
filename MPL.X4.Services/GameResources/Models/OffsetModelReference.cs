@@ -1,6 +1,4 @@
-﻿using System.Xml.Linq;
-
-namespace MPL.X4.GameResources.Models;
+﻿namespace MPL.X4.GameResources.Models;
 
 /// <summary>
 /// A class that implements a offset model reference.

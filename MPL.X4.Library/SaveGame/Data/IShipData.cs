@@ -41,6 +41,11 @@ public interface IShipData : IHasTransform
     IEnumerable<string> Modifications { get; }
 
     /// <summary>
+    /// Gets the name of the ship.
+    /// </summary>
+    string? Name { get; }
+
+    /// <summary>
     /// Gets the owner of the ship.
     /// </summary>
     string Owner { get; }

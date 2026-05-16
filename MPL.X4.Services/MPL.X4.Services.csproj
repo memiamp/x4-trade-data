@@ -12,6 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\MPL.X4.Imports.XmlPatch\MPL.X4.Imports.XmlPatch.csproj" />
     <ProjectReference Include="..\MPL.X4.Library\MPL.X4.Library.csproj" />
   </ItemGroup>
 

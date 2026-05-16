@@ -23,7 +23,12 @@ public interface IGameResourceModels
     /// <summary>
     /// Gets sector names.
     /// </summary>
-    ISectorNameModelList SectorNames { get; }
+    IMacroNameModelList SectorNames { get; }
+
+    /// <summary>
+    /// Gets ship models.
+    /// </summary>
+    IMacroNameModelList ShipModels { get; }
 
     /// <summary>
     /// Gets text resource models.

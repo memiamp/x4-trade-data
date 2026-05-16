@@ -1,12 +1,12 @@
 ﻿namespace MPL.X4.GameResources.Models;
 
 /// <summary>
-/// An interface that defines a sector name model.
+/// An interface that defines a macro name model.
 /// </summary>
-public interface ISectorNameModel : IModelWithId
+public interface IMacroNameModel : IModelWithId
 {
     /// <summary>
-    /// Gets the name of the sector.
+    /// Gets the name of the macro.
     /// </summary>
     string Name { get; }
 }

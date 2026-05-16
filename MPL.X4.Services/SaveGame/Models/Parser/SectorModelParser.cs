@@ -21,12 +21,13 @@ internal class SectorModelParser(
     {
         var gates = new GateModelList();
         var lockboxes = new LockboxModelList();
+        var ships = new ShipModelList();
 
         var name = ParseName(source);
         var owner = ParseOwner(source);
         var transform = ParseTransform(source);
 
-        ParseZones(source, gates, lockboxes);
+        ParseZones(source, gates, lockboxes, ships);
 
         return new SectorModel
         {
@@ -37,6 +38,7 @@ internal class SectorModelParser(
             Lockboxes = lockboxes,
             Name = name,
             Owner = owner,
+            Ships = ships,
             Transform = transform
         };
     }
@@ -69,9 +71,9 @@ internal class SectorModelParser(
             ? offset.Offset
             : ITransform3D.GetDefault();
 
-    private void ParseZone(IZoneData source, IGateModelList gates, ILockboxModelList lockboxes)
+    private void ParseZone(IZoneData source, IGateModelList gates, ILockboxModelList lockboxes, IShipModelList ships)
     {
-        var zoneOffset = parsingScope.GameResources.Offsets.Sectors.TryGetValue(source.Macro, out var offset)
+        var zoneOffset = parsingScope.GameResources.Offsets.Zones.TryGetValue(source.Macro, out var offset)
             ? offset.Offset
             : ITransform3D.GetDefault();
 
@@ -88,13 +90,19 @@ internal class SectorModelParser(
             var model = modelParser.Parse<ILockboxData, ILockboxModel>(item);
             lockboxes.Add(model);
         }
+
+        foreach (var item in source.Ships)
+        {
+            var model = modelParser.Parse<IShipData, IShipModel>(item);
+            ships.Add(model);
+        }
     }
 
-    private void ParseZones(ISectorData source, IGateModelList gates, ILockboxModelList lockboxes)
+    private void ParseZones(ISectorData source, IGateModelList gates, ILockboxModelList lockboxes, IShipModelList ships)
     {
         foreach (var zone in source.Zones)
         {
-            ParseZone(zone, gates, lockboxes);
+            ParseZone(zone, gates, lockboxes, ships);
         }
     }
 }

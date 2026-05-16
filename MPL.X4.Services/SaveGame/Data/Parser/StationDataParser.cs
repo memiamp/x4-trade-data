@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Reflection.PortableExecutable;
-using System.Xml;
+﻿using System.Xml;
 using Microsoft.Extensions.Logging;
 using MPL.X4.Parser;
 using MPL.X4.Services.Xml;

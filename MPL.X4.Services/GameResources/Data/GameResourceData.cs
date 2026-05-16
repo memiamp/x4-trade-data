@@ -11,7 +11,11 @@ internal class GameResourceData : IGameResourceData
 
     public required IOffsetDataDictionary Offsets { get; init; }
 
-    public required ISectorNameDataDictionary SectorNames { get; init; }
+    public required IMacroNameResourceDataDictionary SectorNames { get; init; }
+
+    public required IMacroNameResourceDataDictionary ShipModels { get; init; }
 
     public required ITextResourcePageDictionary Text { get; init; }
+
+    public required IMacroNameResourceDataDictionary WareNames { get; init; }
 }

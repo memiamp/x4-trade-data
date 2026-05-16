@@ -22,5 +22,7 @@ internal class ShipData : HasTransformBase, IShipData
 
     public required IEnumerable<string> Modifications { get; init; }
 
+    public required string? Name { get; init; }
+
     public required string Owner { get; init; }
 }

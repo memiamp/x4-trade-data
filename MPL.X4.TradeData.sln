@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MPL.X4.TradeData.Library", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MPL.X4.TradeData.TestApp", "MPL.X4.TradeData.TestApp\MPL.X4.TradeData.TestApp.csproj", "{7CB35D51-3750-4A65-91E3-2AD0468A6430}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MPL.X4.Imports.XmlPatch", "MPL.X4.Imports.XmlPatch\MPL.X4.Imports.XmlPatch.csproj", "{AE37CDBF-ABAC-8DCA-DCC7-692E8B151D10}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +47,10 @@ Global
 		{7CB35D51-3750-4A65-91E3-2AD0468A6430}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7CB35D51-3750-4A65-91E3-2AD0468A6430}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7CB35D51-3750-4A65-91E3-2AD0468A6430}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AE37CDBF-ABAC-8DCA-DCC7-692E8B151D10}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AE37CDBF-ABAC-8DCA-DCC7-692E8B151D10}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AE37CDBF-ABAC-8DCA-DCC7-692E8B151D10}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AE37CDBF-ABAC-8DCA-DCC7-692E8B151D10}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

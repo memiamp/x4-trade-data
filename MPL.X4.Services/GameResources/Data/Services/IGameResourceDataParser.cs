@@ -32,8 +32,15 @@ public interface IGameResourceDataParser
     /// Parses the sector names from the specified <paramref name="reader"/>.
     /// </summary>
     /// <param name="reader">An <see cref="IXmlReaderWrapper"/> containing the resource data to parse.</param>
-    /// <returns>A <see cref="Task{TResult}"/> representing the asynchronous operation.  An <see cref="ISectorNameDataDictionary"/> containing the result.</returns>
-    Task<ISectorNameDataDictionary> ReadSectorNames(IXmlReaderWrapper reader);
+    /// <returns>A <see cref="Task{TResult}"/> representing the asynchronous operation.  An <see cref="IMacroNameResourceDataDictionary"/> containing the result.</returns>
+    Task<IMacroNameResourceDataDictionary> ReadSectorNames(IXmlReaderWrapper reader);
+
+    /// <summary>
+    /// Parses the ship models from the specified <paramref name="reader"/>.
+    /// </summary>
+    /// <param name="reader">An <see cref="IXmlReaderWrapper"/> containing the resource data to parse.</param>
+    /// <returns>A <see cref="Task{TResult}"/> representing the asynchronous operation.  An <see cref="IMacroNameResourceDataDictionary"/> containing the result.</returns>
+    Task<IMacroNameResourceDataDictionary> ReadShipModels(IXmlReaderWrapper reader);
 
     /// <summary>
     /// Reads text resource data from the specified <paramref name="reader"/>.
@@ -41,4 +48,11 @@ public interface IGameResourceDataParser
     /// <param name="reader">An <see cref="IXmlReaderWrapper"/> containing the resource data to parse.</param>
     /// <returns>A <see cref="Task{TResult}"/> representing the asynchronous operation.  A <see cref="ITextResourcePageDictionary"/> containing the result.</returns>
     Task<ITextResourcePageDictionary> ReadTextResources(IXmlReaderWrapper reader);
+
+    /// <summary>
+    /// Parses the ware names from the specified <paramref name="reader"/>.
+    /// </summary>
+    /// <param name="reader">An <see cref="IXmlReaderWrapper"/> containing the resource data to parse.</param>
+    /// <returns>A <see cref="Task{TResult}"/> representing the asynchronous operation.  An <see cref="IMacroNameResourceDataDictionary"/> containing the result.</returns>
+    Task<IMacroNameResourceDataDictionary> ReadWareNames(IXmlReaderWrapper reader);
 }

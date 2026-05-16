@@ -23,10 +23,20 @@ public interface IGameResourceData
     /// <summary>
     /// Gets sector name data.
     /// </summary>
-    ISectorNameDataDictionary SectorNames { get; }
+    IMacroNameResourceDataDictionary SectorNames { get; }
+
+    /// <summary>
+    /// Gets ship model data.
+    /// </summary>
+    IMacroNameResourceDataDictionary ShipModels { get; }
 
     /// <summary>
     /// Gets text resource data.
     /// </summary>
     ITextResourcePageDictionary Text { get; }
+
+    /// <summary>
+    /// Gets ware name data.
+    /// </summary>
+    IMacroNameResourceDataDictionary WareNames { get; }
 }

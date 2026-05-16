@@ -1,17 +1,17 @@
 ﻿namespace MPL.X4.GameResources.Data;
 
 /// <summary>
-/// An interface that defines a sector name data model.
+/// An interface that defines a macro name resource data model.
 /// </summary>
-public interface ISectorNameData
+public interface IMacroNameResourceData
 {
     /// <summary>
-    /// Gets the sector macro.
+    /// Gets the macro.
     /// </summary>
     string Id { get; }
 
     /// <summary>
-    /// Gets the name resource of the sector.
+    /// Gets the name resource of the macro.
     /// </summary>
     ITextResourceReference NameResource { get; }
 }

@@ -1,6 +1,4 @@
-﻿using MPL.X4.SaveGame.Models;
-
-namespace MPL.X4.SaveGame.Models;
+﻿namespace MPL.X4.SaveGame.Models;
 
 /// <summary>
 /// A class that implements save game models.

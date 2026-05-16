@@ -29,6 +29,12 @@ public static class Constants
             public const string EnglishTextResource = $"{LanguageId.English}.{FileExtensions.XmlData}";
             public const string FactionsXml = "factions.xml";
             public const string MapDefinitionXml = "mapdefaults.xml";
+            public const string ShipMacrosL = "assets/units/size_l/macros/";
+            public const string ShipMacrosM = "assets/units/size_m/macros/";
+            public const string ShipMacrosS = "assets/units/size_s/macros/";
+            public const string ShipMacrosXL = "assets/units/size_xl/macros/";
+            public const string ShipMacrosXS = "assets/units/size_xs/macros/";
+            public const string WareDefinition = "libraries/wares.xml";
         }
 
         public static class IndexFile
@@ -68,6 +74,7 @@ public static class Constants
         {
             public const string Amount = "amount";
             public const string BaseName = "basename";
+            public const string Buy = "buy";
             public const string Buyer = "buyer";
             public const string Class = "class";
             public const string Code = "code";
@@ -100,6 +107,7 @@ public static class Constants
             public const string Reference = "ref";
             public const string Roll = "roll";
             public const string SectorId = "id";
+            public const string Sell = "sell";
             public const string Seller = "seller";
             public const string ShipId = "id";
             public const string ShortName = "shortname";
@@ -109,6 +117,7 @@ public static class Constants
             public const string Title = "title";
             public const string TradeId = "id";
             public const string Ware = "ware";
+            public const string WareId = "id";
             public const string X = "x";
             public const string Y = "y";
             public const string Yaw = "yaw";
@@ -127,6 +136,11 @@ public static class Constants
                 public const string Production = "production";
                 public const string Sector = "sector";
                 public const string Ship = "ship";
+                public const string ShipExtraLarge = "ship_xl";
+                public const string ShipExtraSmall = "ship_xs";
+                public const string ShipLarge = "ship_l";
+                public const string ShipMedium = "ship_m";
+                public const string ShipSmall = "ship_s";
                 public const string Station = "station";
                 public const string Zone = "zone";
             }
@@ -146,13 +160,6 @@ public static class Constants
                 public const string Sectors = "sectors";
                 public const string Zones = "zones";
             }
-            //public static class ShipClass
-            //{
-            //    public const string ExtraLarge = "ship_xl";
-            //    public const string Large = "ship_l";
-            //    public const string Medium = "ship_m";
-            //    public const string Small = "ship_s";
-            //}
         }
 
         public static class ElementName

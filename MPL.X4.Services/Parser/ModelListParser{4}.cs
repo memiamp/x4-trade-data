@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.Logging;
-using MPL.X4.GameResources.Data;
 
 namespace MPL.X4.Parser;
 

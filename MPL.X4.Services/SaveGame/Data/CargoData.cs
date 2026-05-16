@@ -8,5 +8,5 @@ internal class CargoData : ICargoData
     public override string ToString()
         => $"Cargo count: {Items.Count()}";
 
-    public required IEnumerable<ICargoItemData> Items { get; init; }
+    public required IEnumerable<IWareItemData> Items { get; init; }
 }

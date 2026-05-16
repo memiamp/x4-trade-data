@@ -33,6 +33,7 @@ internal class ShipDataParser(
         }
 
         var isKnown = GetIsKnownToPlayer(reader);
+        reader.TryGetAttribute(Constants.XmlDataFile.AttributeName.Name, out string? name);
 
         var (cargo, modifications, transform) = await ParseElements(reader);
 
@@ -45,6 +46,7 @@ internal class ShipDataParser(
             IsKnown = isKnown,
             Macro = macro,
             Modifications = modifications,
+            Name = name,
             Owner = owner,
             Transform = transform
         };
@@ -52,7 +54,7 @@ internal class ShipDataParser(
 
     private async Task<ShipElements> ParseElements(IXmlReaderWrapper reader)
     {
-        var cargoItems = new List<ICargoItemData>();
+        var cargoItems = new List<IWareItemData>();
         var modifications = new List<string>();
         ITransform3D transform = ITransform3D.GetDefault();
 

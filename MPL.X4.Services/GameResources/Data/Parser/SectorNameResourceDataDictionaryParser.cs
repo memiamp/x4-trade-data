@@ -6,18 +6,18 @@ using MPL.X4.Services.Xml;
 namespace MPL.X4.GameResources.Data.Parser;
 
 /// <summary>
-/// A class that implements a data parser for a <see cref="ISectorNameDataDictionary"/>.
+/// A class that implements a data parser for a <see cref="ISectorNameResourceDataDictionary"/>.
 /// </summary>
 /// <param name="dataParser">An <see cref="IDataParser"/> that is the data parser to use.</param>
 /// <param name="logger">An <see cref="ILogger{TCategoryName}"/> that is the logger to use.</param>
-internal class SectorNameDataDictionaryParser(
-                                              IDataParser dataParser,
-                                              ILogger<SectorNameDataDictionaryParser> logger)
-    : DataParserBase<ISectorNameDataDictionary>(dataParser, logger)
+internal class SectorNameResourceDataDictionaryParser(
+                                                      IDataParser dataParser,
+                                                      ILogger<SectorNameResourceDataDictionaryParser> logger)
+    : DataParserBase<ISectorNameResourceDataDictionary>(dataParser, logger)
 {
-    private protected override async Task<ISectorNameDataDictionary> OnParse(IXmlReaderWrapper reader)
+    private protected override async Task<ISectorNameResourceDataDictionary> OnParse(IXmlReaderWrapper reader)
     {
-        SectorNameDataDictionary returnValue = [];
+        var returnValue = new SectorNameResourceDataDictionary();
 
         while (await reader.ReadAsync())
         {
@@ -29,7 +29,7 @@ internal class SectorNameDataDictionaryParser(
                 var name = await ReadDatasetName(subtree);
                 if (!string.IsNullOrWhiteSpace(name))
                 {
-                    var data = new SectorNameData
+                    var data = new MacroNameResourceData
                     {
                         Id = macro.ToLower(),
                         NameResource = TextResourceReference.Parse(name)

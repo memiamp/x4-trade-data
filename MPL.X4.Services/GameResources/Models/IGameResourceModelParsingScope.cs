@@ -1,6 +1,4 @@
-﻿using MPL.X4.GameResources.Data;
-
-namespace MPL.X4.GameResources.Models;
+﻿namespace MPL.X4.GameResources.Models;
 
 /// <summary>
 /// An interface that defines a scope for parsing game resource models.

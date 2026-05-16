@@ -249,7 +249,9 @@ internal class CatalogFileReader(
 
     async IAsyncEnumerable<string> ICatalogFileReader.ReadTextFiles(IEnumerable<ICatalogIndexEntry> entries, [EnumeratorCancellation] CancellationToken cancellationToken)
     {
-        var groupedEntries = entries.GroupBy(
+        var groupedEntries = entries
+                                    .Where(x => x.Size > 0)
+                                    .GroupBy(
                                              x => x.DataFilePath,
                                              (x, entry) => new
                                              {

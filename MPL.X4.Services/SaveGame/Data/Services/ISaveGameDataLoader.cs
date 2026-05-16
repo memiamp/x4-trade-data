@@ -1,6 +1,4 @@
-﻿using MPL.X4.SaveGame.Data;
-
-namespace MPL.X4.SaveGame.Data.Services;
+﻿namespace MPL.X4.SaveGame.Data.Services;
 
 /// <summary>
 /// An interface that defines the behaviour of a loader of save game data.

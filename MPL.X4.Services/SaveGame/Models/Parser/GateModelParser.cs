@@ -14,21 +14,20 @@ internal class GateModelParser(
                                ISaveGameModelParsingScope parsingScope)
     : ModelParserBase<IGateData, IGateModel>(logger)
 {
-    //private const string GateMacroIndex = "_0";
-    //private const string GateMacroIndicator = "lockbox_";
-    //private const char MacroSplitChar = '_';
+    private static readonly Dictionary<string, GateType> _typeMap = new()
+    {
+        { "props_anc_gate_01_blocked_macro", GateType.JumpGate },
+        { "props_gates_anc_gate_anim_macro", GateType.JumpGate },
+        { "props_gates_anc_gate_macro", GateType.JumpGate },
+        { "props_ter_gate_01_macro", GateType.JumpGate },
+        { "props_ter_gate_02_macro", GateType.JumpGate },
 
-    //private static readonly Dictionary<string, GateRarity> _rarityMap = new()
-    //{
-    //    { "big", GateRarity.Rare },
-    //    { "common", GateRarity.Common },
-    //    { "explosive", GateRarity.Rare },
-    //    { "fragile", GateRarity.Rare },
-    //    { "rare", GateRarity.Rare },
-    //    { "special", GateRarity.Rare },
-    //    { "trap", GateRarity.Rare },
-    //    { "unusual", GateRarity.Unusual }
-    //};
+        { "props_gates_orb_accelerator_01_macro", GateType.TransorbitalAccelerator },
+        { "props_gates_orb_accelerator_02_macro", GateType.TransorbitalAccelerator },
+        { "props_ter_accelerator_01_macro", GateType.TransorbitalAccelerator },
+
+        { "props_ter_gate_01_destroyed_macro", GateType.Unknown }
+    };
 
     private protected override IGateModel OnParse(IGateData source)
     {
@@ -47,35 +46,11 @@ internal class GateModelParser(
 
     private GateType ParseGateType(string macro)
     {
-        var returnValue = GateType.Unknown;
-        Console.WriteLine(macro);
-        //var lockboxPosition = macro.IndexOf(GateMacroIndicator);
-        //if (lockboxPosition >= 0)
-        //{
-        //    var typeName = macro[(lockboxPosition + GateMacroIndicator.Length)..];
-
-        //    var splitPosition = typeName.IndexOf(GateMacroIndex);
-        //    if (splitPosition >= 0)
-        //    {
-        //        typeName = typeName[..splitPosition];
-
-        //        if (!_rarityMap.TryGetValue(typeName, out returnValue) &&
-        //            typeName.Contains(MacroSplitChar))
-        //        {
-        //            foreach (var part in typeName.Split(MacroSplitChar, StringSplitOptions.RemoveEmptyEntries))
-        //            {
-        //                if (_rarityMap.TryGetValue(part, out returnValue))
-        //                {
-        //                    break;
-        //                }
-        //            }
-        //        }
-        //    }
-        //}
-
-        if (returnValue == GateType.Unknown)
+        if (!_typeMap.TryGetValue(macro, out var returnValue))
         {
             Logger.LogWarning("Unable to map gate macro {Macro} to a type", macro);
+        
+            returnValue = GateType.Unknown;
         }
 
         return returnValue;

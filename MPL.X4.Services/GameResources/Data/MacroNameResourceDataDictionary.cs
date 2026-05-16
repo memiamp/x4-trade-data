@@ -1,8 +1,8 @@
 ﻿namespace MPL.X4.GameResources.Data;
 
 /// <summary>
-/// A class that implements a dictionary of sector name data models.
+/// A class that implements a dictionary of macro name resource data models.
 /// </summary>
-internal class SectorNameDataDictionary : DictionaryCollection<string, ISectorNameData>, ISectorNameDataDictionary
+internal class MacroNameResourceDataDictionary : DictionaryCollection<string, IMacroNameResourceData>, IMacroNameResourceDataDictionary
 {
 }

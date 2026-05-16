@@ -11,7 +11,9 @@ internal class GameResourceModels : IGameResourceModels
 
     public required IOffsetModelReference Offsets { get; init; }
 
-    public required ISectorNameModelList SectorNames { get; init; }
-    
+    public required IMacroNameModelList SectorNames { get; init; }
+
+    public required IMacroNameModelList ShipModels { get; init; }
+
     public required ITextResourceModelList Text { get; init; }
 }

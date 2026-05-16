@@ -25,7 +25,9 @@ internal partial class GameResourceDataProvider(
         var factions = await gameResourceDataLoader.LoadFactionsFromIndex(index);
         var offsets = await gameResourceDataLoader.LoadOffsetsFromIndex(index);
         var sectorNames = await gameResourceDataLoader.LoadSectorNamesFromIndex(index);
+        var shipModels = await gameResourceDataLoader.LoadShipModelsFromIndex(index);
         var textResource = await gameResourceDataLoader.LoadTextResourcesFromCatalogs(catalogFilePath);
+        var wareNames = await gameResourceDataLoader.LoadWareNamesFromIndex(index);
 
         return new GameResourceData
         {
@@ -33,7 +35,9 @@ internal partial class GameResourceDataProvider(
             Factions = factions,
             Offsets = offsets,
             SectorNames = sectorNames,
-            Text = textResource
+            ShipModels = shipModels,
+            Text = textResource,
+            WareNames = wareNames
         };
     }
 }

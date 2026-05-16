@@ -49,11 +49,13 @@ public static class Bootstrap
         servicesCollection.AddTransient<IDataParser<IPosition3D>, Position3DParser>();
         servicesCollection.AddTransient<IDataParser<IQuaternion>, QuaternionParser>();
         servicesCollection.AddTransient<IDataParser<IRotation3D>, Rotation3DParser>();
-        servicesCollection.AddTransient<IDataParser<ISectorNameDataDictionary>, SectorNameDataDictionaryParser>();
+        servicesCollection.AddTransient<IDataParser<ISectorNameResourceDataDictionary>, SectorNameResourceDataDictionaryParser>();
+        servicesCollection.AddTransient<IDataParser<IShipModelResourceDataDictionary>, ShipModelResourceDataDictionaryParser>();
         servicesCollection.AddTransient<IDataParser<ITextResourceItem>, TextResourceItemParser>();
         servicesCollection.AddTransient<IDataParser<ITextResourcePage>, TextResourcePageParser>();
         servicesCollection.AddTransient<IDataParser<ITransform3D>, Transform3DParser>();
-
+        servicesCollection.AddTransient<IDataParser<IWareNameResourceDataDictionary>, WareNameResourceDataDictionaryParser>();
+        
         // Model parsers
         servicesCollection.AddTransient<IModelParser<IFactionData, IFactionModel>, FactionModelParser>();
         servicesCollection.AddTransient<IModelParser<IFactionDataDictionary, IFactionModelList>, FactionModelListParser>();
@@ -62,8 +64,8 @@ public static class Bootstrap
         servicesCollection.AddTransient<IModelParser<IEnumerable<IOffsetData>, IOffsetModelList>, OffsetModelListParser>();
         servicesCollection.AddTransient<IModelParser<IOffsetData, IOffsetModel>, OffsetModelParser>();
         servicesCollection.AddTransient<IModelParser<IOffsetDataDictionary, IOffsetModelReference>, OffsetModelReferenceParser>();
-        servicesCollection.AddTransient<IModelParser<ISectorNameData, ISectorNameModel>, SectorNameModelParser>();
-        servicesCollection.AddTransient<IModelParser<ISectorNameDataDictionary, ISectorNameModelList>, SectorNameModelListParser>();
+        servicesCollection.AddTransient<IModelParser<IMacroNameResourceData, IMacroNameModel>, MacroNameModelParser>();
+        servicesCollection.AddTransient<IModelParser<IMacroNameResourceDataDictionary, IMacroNameModelList>, MacroNameModelListParser>();
         servicesCollection.AddTransient<IModelParser<ITextResourcePageDictionary, ITextResourceModelList>, TextResourceModelListParser>();
     }
 
@@ -86,6 +88,7 @@ public static class Bootstrap
         servicesCollection.AddTransient<IDataParser<IStationData>, StationDataParser>();
         servicesCollection.AddTransient<IDataParser<ITradeData>, TradeDataParser>();
         servicesCollection.AddTransient<IDataParser<IUniverseData>, UniverseDataParser>();
+        servicesCollection.AddTransient<IDataParser<IWareItemData>, WareItemDataParser>();
         servicesCollection.AddTransient<IDataParser<IZoneData>, ZoneDataParser>();
 
         // Model parsers
@@ -94,6 +97,7 @@ public static class Bootstrap
         servicesCollection.AddTransient<IModelParser<ILockboxData, ILockboxModel>, LockboxModelParser>();
         servicesCollection.AddTransient<IModelParser<ISaveGameData, ISaveGameModels>, SaveGameModelsParser>();
         servicesCollection.AddTransient<IModelParser<ISectorData, ISectorModel>, SectorModelParser>();
+        servicesCollection.AddTransient<IModelParser<IShipData, IShipModel>, ShipModelParser>();
         servicesCollection.AddTransient<IModelParser<IUniverseData, IUniverseModel>, UniverseModelParser>();
     }
 

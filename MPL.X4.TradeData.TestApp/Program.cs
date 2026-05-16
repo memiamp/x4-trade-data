@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using MPL.X4.GameResources.Data.Services;
-using MPL.X4.GameResources.Models;
 using MPL.X4.GameResources.Models.Services;
 using MPL.X4.SaveGame.Data.Services;
 using MPL.X4.SaveGame.Models.Services;
@@ -23,6 +22,7 @@ internal static class Program
         });
 
         // Services
+        X4.Imports.XmlPatch.Bootstrap.AddServices(services);
         X4.Bootstrap.AddServices(services);
 
         return services.BuildServiceProvider();

@@ -1,8 +1,6 @@
-﻿using System.Security.Cryptography.X509Certificates;
-using System.Xml;
+﻿using System.Xml;
 using Microsoft.Extensions.Logging;
 using MPL.X4.Parser;
-using MPL.X4.SaveGame.Data;
 using MPL.X4.Services.Xml;
 
 namespace MPL.X4.GameResources.Data.Parser;

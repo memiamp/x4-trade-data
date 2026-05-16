@@ -17,28 +17,23 @@ internal class CargoDataParser(
 {
     private protected override async Task<ICargoData> OnParse(IXmlReaderWrapper reader)
     {
-        var cargoItems = new List<ICargoItemData>();
-        var returnValue = new CargoData
-        {
-            Items = cargoItems
-        };
+        var cargoItems = new List<IWareItemData>();
 
         while (await reader.ReadAsync())
         {
-            if (reader.CheckNodeMatches(Constants.XmlDataFile.ElementName.Ware, XmlNodeType.Element, 1) &&
-                reader.TryGetAttribute(Constants.XmlDataFile.AttributeName.Amount, out int? amount) &&
-                reader.TryGetAttribute(Constants.XmlDataFile.AttributeName.Ware, out string? ware))
+            if (reader.CheckNodeMatches(Constants.XmlDataFile.ElementName.Ware, XmlNodeType.Element, 1))
             {
-                var cargoItem = new CargoItemData
-                {
-                    Amount = amount.Value,
-                    Ware = ware
-                };
+                using var subtree = await reader.ReadSubtree();
 
-                cargoItems.Add(cargoItem);
+                var data = await DataParser.Parse<IWareItemData>(subtree);
+
+                cargoItems.Add(data);
             }
         }
 
-        return returnValue;
+        return new CargoData
+        {
+            Items = cargoItems
+        };
     }
 }

@@ -1,9 +1,9 @@
 ﻿namespace MPL.X4.GameResources.Data;
 
 /// <summary>
-/// A class that implements a data model of a sector name.
+/// A class that implements a data model of a macro name resource.
 /// </summary>
-internal class SectorNameData : ISectorNameData
+internal class MacroNameResourceData : IMacroNameResourceData
 {
     public override string ToString()
         => $"{Id} - {NameResource}";

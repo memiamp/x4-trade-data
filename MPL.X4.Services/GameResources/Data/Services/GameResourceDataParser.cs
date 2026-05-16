@@ -98,9 +98,9 @@ internal class GameResourceDataParser(
         return returnValue;
     }
 
-    async Task<ISectorNameDataDictionary> IGameResourceDataParser.ReadSectorNames(IXmlReaderWrapper reader)
+    async Task<IMacroNameResourceDataDictionary> IGameResourceDataParser.ReadSectorNames(IXmlReaderWrapper reader)
     {
-        ISectorNameDataDictionary returnValue = new SectorNameDataDictionary();
+        IMacroNameResourceDataDictionary returnValue = new MacroNameResourceDataDictionary();
 
         while (await reader.ReadAsync())
         {
@@ -108,13 +108,34 @@ internal class GameResourceDataParser(
             {
                 using var subtree = await reader.ReadSubtree();
 
-                returnValue = await dataParser.Parse<ISectorNameDataDictionary>(subtree);
+                returnValue = await dataParser.Parse<ISectorNameResourceDataDictionary>(subtree);
 
                 break;
             }
         }
 
         logger.LogDebug("{Count} sector names parsed", returnValue.Count);
+
+        return returnValue;
+    }
+
+    async Task<IMacroNameResourceDataDictionary> IGameResourceDataParser.ReadShipModels(IXmlReaderWrapper reader)
+    {
+        IMacroNameResourceDataDictionary returnValue = new MacroNameResourceDataDictionary();
+
+        while (await reader.ReadAsync())
+        {
+            if (reader.CheckNodeMatches(Constants.XmlDataFile.ElementName.Macros, XmlNodeType.Element, 0))
+            {
+                using var subtree = await reader.ReadSubtree();
+
+                returnValue = await dataParser.Parse<IShipModelResourceDataDictionary>(subtree);
+
+                break;
+            }
+        }
+
+        logger.LogDebug("{Count} ship models parsed", returnValue.Count);
 
         return returnValue;
     }
@@ -141,4 +162,26 @@ internal class GameResourceDataParser(
 
         return returnValue;
     }
+
+    async Task<IMacroNameResourceDataDictionary> IGameResourceDataParser.ReadWareNames(IXmlReaderWrapper reader)
+    {
+        IMacroNameResourceDataDictionary returnValue = new MacroNameResourceDataDictionary();
+
+        while (await reader.ReadAsync())
+        {
+            if (reader.CheckNodeMatches(Constants.XmlDataFile.ElementName.Wares, XmlNodeType.Element, 0))
+            {
+                using var subtree = await reader.ReadSubtree();
+
+                returnValue = await dataParser.Parse<IWareNameResourceDataDictionary>(subtree);
+
+                break;
+            }
+        }
+
+        logger.LogDebug("{Count} ware names parsed", returnValue.Count);
+
+        return returnValue;
+    }
+
 }
