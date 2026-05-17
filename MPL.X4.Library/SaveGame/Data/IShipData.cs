@@ -38,7 +38,7 @@ public interface IShipData : IHasTransform
     /// <summary>
     /// Gets the modifications applied to the ship.
     /// </summary>
-    IEnumerable<string> Modifications { get; }
+    IEnumerable<IModificationData> Modifications { get; }
 
     /// <summary>
     /// Gets the name of the ship.

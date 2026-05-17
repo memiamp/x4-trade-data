@@ -36,6 +36,8 @@ internal class GameResourceModelLoader(
 
         var shipModels = modelParser.Parse<IMacroNameResourceDataDictionary, IMacroNameModelList>(data.ShipModels);
 
+        var wareNames = modelParser.Parse<IMacroNameResourceDataDictionary, IMacroNameModelList>(data.WareNames);
+
         return new GameResourceModels
         {
             Colours = colours,
@@ -43,7 +45,8 @@ internal class GameResourceModelLoader(
             Offsets = offsets,
             SectorNames = sectorNames,
             ShipModels = shipModels,
-            Text = texts
+            Text = texts,
+            WareNames = wareNames
         };
     }
 }

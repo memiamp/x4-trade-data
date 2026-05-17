@@ -8,17 +8,19 @@ internal class ShipModel : ModelWithIdBase, IShipModel
     public override string ToString()
         => $"{Class} {Model} - IsKnown {IsKnown} - {Id}";
 
-    public required ShipClass Class { get; set; }
+    public required ICargoItemModelList Cargo { get; init; }
+
+    public required ShipClass Class { get; init; }
 
     public required string Code { get; init; }
 
     public required bool IsKnown { get; init; }
 
-    public required string Model { get; set; }
+    public required string Model { get; init; }
 
-    public required string? Name { get; set; }
+    public required string? Name { get; init; }
 
-    public required string Owner { get; set; }
+    public required string Owner { get; init; }
 
     public required ITransform3D Transform { get; init; }
 }

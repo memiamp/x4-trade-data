@@ -34,4 +34,9 @@ public interface IGameResourceModels
     /// Gets text resource models.
     /// </summary>
     ITextResourceModelList Text { get; }
+
+    /// <summary>
+    /// Gets ware names.
+    /// </summary>
+    IMacroNameModelList WareNames { get; }
 }

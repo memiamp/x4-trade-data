@@ -20,7 +20,7 @@ internal class ShipData : HasTransformBase, IShipData
 
     public required string Macro { get; init; }
 
-    public required IEnumerable<string> Modifications { get; init; }
+    public required IEnumerable<IModificationData> Modifications { get; init; }
 
     public required string? Name { get; init; }
 

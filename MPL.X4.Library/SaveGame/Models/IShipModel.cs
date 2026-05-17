@@ -5,12 +5,11 @@
 /// </summary>
 public interface IShipModel : IHasIsKnown, IHasTransform, IModelWithId
 {
-    /*
     /// <summary>
     /// Gets the ship cargo.
     /// </summary>
-    ICargoData Cargo { get; }
-    */
+    ICargoItemModelList Cargo { get; }
+    
     /// <summary>
     /// Gets the class of the ship.
     /// </summary>

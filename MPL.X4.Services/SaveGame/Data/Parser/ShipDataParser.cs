@@ -7,7 +7,7 @@ namespace MPL.X4.SaveGame.Data.Parser;
 
 using ShipElements = (
                       CargoData CargoData,
-                      IEnumerable<string> Modifications,
+                      IEnumerable<IModificationData> Modifications,
                       ITransform3D Transform);
 
 /// <summary>
@@ -55,7 +55,7 @@ internal class ShipDataParser(
     private async Task<ShipElements> ParseElements(IXmlReaderWrapper reader)
     {
         var cargoItems = new List<IWareItemData>();
-        var modifications = new List<string>();
+        var modifications = new List<IModificationData>();
         ITransform3D transform = ITransform3D.GetDefault();
 
         while (await reader.ReadAsync())
@@ -76,35 +76,27 @@ internal class ShipDataParser(
             }
             else if (reader.CheckNodeMatches(Constants.XmlDataFile.ElementName.Modification, XmlNodeType.Element, 1))
             {
+                //using var subtree = await reader.ReadSubtree();
+
+                //var data = await ParseModifications(subtree);
+
+                //modifications.AddRange(data);
+            }
+            else if (reader.CheckNodeMatches(Constants.XmlDataFile.ElementName.Shields, XmlNodeType.Element, 1))
+            {
                 using var subtree = await reader.ReadSubtree();
 
-                var data = await ParseModifications(subtree);
+                var data = await DataParser.Parse<IEnumerable<IModificationData>>(subtree);
 
                 modifications.AddRange(data);
             }
-            /*
-            <shields>
-                <group>
-                    <modification ware="mod_shield_rechargerate_01_mk3" rechargedelay="0.339787" rechargerate="1.68667"/>
-                </group>
-            </shields>
-            */
-            else if (reader.CheckNodeMatches(Constants.XmlDataFile.ElementName.Modification, XmlNodeType.Element, 3))
+            else if (reader.CheckNodeMatches(Constants.XmlDataFile.ElementName.Connections, XmlNodeType.Element, 1))
             {
-                modifications.Add("Shield");
-            }
-            /*
-            <connections>
-                <connection connection="con_weapon_03">
-                    <component class="weapon" macro="weapon_spl_m_shotgun_01_mk2_macro" connection="weaponcon_01" lastshottime="355048.508" id="[0x7ac51]">
-                        <modification ware="mod_weapon_damage_02_mk3" damage="1.18599" cooling="1.30893" reload="1.10112" sticktime="1.10831"/>
-                    </component>
-                </connection>
-            </connections>
-            */
-            else if (reader.CheckNodeMatches(Constants.XmlDataFile.ElementName.Modification, XmlNodeType.Element, 4))
-            {
-                modifications.Add("Weapon");
+                using var subtree = await reader.ReadSubtree();
+
+                var data = await DataParser.Parse<IEnumerable<IModificationData>>(subtree);
+
+                modifications.AddRange(data);
             }
         }
 
@@ -114,6 +106,32 @@ internal class ShipDataParser(
     private static async Task<IEnumerable<string>> ParseModifications(IXmlReaderWrapper reader)
     {
         /*
+         * ENGINE
+         *   boostacc
+         *   boostduration
+         *   boostthrust
+         *   forwardthrust
+         *   rotationthrust
+         *   strafeacc
+         *   strafethrust
+         *   travelattacktime
+         *   travelchargetime
+         *   travelstartthrust=
+         *   travelthrust
+         *    
+         * SHIP
+         *   countermeasurecapacity
+         *   deployablecapacity
+         *   
+         *   drag
+         *   mass
+         *   maxhull
+         *   missilecapacity
+         *   radarcloak
+         *   radarrange
+         *   regiondamage
+         *   unitcapacity
+         *   
         <modification>
             <engine ware="mod_engine_forwardthrust_01_mk3" forwardthrust="1.19757" rotationthrust="1.20424" boostthrust="1.37198" travelthrust="1.2086" strafeacc="1.20435"/>
             <paint ware="paintmod_0188"/>

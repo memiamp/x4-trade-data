@@ -84,6 +84,7 @@ public static class Bootstrap
         servicesCollection.AddTransient<IDataParser<ICargoData>, CargoDataParser>();
         servicesCollection.AddTransient<IDataParser<IGateData>, GateDataParser>();
         servicesCollection.AddTransient<IDataParser<ILockboxData>, LockboxDataParser>();
+        servicesCollection.AddTransient<IDataParser<IEnumerable<IModificationData>>, ModificationParser>();
         servicesCollection.AddTransient<IDataParser<ISectorData>, SectorDataParser>();
         servicesCollection.AddTransient<IDataParser<IShipData>, ShipDataParser>();
         servicesCollection.AddTransient<IDataParser<IStationData>, StationDataParser>();
@@ -93,6 +94,8 @@ public static class Bootstrap
         servicesCollection.AddTransient<IDataParser<IZoneData>, ZoneDataParser>();
 
         // Model parsers
+        servicesCollection.AddTransient<IModelParser<IWareItemData, ICargoItemModel>, CargoItemModelParser>();
+        servicesCollection.AddTransient<IModelParser<IEnumerable<IWareItemData>, ICargoItemModelList>, CargoItemModelListParser>();
         servicesCollection.AddTransient<IModelParser<IEnumerable<ISectorData>, ISectorModelList>, SectorModelListParser>();
         servicesCollection.AddTransient<IModelParser<IGateData, IGateModel>, GateModelParser>();
         servicesCollection.AddTransient<IModelParser<ILockboxData, ILockboxModel>, LockboxModelParser>();
