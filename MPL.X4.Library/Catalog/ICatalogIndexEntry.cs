@@ -6,19 +6,9 @@
 public interface ICatalogIndexEntry
 {
     /// <summary>
-    /// Gets the path of the data file this entry is from.
-    /// </summary>
-    string DataFilePath { get; }
-
-    /// <summary>
     /// Gets the filepath in the catalog.
     /// </summary>
     string FilePath { get; }
-
-    /// <summary>
-    /// Gets the path of the index file this entry is from.
-    /// </summary>
-    string IndexFilePath { get; }
 
     /// <summary>
     /// Gets the file offset.

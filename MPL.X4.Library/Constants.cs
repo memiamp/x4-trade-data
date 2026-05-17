@@ -10,6 +10,14 @@ public static class Constants
     /// </summary>
     public static class CatalogFile
     {
+        public const string BaseGame = "BaseGame";
+        public const string GameExtension = "Extension";
+
+        public static class DirectoryName
+        {
+            public const string Extensions = "extensions";
+        }
+
         public static class FileExtensions
         {
             public const string DataFile = "dat";
@@ -27,13 +35,15 @@ public static class Constants
         {
             public const string ColourXml = "colors.xml";
             public const string EnglishTextResource = $"{LanguageId.English}.{FileExtensions.XmlData}";
-            public const string FactionsXml = "factions.xml";
+            public const string FactionsXml = "libraries/factions.xml";
             public const string MapDefinitionXml = "mapdefaults.xml";
+            public static readonly string[] ShipMacros = [ShipMacrosL, ShipMacrosM, ShipMacrosS, ShipMacrosXL, ShipMacrosXS];
             public const string ShipMacrosL = "assets/units/size_l/macros/";
             public const string ShipMacrosM = "assets/units/size_m/macros/";
             public const string ShipMacrosS = "assets/units/size_s/macros/";
             public const string ShipMacrosXL = "assets/units/size_xl/macros/";
             public const string ShipMacrosXS = "assets/units/size_xs/macros/";
+            public const string SignatureIndicator = "_sig";
             public const string WareDefinition = "libraries/wares.xml";
         }
 
@@ -45,6 +55,30 @@ public static class Constants
         public static class LanguageId
         {
             public const string English = "44";
+        }
+    }
+
+    /// <summary>
+    /// Constants relating to X4 catalog files.
+    /// </summary>
+    public static class ContentFile
+    {
+        public static class AttributeName
+        {
+            public const string ContentId = "id";
+            public const string DependencyId = "id";
+        }
+
+        public static class ElementName
+        {
+            public const string Content = "content";
+            public const string Dependency = "dependency";
+        }
+
+        public static class FileName
+        {
+            public const string Data = "content.xml";
+            public const string Signature = "content.xml.sig";
         }
     }
 

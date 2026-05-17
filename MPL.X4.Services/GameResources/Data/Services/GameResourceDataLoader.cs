@@ -22,13 +22,70 @@ internal class GameResourceDataLoader(
                                       IXmlReaderWrapperFactory xmlReaderWrapperFactory)
     : IGameResourceDataLoader
 {
-    private async Task<IColourResourceData> LoadColourResourcesInternal(IEnumerable<ICatalogIndexEntry> index)
+    private static Dictionary<string, IEnumerable<ICatalogIndexEntry>> FilterIndexEntries(IEnumerable<ICatalogIndex> index, Func<ICatalogIndexEntry, bool> predicate)
+        => index
+                .Select(x =>
+                {
+                    var filtered = x.Entries
+                                            .Where(x => x.Size > 0)
+                                            .Where(predicate)
+                                            .ToList();
+
+                    return new
+                    {
+                        x.DataFilePath,
+                        Entries = filtered as IEnumerable<ICatalogIndexEntry>
+                    };
+                })
+                .Where(x => x.Entries.Any())
+                .ToDictionary(
+                              x => x.DataFilePath,
+                              x => x.Entries);
+
+    async Task<string?> MergeIndexEntriesToXml(IEnumerable<ICatalogIndex> index, Func<ICatalogIndexEntry, bool> predicate, bool throwOnNoData = true)
+    {
+        string? returnValue = null;
+
+        var entries = FilterIndexEntries(index, predicate);
+        await foreach (var file in catalogFileReader.ReadTextFiles(entries))
+        {
+            if (returnValue is null)
+            {
+                returnValue = file;
+            }
+            else
+            {
+                returnValue = xmlPatchService.PatchToString(returnValue, file);
+            }
+        }
+
+        if (throwOnNoData &&
+            returnValue is null)
+        {
+            throw new ArgumentException("The requested merge resulted in no data", nameof(index));
+        }
+
+        return returnValue;
+    }
+
+    async Task<IColourResourceData> IGameResourceDataLoader.LoadColourResourcesFromCatalogs(string catalogsFilePath)
+    {
+        logger.LogInformation("Loading colour data from catalogs at {CatalogsFilePath}", catalogsFilePath);
+
+        var entries = await catalogFileReader.ParseIndexes(catalogsFilePath, Constants.CatalogFile.FileName.ColourXml, Constants.CatalogFile.FileExtensions.XmlData, true);
+
+        return await ((IGameResourceDataLoader)this).LoadColourResourcesFromIndex(entries);
+    }
+
+    async Task<IColourResourceData> IGameResourceDataLoader.LoadColourResourcesFromIndex(IEnumerable<ICatalogIndex> index)
     {
         var colours = new ColourDataDictionary();
         var mappings = new MappingDataDictionary();
 
-        var files = catalogFileReader.ReadTextFiles(index);
-        await foreach (var file in files)
+        logger.LogInformation("Loading colour data from supplied index");
+
+        var entries = FilterIndexEntries(index, x => x.FilePath.Contains(Constants.CatalogFile.FileName.ColourXml, StringComparison.OrdinalIgnoreCase));
+        await foreach (var file in catalogFileReader.ReadTextFiles(entries))
         {
             using var reader = xmlReaderWrapperFactory.CreateXmlReaderFromXmlString(file);
 
@@ -45,30 +102,49 @@ internal class GameResourceDataLoader(
         };
     }
 
-    private async Task<IFactionDataDictionary> LoadFactionsInternal(IEnumerable<ICatalogIndexEntry> index)
+    async Task<IFactionDataDictionary> IGameResourceDataLoader.LoadFactionsFromCatalogs(string catalogsFilePath)
     {
-        FactionDataDictionary returnValue = [];
+        logger.LogInformation("Loading faction data from catalogs at {CatalogsFilePath}", catalogsFilePath);
 
-        var files = catalogFileReader.ReadTextFiles(index);
-        await foreach (var file in files)
+        var entries = await catalogFileReader.ParseIndexes(catalogsFilePath, Constants.CatalogFile.FileName.FactionsXml, Constants.CatalogFile.FileExtensions.XmlData, true);
+
+        return await ((IGameResourceDataLoader)this).LoadFactionsFromIndex(entries);
+    }
+
+    async Task<IFactionDataDictionary> IGameResourceDataLoader.LoadFactionsFromIndex(IEnumerable<ICatalogIndex> index)
+    {
+        logger.LogInformation("Loading faction data from supplied index");
+
+        var file = await MergeIndexEntriesToXml(index, x => x.FilePath.Contains(Constants.CatalogFile.FileName.FactionsXml, StringComparison.OrdinalIgnoreCase));
+        if (file is not null)
         {
             using var reader = xmlReaderWrapperFactory.CreateXmlReaderFromXmlString(file);
 
-            var data = await resourceDataParser.ReadFactions(reader);
-
-            returnValue.Merge(data);
+            return await resourceDataParser.ReadFactions(reader);
         }
 
-        return returnValue;
+        return new FactionDataDictionary();
     }
 
-    private async Task<IOffsetDataDictionary> LoadOffsetsInternal(IEnumerable<ICatalogIndexEntry> index)
+    async Task<IOffsetDataDictionary> IGameResourceDataLoader.LoadOffsetsFromCatalogs(string catalogsFilePath)
+    {
+        logger.LogInformation("Loading offset data from catalogs at {CatalogsFilePath}", catalogsFilePath);
+
+        var entries = await catalogFileReader.ParseIndexes(catalogsFilePath, "maps/", Constants.CatalogFile.FileExtensions.XmlData, true);
+
+        return await ((IGameResourceDataLoader)this).LoadOffsetsFromIndex(entries);
+    }
+
+    async Task<IOffsetDataDictionary> IGameResourceDataLoader.LoadOffsetsFromIndex(IEnumerable<ICatalogIndex> index)
     {
         OffsetDataDictionary returnValue = [];
+    
+        logger.LogInformation("Loading offset data from supplied index");
 
-        var files = catalogFileReader.ReadTextFiles(index);
-        await foreach (var file in files)
+        var entries = FilterIndexEntries(index, x => x.FilePath.StartsWith("maps/", StringComparison.OrdinalIgnoreCase));
+        await foreach (var file in catalogFileReader.ReadTextFiles(entries))
         {
+            // Need to have a think how best to perform diffs on map files as there are many of them
             using var reader = xmlReaderWrapperFactory.CreateXmlReaderFromXmlString(file);
 
             var data = await resourceDataParser.ReadOffsets(reader);
@@ -79,12 +155,23 @@ internal class GameResourceDataLoader(
         return returnValue;
     }
 
-    private async Task<IMacroNameResourceDataDictionary> LoadSectorNamesInternal(IEnumerable<ICatalogIndexEntry> index)
+    async Task<IMacroNameResourceDataDictionary> IGameResourceDataLoader.LoadSectorNamesFromCatalogs(string catalogsFilePath)
     {
-        MacroNameResourceDataDictionary returnValue = [];
+        logger.LogInformation("Loading sector names from catalogs at {CatalogsFilePath}", catalogsFilePath);
 
-        var files = catalogFileReader.ReadTextFiles(index);
-        await foreach (var file in files)
+        var entries = await catalogFileReader.ParseIndexes(catalogsFilePath, Constants.CatalogFile.FileName.MapDefinitionXml, Constants.CatalogFile.FileExtensions.XmlData, true);
+
+        return await ((IGameResourceDataLoader)this).LoadSectorNamesFromIndex(entries);
+    }
+
+    async Task<IMacroNameResourceDataDictionary> IGameResourceDataLoader.LoadSectorNamesFromIndex(IEnumerable<ICatalogIndex> index)
+    {
+        var returnValue = new MacroNameResourceDataDictionary();
+
+        logger.LogInformation("Loading sector names from supplied index");
+
+        var entries = FilterIndexEntries(index, x => x.FilePath.Contains(Constants.CatalogFile.FileName.MapDefinitionXml, StringComparison.OrdinalIgnoreCase));
+        await foreach (var file in catalogFileReader.ReadTextFiles(entries))
         {
             using var reader = xmlReaderWrapperFactory.CreateXmlReaderFromXmlString(file);
 
@@ -94,136 +181,6 @@ internal class GameResourceDataLoader(
         }
 
         return returnValue;
-    }
-
-    private async Task<IMacroNameResourceDataDictionary> LoadShipModelsInternal(IEnumerable<ICatalogIndexEntry> index)
-    {
-        MacroNameResourceDataDictionary returnValue = [];
-
-        var files = catalogFileReader.ReadTextFiles(index);
-        await foreach (var file in files)
-        {
-            using var reader = xmlReaderWrapperFactory.CreateXmlReaderFromXmlString(file);
-
-            var data = await resourceDataParser.ReadShipModels(reader);
-
-            returnValue.Merge(data);
-        }
-
-        return returnValue;
-    }
-
-    private async Task<IMacroNameResourceDataDictionary> LoadWareNamesInternal(IEnumerable<ICatalogIndexEntry> index)
-    {
-        string? xmlString = null;
-
-        var f = index.OrderBy(x => x.DataFilePath.Contains("extension")).ThenByDescending(x => x.Timestamp);
-        var files = catalogFileReader.ReadTextFiles(f);
-        await foreach (var file in files)
-        {
-            if (xmlString is null)
-            {
-                xmlString = file;
-            }
-            else
-            {
-                xmlString = xmlPatchService.PatchToString(xmlString, file);
-            }
-        }
-
-        if (xmlString is not null)
-        {
-            using var reader = xmlReaderWrapperFactory.CreateXmlReaderFromXmlString(xmlString);
-
-            return await resourceDataParser.ReadWareNames(reader);
-        }
-
-        return new MacroNameResourceDataDictionary();
-        //MacroNameResourceDataDictionary returnValue = [];
-
-        //var files = catalogFileReader.ReadTextFiles(index);
-        //await foreach (var file in files)
-        //{
-        //    using var reader = xmlReaderWrapperFactory.CreateXmlReaderFromXmlString(file);
-
-        //    var data = await resourceDataParser.ReadWareNames(reader);
-
-        //    returnValue.Merge(data);
-        //}
-
-        //return returnValue;
-    }
-
-    async Task<IColourResourceData> IGameResourceDataLoader.LoadColourResourcesFromCatalogs(string catalogsFilePath)
-    {
-        logger.LogInformation("Loading colour data from catalogs at {CatalogsFilePath}", catalogsFilePath);
-
-        var entries = await catalogFileReader.ParseIndexes(catalogsFilePath, Constants.CatalogFile.FileName.ColourXml, Constants.CatalogFile.FileExtensions.XmlData, true);
-
-        return await LoadColourResourcesInternal(entries);
-    }
-
-    async Task<IColourResourceData> IGameResourceDataLoader.LoadColourResourcesFromIndex(IEnumerable<ICatalogIndexEntry> index)
-    {
-        logger.LogInformation("Loading colour data from supplied index");
-
-        var entries = index.Where(x => x.FilePath.Contains(Constants.CatalogFile.FileName.ColourXml, StringComparison.OrdinalIgnoreCase));
-
-        return await LoadColourResourcesInternal(entries);
-    }
-
-    async Task<IFactionDataDictionary> IGameResourceDataLoader.LoadFactionsFromCatalogs(string catalogsFilePath)
-    {
-        logger.LogInformation("Loading faction data from catalogs at {CatalogsFilePath}", catalogsFilePath);
-
-        var entries = await catalogFileReader.ParseIndexes(catalogsFilePath, Constants.CatalogFile.FileName.FactionsXml, Constants.CatalogFile.FileExtensions.XmlData, true);
-
-        return await LoadFactionsInternal(entries);
-    }
-
-    async Task<IFactionDataDictionary> IGameResourceDataLoader.LoadFactionsFromIndex(IEnumerable<ICatalogIndexEntry> index)
-    {
-        logger.LogInformation("Loading faction data from supplied index");
-
-        var entries = index.Where(x => x.FilePath.Contains(Constants.CatalogFile.FileName.FactionsXml, StringComparison.OrdinalIgnoreCase));
-
-        return await LoadFactionsInternal(entries);
-    }
-
-    async Task<IOffsetDataDictionary> IGameResourceDataLoader.LoadOffsetsFromCatalogs(string catalogsFilePath)
-    {
-        logger.LogInformation("Loading offset data from catalogs at {CatalogsFilePath}", catalogsFilePath);
-
-        var entries = await catalogFileReader.ParseIndexes(catalogsFilePath, "maps/", Constants.CatalogFile.FileExtensions.XmlData, true);
-
-        return await LoadOffsetsInternal(entries);
-    }
-
-    async Task<IOffsetDataDictionary> IGameResourceDataLoader.LoadOffsetsFromIndex(IEnumerable<ICatalogIndexEntry> index)
-    {
-        logger.LogInformation("Loading offset data from supplied index");
-
-        var entries = index.Where(x => x.FilePath.StartsWith("maps/", StringComparison.OrdinalIgnoreCase));
-
-        return await LoadOffsetsInternal(entries);
-    }
-
-    async Task<IMacroNameResourceDataDictionary> IGameResourceDataLoader.LoadSectorNamesFromCatalogs(string catalogsFilePath)
-    {
-        logger.LogInformation("Loading sector names from catalogs at {CatalogsFilePath}", catalogsFilePath);
-
-        var entries = await catalogFileReader.ParseIndexes(catalogsFilePath, Constants.CatalogFile.FileName.MapDefinitionXml, Constants.CatalogFile.FileExtensions.XmlData, true);
-
-        return await LoadSectorNamesInternal(entries);
-    }
-
-    async Task<IMacroNameResourceDataDictionary> IGameResourceDataLoader.LoadSectorNamesFromIndex(IEnumerable<ICatalogIndexEntry> index)
-    {
-        logger.LogInformation("Loading sector names from supplied index");
-
-        var entries = index.Where(x => x.FilePath.Contains(Constants.CatalogFile.FileName.MapDefinitionXml, StringComparison.OrdinalIgnoreCase));
-
-        return await LoadSectorNamesInternal(entries);
     }
 
     async Task<IMacroNameResourceDataDictionary> IGameResourceDataLoader.LoadShipModelsFromCatalogs(string catalogsFilePath)
@@ -242,21 +199,26 @@ internal class GameResourceDataLoader(
                               .Concat(entriesXL)
                               .Concat(entriesXS);
 
-        return await LoadShipModelsInternal(entries);
+        return await ((IGameResourceDataLoader)this).LoadShipModelsFromIndex(entries);
     }
 
-    async Task<IMacroNameResourceDataDictionary> IGameResourceDataLoader.LoadShipModelsFromIndex(IEnumerable<ICatalogIndexEntry> index)
+    async Task<IMacroNameResourceDataDictionary> IGameResourceDataLoader.LoadShipModelsFromIndex(IEnumerable<ICatalogIndex> index)
     {
+        MacroNameResourceDataDictionary returnValue = [];
+        
         logger.LogInformation("Loading ship models from supplied index");
 
-        var entries = index.Where(x =>
-                                       x.FilePath.Contains(Constants.CatalogFile.FileName.ShipMacrosL, StringComparison.OrdinalIgnoreCase) ||
-                                       x.FilePath.Contains(Constants.CatalogFile.FileName.ShipMacrosM, StringComparison.OrdinalIgnoreCase) ||
-                                       x.FilePath.Contains(Constants.CatalogFile.FileName.ShipMacrosS, StringComparison.OrdinalIgnoreCase) ||
-                                       x.FilePath.Contains(Constants.CatalogFile.FileName.ShipMacrosXL, StringComparison.OrdinalIgnoreCase) ||
-                                       x.FilePath.Contains(Constants.CatalogFile.FileName.ShipMacrosXS, StringComparison.OrdinalIgnoreCase));
+        var entries = FilterIndexEntries(index, x => Constants.CatalogFile.FileName.ShipMacros.Any(y => x.FilePath.Contains(y, StringComparison.OrdinalIgnoreCase)));
+        await foreach (var file in catalogFileReader.ReadTextFiles(entries))
+        {
+            using var reader = xmlReaderWrapperFactory.CreateXmlReaderFromXmlString(file);
 
-        return await LoadShipModelsInternal(entries);
+            var data = await resourceDataParser.ReadShipModels(reader);
+
+            returnValue.Merge(data);
+        }
+
+        return returnValue;
     }
 
     async Task<ITextResourcePageDictionary> IGameResourceDataLoader.LoadTextResourcesFromCatalogs(string catalogsFilePath)
@@ -277,15 +239,21 @@ internal class GameResourceDataLoader(
 
         var entries = await catalogFileReader.ParseIndexes(catalogsFilePath, Constants.CatalogFile.FileName.WareDefinition, Constants.CatalogFile.FileExtensions.XmlData, true);
 
-        return await LoadWareNamesInternal(entries);
+        return await ((IGameResourceDataLoader)this).LoadWareNamesFromIndex(entries);
     }
 
-    async Task<IMacroNameResourceDataDictionary> IGameResourceDataLoader.LoadWareNamesFromIndex(IEnumerable<ICatalogIndexEntry> index)
+    async Task<IMacroNameResourceDataDictionary> IGameResourceDataLoader.LoadWareNamesFromIndex(IEnumerable<ICatalogIndex> index)
     {
         logger.LogInformation("Loading ware names from supplied index");
 
-        var entries = index.Where(x => x.FilePath.Contains(Constants.CatalogFile.FileName.WareDefinition, StringComparison.OrdinalIgnoreCase));
+        var file = await MergeIndexEntriesToXml(index, x => x.FilePath.Contains(Constants.CatalogFile.FileName.WareDefinition, StringComparison.OrdinalIgnoreCase));
+        if (file is not null)
+        {
+            using var reader = xmlReaderWrapperFactory.CreateXmlReaderFromXmlString(file);
 
-        return await LoadWareNamesInternal(entries);
+            return await resourceDataParser.ReadWareNames(reader);
+        }
+
+        return new MacroNameResourceDataDictionary();
     }
 }

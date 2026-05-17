@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using MPL.X4.Catalog.Parser;
 using MPL.X4.Catalog.Services;
 using MPL.X4.GameResources.Data;
 using MPL.X4.GameResources.Data.Parser;
@@ -107,12 +108,15 @@ public static class Bootstrap
     /// <param name="servicesCollection">An <see cref="IServiceCollection"/> to add services to.</param>
     public static void AddServices(IServiceCollection servicesCollection)
     {
+        // Catalog services
+        servicesCollection.AddTransient<IDataParser<ContentFileData>, ContentFileDataParser>();
+
         // General services
         servicesCollection.AddTransient<IXmlReaderWrapper, XmlReaderWrapper>();
         servicesCollection.AddTransient<IXmlReaderWrapperFactory, XmlReaderWrapperFactory>();
 
         // Parser services
-        servicesCollection.AddTransient<IDataParser, X4.Parser.DataParser>();
+        servicesCollection.AddTransient<IDataParser, DataParser>();
         servicesCollection.AddTransient<IModelParser, ModelParser>();
 
         AddCatalogServices(servicesCollection);

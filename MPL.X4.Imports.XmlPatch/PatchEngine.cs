@@ -2,6 +2,7 @@
 // Original code was released under APACHE 2.0 License - "see License\Apache 2.0 License.txt"
 // Original code Copyright (c) chemodun
 // Modified by Martin Parkin in May 2026.
+using System.Collections;
 using System.Diagnostics.CodeAnalysis;
 using System.Xml.Linq;
 using System.Xml.XPath;
@@ -22,6 +23,7 @@ internal class PatchEngine(
     private const string AddOperationBefore = "before";
     private const string AddOperationPrepend = "prepend";
     
+    private const string AttributeIf = "if";
     private const string AttributePos = "pos";
     private const string AttributeSel = "sel";
     private const string AttributeType = "type";
@@ -34,6 +36,77 @@ internal class PatchEngine(
         Attribute,
         Before,
         Prepend
+    }
+
+    private void AddInternal(XElement change, XElement target, bool allowDoubles, AddOperationPosition position)
+    {
+        XNode? latestAdded = null;
+
+        var nodes = change
+                          .Nodes()
+                          .Where(x => x is XElement or XComment)
+                          .Select(x => x is XElement ne
+                                                        ? (XNode)new XElement(ne)
+                                                        : new XComment(((XComment)x).Value));
+        foreach (var cloned in nodes)
+        {
+            if (latestAdded is null)
+            {
+                // First node: apply duplicate check for elements, then insert at position
+                if (!allowDoubles &&
+                    cloned is XElement clonedElem)
+                {
+                    // Duplicate check: both-direction attribute equality
+                    var searchIn = position is AddOperationPosition.Before or AddOperationPosition.After
+                        ? target.Parent!.Elements()
+                        : target.Elements();
+
+                    var isDuplicate = searchIn.Any(e =>
+                        e.Name == clonedElem.Name &&
+                        e.Attributes().All(a => clonedElem.Attribute(a.Name)?.Value == a.Value) &&
+                        clonedElem.Attributes().All(a => e.Attribute(a.Name)?.Value == a.Value)
+                    );
+
+                    if (isDuplicate)
+                    {
+                        logger.LogWarning("Duplicate element already exists: '{ElementInfo}'", GetElementInfo(target));
+                        continue;
+                    }
+                }
+
+                switch (position)
+                {
+                    case AddOperationPosition.After:
+                        target.AddAfterSelf(cloned);
+                        logger.LogDebug("Inserted element after '{ElementInfo}'", GetElementInfo(target));
+                        break;
+
+                    case AddOperationPosition.Append:
+                        target.Add(cloned);
+                        logger.LogDebug("Appended element to '{ElementInfo}'", GetElementInfo(target));
+                        break;
+
+                    case AddOperationPosition.Before:
+                        target.AddBeforeSelf(cloned);
+                        logger.LogDebug("Inserted element before '{ElementInfo}'", GetElementInfo(target));
+                        break;
+
+                    case AddOperationPosition.Prepend:
+                        target.AddFirst(cloned);
+                        logger.LogDebug("Prepended element to '{ElementInfo}'", GetElementInfo(target));
+                        break;
+                }
+
+                latestAdded = cloned;
+            }
+            else
+            {
+                // Subsequent nodes: always AddAfterSelf to preserve insertion order
+                latestAdded.AddAfterSelf(cloned);
+                latestAdded = cloned;
+                logger.LogDebug("Added subsequent node after previous");
+            }
+        }
     }
 
     private static string GetElementInfo(XElement? element)
@@ -53,6 +126,19 @@ internal class PatchEngine(
         return sb.ToString();
     }
 
+    private static bool GetIfCheckResult(XElement originalRoot, string? ifCheck)
+    {
+        if (ifCheck is null)
+            return true;
+
+        return originalRoot.XPathEvaluate(ifCheck) switch
+        {
+            bool returnValue => returnValue,
+            IEnumerable enumerable => enumerable.OfType<object>().Any(),
+            _ => throw new ArgumentException($"The specified if check operation '{ifCheck}' returned an unknown result", nameof(ifCheck))
+        };
+    }
+
     private static string LastApplicableNode(string selector, XElement root)
     {
         var parts = selector.Split('/');
@@ -66,7 +152,7 @@ internal class PatchEngine(
                 current += "/";
                 continue;
             }
-            current += (current.EndsWith("/") ? "" : "/") + part;
+            current += (current.EndsWith('/') ? "" : "/") + part;
 
             try
             {
@@ -97,9 +183,10 @@ internal class PatchEngine(
             _ => AddOperationPosition.Unknown
         };
 
-    private bool TryGetAddOperationElements(XElement originalRoot, XElement change, out AddOperationPosition position, [NotNullWhen(true)] out XElement? target, out string? attributeName)
+    private bool TryGetAddOperationElements(XElement originalRoot, XElement change, out AddOperationPosition position, [NotNullWhen(true)] out XElement? target, out string? attributeName, out string? ifCheck)
     {
         attributeName = null;
+        ifCheck = null;
         position = AddOperationPosition.Unknown;
         var returnValue = false;
         target = null;
@@ -107,8 +194,10 @@ internal class PatchEngine(
         var sel = change.Attribute(AttributeSel)?.Value;
         if (sel is not null)
         {
-            var type = change.Attribute(AttributeType)?.Value;
             var pos = change.Attribute(AttributePos)?.Value;
+            var type = change.Attribute(AttributeType)?.Value;
+
+            ifCheck = change.Attribute(AttributeIf)?.Value;
             position = ParseAddOperationPosition(pos, type);
 
             logger.LogDebug("Add operation sel='{SelValue}' pos='{PosValue}' type='{TypeValue}'", sel, pos, type);
@@ -189,188 +278,58 @@ internal class PatchEngine(
 
     void IPatchEngine.Add(XElement originalRoot, XElement change, bool allowDoubles)
     {
-        //var sel = change.Attribute(AttributeSel)?.Value;
-        //if (sel == null)
-        //{
-        //    logger.LogWarning("Replace operation missing '{AttributeName}' attribute", AttributeSel);
-        //    return;
-        //}
-
-        //var type = change.Attribute(AttributeType)?.Value;
-        //var pos = change.Attribute(AttributePos)?.Value;
-        //if (pos == null &&
-        //    type == null)
-        //{
-        //    pos = "append";
-        //}
-
-        //Logger.Info($"[Operation add] sel='{sel}' pos='{pos}' type='{type}'");
-
-        //var targets = originalRoot.XPathSelectElements(sel).ToList();
-        //if (targets.Count == 0)
-        //{
-        //    Logger.Warn(
-        //        $"[Operation add] No element found for sel='{sel}'. Last resolvable: '{LastApplicableNode(sel, originalRoot)}'. Skipping."
-        //    );
-        //    return;
-        //}
-        //if (targets.Count > 1)
-        //{
-        //    Logger.Warn(
-        //        $"[Operation add] Multiple elements ({targets.Count}) found for sel='{sel}'. Skipping."
-        //    );
-        //    return;
-        //}
-
-        //var target = targets[0];
-        if (!TryGetAddOperationElements(originalRoot, change, out var position, out var target, out var attributeName))
+        if (!TryGetAddOperationElements(originalRoot, change, out var position, out var target, out var attributeName, out var ifCheck))
         {
             return;
         }
 
-        //if (type != null)
-        //if (type.StartsWith('@') && type.Length > 1)
-        if (position == AddOperationPosition.Attribute)
+        if (GetIfCheckResult(originalRoot, ifCheck))
         {
-            //target.SetAttributeValue(type[1..], change.Value);
-            target.SetAttributeValue(attributeName!, change.Value);
-            logger.LogDebug("Added attribute '{AttributeName}' with '{AttributeValue'", GetElementInfo(target));
-
-            return;
-        }
-        else if (position == AddOperationPosition.Unknown)
-        {
-            logger.LogWarning("Cannot perform add operation due to invalid position");
-            return;
-        }
-
-        AddInternal(change, target, allowDoubles, position);
-    }
-
-    private void AddInternal(XElement change, XElement target, bool allowDoubles, AddOperationPosition position)
-    {
-        XNode? latestAdded = null;
-
-        var nodes = change
-                          .Nodes()
-                          .Where(x => x is XElement or XComment)
-                          .Select(x => x is XElement ne
-                                                        ? (XNode)new XElement(ne)
-                                                        : new XComment(((XComment)x).Value));
-        foreach (var cloned in nodes)
-        //foreach (var newNode in nodes)
-        {
-            //if (newNode is not XElement or XComment)
-            //{
-            //    continue;
-            //}
-
-            //XNode cloned = newNode is XElement ne
-            //    ? new XElement(ne)
-            //    : new XComment(((XComment)newNode).Value);
-
-            if (latestAdded is null)
+            if (position == AddOperationPosition.Attribute)
             {
-                // First node: apply duplicate check for elements, then insert at position
-                if (!allowDoubles &&
-                    cloned is XElement clonedElem)
-                {
-                    // Duplicate check: both-direction attribute equality
-                    var searchIn = position is AddOperationPosition.Before or AddOperationPosition.After
-                        ? target.Parent!.Elements()
-                        : target.Elements();
-
-                    var isDuplicate = searchIn.Any(e =>
-                        e.Name == clonedElem.Name &&
-                        e.Attributes().All(a => clonedElem.Attribute(a.Name)?.Value == a.Value) &&
-                        clonedElem.Attributes().All(a => e.Attribute(a.Name)?.Value == a.Value)
-                    );
-
-                    if (isDuplicate)
-                    {
-                        logger.LogWarning("Duplicate element already exists: '{ElementInfo}'", GetElementInfo(target));
-                        continue;
-                    }
-                }
-
-                switch (position)
-                {
-                    case AddOperationPosition.After:
-                        target.AddAfterSelf(cloned);
-                        logger.LogDebug("Inserted element after '{ElementInfo}'", GetElementInfo(target));
-                        break;
-
-                    case AddOperationPosition.Append:
-                        target.Add(cloned);
-                        logger.LogDebug("Appended element to '{ElementInfo}'", GetElementInfo(target));
-                        break;
-
-                    case AddOperationPosition.Before:
-                        target.AddBeforeSelf(cloned);
-                        logger.LogDebug("Inserted element before '{ElementInfo}'", GetElementInfo(target));
-                        break;
-
-                    case AddOperationPosition.Prepend:
-                        target.AddFirst(cloned);
-                        logger.LogDebug("Prepended element to '{ElementInfo}'", GetElementInfo(target));
-                        break;
-                }
-
-                latestAdded = cloned;
+                target.SetAttributeValue(attributeName!, change.Value);
+                logger.LogDebug("Added attribute '{AttributeName}' with '{AttributeValue'", GetElementInfo(target));
+            }
+            else if (position == AddOperationPosition.Unknown)
+            {
+                logger.LogWarning("Cannot perform add operation due to invalid position");
             }
             else
             {
-                // Subsequent nodes: always AddAfterSelf to preserve insertion order
-                latestAdded.AddAfterSelf(cloned);
-                latestAdded = cloned;
-                logger.LogDebug("Added subsequent node after previous");
+                AddInternal(change, target, allowDoubles, position);
             }
         }
     }
 
-
     void IPatchEngine.Remove(XElement originalRoot, XElement change)
     {
-        //var sel = change.Attribute(AttributeSel)?.Value;
-        //if (sel == null)
-        //{
-        //    logger.LogWarning("Replace operation missing '{AttributeName}' attribute", AttributeSel);
-        //    return;
-        //}
-
-        //logger.LogDebug("Remove sel='{SelValue}'", sel);
-
-        //var results = (originalRoot.XPathEvaluate(sel) as IEnumerable<object>)?.ToList();
-        //if (results == null ||
-        //    results.Count == 0)
-        //{
-        //    logger.LogWarning("No nodes found to remove for sel='{SelValue}'. Last resolvable: '{LastResolvable}'", sel, LastApplicableNode(sel, originalRoot));
-        //    return;
-        //}
-        if (TryGetTargetList(originalRoot, change, nameof(IPatchEngine.Remove), out var results))
+        if (GetIfCheckResult(originalRoot, change.Attribute(AttributeIf)?.Value))
         {
-            foreach (var result in results)
+            if (TryGetTargetList(originalRoot, change, nameof(IPatchEngine.Remove), out var results))
             {
-                switch (result)
+                foreach (var result in results)
                 {
-                    case XElement element when element.Parent is not null:
-                        element.Remove();
-                        logger.LogDebug("Removed element '{ElementInfo}'", GetElementInfo(element));
-                        break;
+                    switch (result)
+                    {
+                        case XElement element when element.Parent is not null:
+                            element.Remove();
+                            logger.LogDebug("Removed element '{ElementInfo}'", GetElementInfo(element));
+                            break;
 
-                    case XAttribute attr when attr.Parent is not null:
-                        attr.Remove();
-                        logger.LogDebug("Removed attribute '{AttributeName}'", attr.Name);
-                        break;
+                        case XAttribute attr when attr.Parent is not null:
+                            attr.Remove();
+                            logger.LogDebug("Removed attribute '{AttributeName}'", attr.Name);
+                            break;
 
-                    case XText textNode:
-                        textNode.Remove();
-                        logger.LogDebug("Removed text node");
-                        break;
+                        case XText textNode:
+                            textNode.Remove();
+                            logger.LogDebug("Removed text node");
+                            break;
 
-                    default:
-                        logger.LogWarning("Cannot remove node type '{NodeType}'", result?.GetType().Name);
-                        break;
+                        default:
+                            logger.LogWarning("Cannot remove node type '{NodeType}'", result?.GetType().Name);
+                            break;
+                    }
                 }
             }
         }
@@ -378,56 +337,43 @@ internal class PatchEngine(
 
     void IPatchEngine.Replace(XElement originalRoot, XElement change)
     {
-        //var sel = change.Attribute(AttributeSel)?.Value;
-        //if (sel == null)
-        //{
-        //    logger.LogWarning("Replace operation missing '{AttributeName}' attribute", AttributeSel);
-        //    return;
-        //}
-
-        //logger.LogDebug("Replace sel='{SelValue}'", sel);
-
-        //var results = (originalRoot.XPathEvaluate(sel) as IEnumerable<object>);
-        //if (results is null ||
-        //    !results.Any())
-        //{
-        //    logger.LogWarning("No nodes found to replace for sel='{SelValue}'. Last resolvable: '{LastResolvable}'", sel, LastApplicableNode(sel, originalRoot));
-        //    return;
-        //}
-        if (TryGetTargetList(originalRoot, change, nameof(IPatchEngine.Replace), out var results))
+        if (GetIfCheckResult(originalRoot, change.Attribute(AttributeIf)?.Value))
         {
-            foreach (var result in results)
+            if (TryGetTargetList(originalRoot, change, nameof(IPatchEngine.Replace), out var results))
             {
-                switch (result)
+                foreach (var result in results)
                 {
-                    case XElement target:
-                        var replaceContent = change
-                                                   .Elements()
-                                                   .Select(e => new XElement(e));
-                        if (replaceContent.Any())
-                        {
-                            target.ReplaceWith([.. replaceContent.Cast<object>()]);
-                            logger.LogDebug("Replacement replaced {Target} with {Length} element(s)", GetElementInfo(target), replaceContent.Count());
-                        }
-                        else
-                        {
-                            logger.LogWarning("No child elements to replace");
-                        }
-                        break;
+                    switch (result)
+                    {
+                        case XElement target:
+                            var replaceContent = change
+                                                       .Elements()
+                                                       .Select(e => new XElement(e));
+                            if (replaceContent.Any())
+                            {
+                                target.ReplaceWith([.. replaceContent.Cast<object>()]);
+                                logger.LogDebug("Replacement replaced {Target} with {Length} element(s)", GetElementInfo(target), replaceContent.Count());
+                            }
+                            else
+                            {
+                                logger.LogWarning("No child elements to replace");
+                            }
+                            break;
 
-                    case XText textNode:
-                        textNode.Value = change.Value;
-                        logger.LogDebug("Replacement set text node value to '{NewValue}'", change.Value);
-                        break;
+                        case XText textNode:
+                            textNode.Value = change.Value;
+                            logger.LogDebug("Replacement set text node value to '{NewValue}'", change.Value);
+                            break;
 
-                    case XAttribute attr:
-                        attr.Value = change.Value;
-                        logger.LogDebug("Replacement set attribute '{AttributeName}' = '{NewValue}'", attr.Name, change.Value);
-                        break;
+                        case XAttribute attr:
+                            attr.Value = change.Value;
+                            logger.LogDebug("Replacement set attribute '{AttributeName}' = '{NewValue}'", attr.Name, change.Value);
+                            break;
 
-                    default:
-                        logger.LogWarning("Unsupported node type for replacement '{NodeType}'", result?.GetType().Name);
-                        break;
+                        default:
+                            logger.LogWarning("Unsupported node type for replacement '{NodeType}'", result?.GetType().Name);
+                            break;
+                    }
                 }
             }
         }

@@ -10,18 +10,18 @@ namespace MPL.X4.SaveGame.Data.Services;
 /// </summary>
 /// <param name="dataParser">An <see cref="IDataParser"/> that is the data parser to use.</param>
 /// <param name="logger">An <see cref="ILogger{TCategoryName}"/> that is the logger to use.</param>
-/// <param name="xmlReaderFactory">An <see cref="IXmlReaderWrapperFactory"/> that is the XmlReader factory to use.</param>
+/// <param name="xmlReaderWrapperFactory">An <see cref="IXmlReaderWrapperFactory"/> that is the XmlReader factory to use.</param>
 internal class SaveGameDataLoader(
                                   IDataParser dataParser,
                                   ILogger<SaveGameDataLoader> logger,
-                                  IXmlReaderWrapperFactory xmlReaderFactory)
+                                  IXmlReaderWrapperFactory xmlReaderWrapperFactory)
     : ISaveGameDataLoader
 {
     async Task<ISaveGameData> ISaveGameDataLoader.LoadFrom(string sourcePath)
     {
         ISaveGameData? returnValue = null;
 
-        using var reader = xmlReaderFactory.CreateXmlReader(sourcePath);
+        using var reader = xmlReaderWrapperFactory.CreateXmlReader(sourcePath);
 
         while (await reader.ReadAsync())
         {

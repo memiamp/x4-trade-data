@@ -22,8 +22,8 @@ internal static class Program
         });
 
         // Services
-        X4.Imports.XmlPatch.Bootstrap.AddServices(services);
-        X4.Bootstrap.AddServices(services);
+        Imports.XmlPatch.Bootstrap.AddServices(services);
+        Bootstrap.AddServices(services);
 
         return services.BuildServiceProvider();
     }
@@ -33,7 +33,7 @@ internal static class Program
         var sp = BuildServices();
         
         var gameResourceDataService = sp.GetRequiredService<IGameResourceDataProvider>();
-        var gameResourceData = await gameResourceDataService.LoadFromCatalog(@"E:\Shared\X4\GameData");
+        var gameResourceData = await gameResourceDataService.LoadFromCatalog(@"C:\Program Files (x86)\Steam\steamapps\common\X4 Foundations");
         Console.WriteLine("Game resource data loaded");
 
         var gameResourceModelService = sp.GetRequiredService<IGameResourceModelLoader>();
@@ -41,7 +41,7 @@ internal static class Program
         Console.WriteLine("Game resource models loaded");
         
         var saveGameService = sp.GetRequiredService<ISaveGameDataLoader>();
-        var saveGame = await saveGameService.LoadFrom(@"E:\Shared\X4\save\save_007.xml.gz");
+        var saveGame = await saveGameService.LoadFrom(@"C:\Users\martin\Documents\Egosoft\X4\48359014\save\quicksave.xml.gz");
         Console.WriteLine("Save game data loaded");
 
         var saveGameModelService = sp.GetRequiredService<ISaveGameModelLoader>();
