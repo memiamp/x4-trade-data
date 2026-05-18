@@ -18,6 +18,8 @@ internal class ShipModel : ModelWithIdBase, IShipModel
 
     public required string Model { get; init; }
 
+    public required IModificationModelList Modifications { get; init; }
+
     public required string? Name { get; init; }
 
     public required string Owner { get; init; }

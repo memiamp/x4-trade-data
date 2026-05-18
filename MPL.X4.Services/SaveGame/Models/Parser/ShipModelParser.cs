@@ -18,22 +18,21 @@ internal class ShipModelParser(
 {
     private static readonly Dictionary<string, ShipClass> _typeMap = new()
     {
-        { "ship_xl", ShipClass.ExtraLarge},
-        { "ship_xs", ShipClass.ExtraSmall},
-        { "ship_l", ShipClass.Large},
-        { "ship_m", ShipClass.Medium},
-        { "ship_s", ShipClass.Small}
+        { Constants.XmlDataFile.AttributeValue.Class.ShipExtraLarge, ShipClass.ExtraLarge},
+        { Constants.XmlDataFile.AttributeValue.Class.ShipExtraSmall, ShipClass.ExtraSmall},
+        { Constants.XmlDataFile.AttributeValue.Class.ShipLarge, ShipClass.Large},
+        { Constants.XmlDataFile.AttributeValue.Class.ShipMedium, ShipClass.Medium},
+        { Constants.XmlDataFile.AttributeValue.Class.ShipSmall, ShipClass.Small}
     };
 
     private protected override IShipModel OnParse(IShipData source)
     {
         var cargo = modelParser.Parse<IEnumerable<IWareItemData>, ICargoItemModelList>(source.Cargo.Items);
         var model = ParseModel(source.Macro);
+        var modifications = modelParser.Parse<IEnumerable<IModificationData>, IModificationModelList>(source.Modifications);
         var shipClass = ParseShipClass(source.Class);
         var transform = source.Transform.Add(parsingScope.CurrentOffset);
 
-        //this is WHERE YOU ARE
-        //source.Modifications
         return new ShipModel
         {
             Cargo = cargo,
@@ -42,6 +41,7 @@ internal class ShipModelParser(
             IsKnown = source.IsKnown,
             Id = source.Id,
             Model = model,
+            Modifications = modifications,
             Name = source.Name,
             Owner = source.Owner,
             Transform = transform,

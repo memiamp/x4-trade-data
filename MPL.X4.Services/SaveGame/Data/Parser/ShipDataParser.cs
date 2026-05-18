@@ -76,11 +76,11 @@ internal class ShipDataParser(
             }
             else if (reader.CheckNodeMatches(Constants.XmlDataFile.ElementName.Modification, XmlNodeType.Element, 1))
             {
-                //using var subtree = await reader.ReadSubtree();
+                using var subtree = await reader.ReadSubtree();
 
-                //var data = await ParseModifications(subtree);
+                var data = await DataParser.Parse<IEnumerable<IModificationData>>(subtree);
 
-                //modifications.AddRange(data);
+                modifications.AddRange(data);
             }
             else if (reader.CheckNodeMatches(Constants.XmlDataFile.ElementName.Shields, XmlNodeType.Element, 1))
             {
@@ -101,61 +101,5 @@ internal class ShipDataParser(
         }
 
         return (new CargoData { Items = cargoItems }, modifications, transform);
-    }
-
-    private static async Task<IEnumerable<string>> ParseModifications(IXmlReaderWrapper reader)
-    {
-        /*
-         * ENGINE
-         *   boostacc
-         *   boostduration
-         *   boostthrust
-         *   forwardthrust
-         *   rotationthrust
-         *   strafeacc
-         *   strafethrust
-         *   travelattacktime
-         *   travelchargetime
-         *   travelstartthrust=
-         *   travelthrust
-         *    
-         * SHIP
-         *   countermeasurecapacity
-         *   deployablecapacity
-         *   
-         *   drag
-         *   mass
-         *   maxhull
-         *   missilecapacity
-         *   radarcloak
-         *   radarrange
-         *   regiondamage
-         *   unitcapacity
-         *   
-        <modification>
-            <engine ware="mod_engine_forwardthrust_01_mk3" forwardthrust="1.19757" rotationthrust="1.20424" boostthrust="1.37198" travelthrust="1.2086" strafeacc="1.20435"/>
-            <paint ware="paintmod_0188"/>
-            <ship ware="mod_ship_mass_01_mk3" mass="0.796761" drag="0.834835"/>
-        </modification>
-        */
-        var returnValue = new List<string>();
-
-        while (await reader.ReadAsync())
-        {
-            if (reader.CheckNodeMatches(Constants.XmlDataFile.ElementName.Engine, XmlNodeType.Element, 1))
-            {
-                returnValue.Add("Engine");
-            }
-            else if (reader.CheckNodeMatches(Constants.XmlDataFile.ElementName.Paint, XmlNodeType.Element, 1))
-            {
-                returnValue.Add("Paint");
-            }
-            else if (reader.CheckNodeMatches(Constants.XmlDataFile.ElementName.Ship, XmlNodeType.Element, 1))
-            {
-                returnValue.Add("Ship");
-            }
-        }
-
-        return returnValue;
     }
 }

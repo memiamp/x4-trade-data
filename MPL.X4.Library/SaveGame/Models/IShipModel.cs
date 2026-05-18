@@ -25,12 +25,10 @@ public interface IShipModel : IHasIsKnown, IHasTransform, IModelWithId
     /// </summary>
     string Model { get; }
 
-    /*
     /// <summary>
     /// Gets the modifications applied to the ship.
     /// </summary>
-    IEnumerable<string> Modifications { get; }
-    */
+    IModificationModelList Modifications { get; }
 
     /// <summary>
     /// Gets the name of the ship (if any).

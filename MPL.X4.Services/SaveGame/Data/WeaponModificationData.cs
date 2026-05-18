@@ -1,4 +1,6 @@
-﻿namespace MPL.X4.SaveGame.Data;
+﻿using MPL.X4.Services;
+
+namespace MPL.X4.SaveGame.Data;
 
 /// <summary>
 /// A class that implements a data model of a weapon modification.
@@ -6,7 +8,7 @@
 internal class WeaponModificationData : ModificationData, IWeaponModificationData
 {
     public override string ToString()
-        => $"{Ware} - Cooling: {Cooling} Damage: {Damage} Reload: {Reload} StickTime: {StickTime}";
+        => $"{Ware} - {DebugOutputHelper.GetPropertyValues<double>(this, x => x != 0)}";
 
     public required double ChargeTime { get; init; }
 

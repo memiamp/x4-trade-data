@@ -99,6 +99,8 @@ public static class Bootstrap
         servicesCollection.AddTransient<IModelParser<IEnumerable<ISectorData>, ISectorModelList>, SectorModelListParser>();
         servicesCollection.AddTransient<IModelParser<IGateData, IGateModel>, GateModelParser>();
         servicesCollection.AddTransient<IModelParser<ILockboxData, ILockboxModel>, LockboxModelParser>();
+        servicesCollection.AddTransient<IModelParser<IModificationData, IModificationModel>, ModificationModelParser>();
+        servicesCollection.AddTransient<IModelParser<IEnumerable<IModificationData>, IModificationModelList>, ModificationModelListParser>();
         servicesCollection.AddTransient<IModelParser<ISaveGameData, ISaveGameModels>, SaveGameModelsParser>();
         servicesCollection.AddTransient<IModelParser<ISectorData, ISectorModel>, SectorModelParser>();
         servicesCollection.AddTransient<IModelParser<IShipData, IShipModel>, ShipModelParser>();
