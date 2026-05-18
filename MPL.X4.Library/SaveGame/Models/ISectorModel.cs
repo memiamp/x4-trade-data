@@ -34,4 +34,9 @@ public interface ISectorModel : IHasIsKnown, IHasTransform, IModelWithId
     /// Gets the ships in the sector.
     /// </summary>
     IShipModelList Ships { get; }
+
+    /// <summary>
+    /// Gets the stations in the sector.
+    /// </summary>
+    IStationModelList Stations { get; }
 }

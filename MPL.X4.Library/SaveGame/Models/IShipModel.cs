@@ -21,6 +21,11 @@ public interface IShipModel : IHasIsKnown, IHasTransform, IModelWithId
     string Code { get; }
 
     /// <summary>
+    /// Gets an indication of whether the ship is a wreck.
+    /// </summary>
+    bool IsWreck { get; }
+
+    /// <summary>
     /// Gets the model of the ship.
     /// </summary>
     string Model { get; }

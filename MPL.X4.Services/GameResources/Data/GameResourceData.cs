@@ -9,6 +9,8 @@ internal class GameResourceData : IGameResourceData
 
     public required IFactionDataDictionary Factions { get; init; }
 
+    public required IMacroNameResourceDataDictionary LandmarkNames { get; init; }
+
     public required IOffsetDataDictionary Offsets { get; init; }
 
     public required IMacroNameResourceDataDictionary SectorNames { get; init; }

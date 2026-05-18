@@ -36,6 +36,7 @@ public static class Constants
             public const string ColourXml = "colors.xml";
             public const string EnglishTextResource = $"{LanguageId.English}.{FileExtensions.XmlData}";
             public const string FactionsXml = "libraries/factions.xml";
+            public const string LandmarkMacros = "landmarks/macros/";
             public const string MapDefinitionXml = "mapdefaults.xml";
             public static readonly string[] ShipMacros = [ShipMacrosL, ShipMacrosM, ShipMacrosS, ShipMacrosXL, ShipMacrosXS];
             public const string ShipMacrosL = "assets/units/size_l/macros/";
@@ -227,6 +228,12 @@ public static class Constants
             {
                 public const string Sectors = "sectors";
                 public const string Zones = "zones";
+            }
+
+            public static class State
+            {
+                public const string Construction = "construction";
+                public const string Wreck = "wreck";
             }
         }
 

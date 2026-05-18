@@ -46,6 +46,27 @@ internal static class Program
         //var saveGame = await saveGameService.LoadFrom(@"C:\Users\martin\Documents\Egosoft\X4\48359014\save\quicksave.xml.gz");
         Console.WriteLine("Save game data loaded");
 
+        var stationStates = saveGame
+                                    .Universe
+                                    .Sectors
+                                    .SelectMany(x => x.Zones)
+                                    .SelectMany(x => x.Stations)
+                                    .Where(x => !string.IsNullOrWhiteSpace(x.State))
+                                    .Select(x => x.State)
+                                    .Distinct()
+                                    .Order();
+
+
+        var shipStates = saveGame
+                                 .Universe
+                                 .Sectors
+                                 .SelectMany(x => x.Zones)
+                                 .SelectMany(x => x.Ships)
+                                 .Where(x => !string.IsNullOrWhiteSpace(x.State))
+                                 .Select(x => x.State)
+                                 .Distinct()
+                                 .Order();
+
         var saveGameModelService = sp.GetRequiredService<ISaveGameModelLoader>();
         var saveGameModels = saveGameModelService.LoadModels(saveGame, gameResourceModels);
         Console.WriteLine("Save game models loaded");

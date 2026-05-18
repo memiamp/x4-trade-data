@@ -126,6 +126,34 @@ internal class GameResourceDataLoader(
         return new FactionDataDictionary();
     }
 
+    async Task<IMacroNameResourceDataDictionary> IGameResourceDataLoader.LoadLandmarkNamesFromCatalogs(string catalogsFilePath)
+    {
+        logger.LogInformation("Loading landmark names from catalogs at {CatalogsFilePath}", catalogsFilePath);
+
+        var entries = await catalogFileReader.ParseIndexes(catalogsFilePath, Constants.CatalogFile.FileName.LandmarkMacros, Constants.CatalogFile.FileExtensions.XmlData, true);
+
+        return await ((IGameResourceDataLoader)this).LoadLandmarkNamesFromIndex(entries);
+    }
+
+    async Task<IMacroNameResourceDataDictionary> IGameResourceDataLoader.LoadLandmarkNamesFromIndex(IEnumerable<ICatalogIndex> index)
+    {
+        var returnValue = new MacroNameResourceDataDictionary();
+
+        logger.LogInformation("Loading landmark names from supplied index");
+
+        var entries = FilterIndexEntries(index, x => x.FilePath.Contains(Constants.CatalogFile.FileName.LandmarkMacros, StringComparison.OrdinalIgnoreCase));
+        await foreach (var file in catalogFileReader.ReadTextFiles(entries))
+        {
+            using var reader = xmlReaderWrapperFactory.CreateXmlReaderFromXmlString(file);
+
+            var data = await resourceDataParser.ReadLandmarkNames(reader);
+
+            returnValue.Merge(data);
+        }
+
+        return returnValue;
+    }
+
     async Task<IOffsetDataDictionary> IGameResourceDataLoader.LoadOffsetsFromCatalogs(string catalogsFilePath)
     {
         logger.LogInformation("Loading offset data from catalogs at {CatalogsFilePath}", catalogsFilePath);

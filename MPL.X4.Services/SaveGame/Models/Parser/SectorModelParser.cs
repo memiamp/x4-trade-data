@@ -22,12 +22,13 @@ internal class SectorModelParser(
         var gates = new GateModelList();
         var lockboxes = new LockboxModelList();
         var ships = new ShipModelList();
+        var stations = new StationModelList();
 
         var name = ParseName(source);
         var owner = ParseOwner(source);
         var transform = ParseTransform(source);
 
-        ParseZones(source, gates, lockboxes, ships);
+        ParseZones(source, gates, lockboxes, ships, stations);
 
         return new SectorModel
         {
@@ -39,6 +40,7 @@ internal class SectorModelParser(
             Name = name,
             Owner = owner,
             Ships = ships,
+            Stations = stations,
             Transform = transform
         };
     }
@@ -71,11 +73,15 @@ internal class SectorModelParser(
             ? offset.Offset
             : ITransform3D.GetDefault();
 
-    private void ParseZone(IZoneData source, IGateModelList gates, ILockboxModelList lockboxes, IShipModelList ships)
+    private void ParseZone(IZoneData source, IGateModelList gates, ILockboxModelList lockboxes, IShipModelList ships, IStationModelList stations)
     {
-        var zoneOffset = parsingScope.GameResources.Offsets.Zones.TryGetValue(source.Macro, out var offset)
-            ? offset.Offset
-            : ITransform3D.GetDefault();
+        var zoneOffset = parsingScope
+                                     .GameResources
+                                     .Offsets
+                                     .Zones
+                                     .TryGetValue(source.Macro, out var offset)
+                                                                                ? offset.Offset
+                                                                                : ITransform3D.GetDefault();
 
         parsingScope.CurrentOffset = zoneOffset;
 
@@ -96,13 +102,19 @@ internal class SectorModelParser(
             var model = modelParser.Parse<IShipData, IShipModel>(item);
             ships.Add(model);
         }
+
+        foreach (var item in source.Stations)
+        {
+            var model = modelParser.Parse<IStationData, IStationModel>(item);
+            stations.Add(model);
+        }
     }
 
-    private void ParseZones(ISectorData source, IGateModelList gates, ILockboxModelList lockboxes, IShipModelList ships)
+    private void ParseZones(ISectorData source, IGateModelList gates, ILockboxModelList lockboxes, IShipModelList ships, IStationModelList stations)
     {
         foreach (var zone in source.Zones)
         {
-            ParseZone(zone, gates, lockboxes, ships);
+            ParseZone(zone, gates, lockboxes, ships, stations);
         }
     }
 }

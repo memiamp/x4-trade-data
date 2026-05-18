@@ -30,6 +30,8 @@ internal class GameResourceModelLoader(
 
         var factions = modelParser.Parse<IFactionDataDictionary, IFactionModelList>(data.Factions);
 
+        var landmarkNames = modelParser.Parse<IMacroNameResourceDataDictionary, IMacroNameModelList>(data.LandmarkNames);
+
         var offsets = modelParser.Parse<IOffsetDataDictionary, IOffsetModelReference>(data.Offsets);
 
         var sectorNames = modelParser.Parse<IMacroNameResourceDataDictionary, IMacroNameModelList>(data.SectorNames);
@@ -42,6 +44,7 @@ internal class GameResourceModelLoader(
         {
             Colours = colours,
             Factions = factions,
+            LandmarkNames = landmarkNames,
             Offsets = offsets,
             SectorNames = sectorNames,
             ShipModels = shipModels,

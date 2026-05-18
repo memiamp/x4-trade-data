@@ -16,6 +16,11 @@ public interface IGameResourceData
     IFactionDataDictionary Factions { get; }
 
     /// <summary>
+    /// Gets landmark name data.
+    /// </summary>
+    IMacroNameResourceDataDictionary LandmarkNames { get; }
+
+    /// <summary>
     /// Gets offset resource data.
     /// </summary>
     IOffsetDataDictionary Offsets { get; }

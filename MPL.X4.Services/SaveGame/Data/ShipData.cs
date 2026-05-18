@@ -25,4 +25,6 @@ internal class ShipData : HasTransformBase, IShipData
     public required string? Name { get; init; }
 
     public required string Owner { get; init; }
+
+    public string? State { get; init; }
 }

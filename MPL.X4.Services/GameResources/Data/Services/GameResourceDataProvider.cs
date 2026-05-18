@@ -23,6 +23,7 @@ internal partial class GameResourceDataProvider(
 
         var colours = await gameResourceDataLoader.LoadColourResourcesFromIndex(index);
         var factions = await gameResourceDataLoader.LoadFactionsFromIndex(index);
+        var landmarkNames = await gameResourceDataLoader.LoadLandmarkNamesFromIndex(index);
         var offsets = await gameResourceDataLoader.LoadOffsetsFromIndex(index);
         var sectorNames = await gameResourceDataLoader.LoadSectorNamesFromIndex(index);
         var shipModels = await gameResourceDataLoader.LoadShipModelsFromIndex(index);
@@ -33,6 +34,7 @@ internal partial class GameResourceDataProvider(
         {
             Colours = colours,
             Factions = factions,
+            LandmarkNames = landmarkNames,
             Offsets = offsets,
             SectorNames = sectorNames,
             ShipModels = shipModels,

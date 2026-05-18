@@ -16,6 +16,8 @@ internal class ShipModel : ModelWithIdBase, IShipModel
 
     public required bool IsKnown { get; init; }
 
+    public required bool IsWreck { get; init; }
+
     public required string Model { get; init; }
 
     public required IModificationModelList Modifications { get; init; }

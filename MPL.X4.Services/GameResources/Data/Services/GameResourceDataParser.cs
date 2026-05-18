@@ -75,6 +75,27 @@ internal class GameResourceDataParser(
         return returnValue;
     }
 
+    async Task<IMacroNameResourceDataDictionary> IGameResourceDataParser.ReadLandmarkNames(IXmlReaderWrapper reader)
+    {
+        IMacroNameResourceDataDictionary returnValue = new MacroNameResourceDataDictionary();
+
+        while (await reader.ReadAsync())
+        {
+            if (reader.CheckNodeMatches(Constants.XmlDataFile.ElementName.Macros, XmlNodeType.Element, 0))
+            {
+                using var subtree = await reader.ReadSubtree();
+
+                returnValue = await dataParser.Parse<ILandmarkNameResourceDataDictionary>(subtree);
+
+                break;
+            }
+        }
+
+        logger.LogDebug("{Count} sector names parsed", returnValue.Count);
+
+        return returnValue;
+    }
+
     async Task<IOffsetDataDictionary> IGameResourceDataParser.ReadOffsets(IXmlReaderWrapper reader)
     {
         OffsetDataDictionary returnValue = [];

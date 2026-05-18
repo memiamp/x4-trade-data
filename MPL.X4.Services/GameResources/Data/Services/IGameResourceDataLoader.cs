@@ -36,6 +36,20 @@ public interface IGameResourceDataLoader
     Task<IFactionDataDictionary> LoadFactionsFromIndex(IEnumerable<ICatalogIndex> index);
 
     /// <summary>
+    /// Loads landmark names from catalogs in the specified <paramref name="catalogsFilePath"/>.
+    /// </summary>
+    /// <param name="catalogsFilePath">A <see cref="string"/> containing the path to the catalog files.</param>
+    /// <returns>A <see cref="Task{TResult}"/> representing the asynchronous operation.  An <see cref="IMacroNameResourceDataDictionary"/> that is the result.</returns>
+    Task<IMacroNameResourceDataDictionary> LoadLandmarkNamesFromCatalogs(string catalogsFilePath);
+
+    /// <summary>
+    /// Loads landmark names from entries in the specified <paramref name="index"/>.
+    /// </summary>
+    /// <param name="index">An <see cref="IEnumerable{ICatalogIndex}"/> that is the catalog file index.</param>
+    /// <returns>A <see cref="Task{TResult}"/> representing the asynchronous operation.  An <see cref="IMacroNameResourceDataDictionary"/> that is the result.</returns>
+    Task<IMacroNameResourceDataDictionary> LoadLandmarkNamesFromIndex(IEnumerable<ICatalogIndex> index);
+
+    /// <summary>
     /// Loads offset data from catalogs in the specified <paramref name="catalogsFilePath"/>.
     /// </summary>
     /// <param name="catalogsFilePath">A <see cref="string"/> containing the path to the catalog files.</param>

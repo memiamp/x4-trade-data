@@ -40,6 +40,7 @@ internal class ShipModelParser(
             Code = source.Code,
             IsKnown = source.IsKnown,
             Id = source.Id,
+            IsWreck = source.State == Constants.XmlDataFile.AttributeValue.State.Wreck,
             Model = model,
             Modifications = modifications,
             Name = source.Name,

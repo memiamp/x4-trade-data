@@ -16,6 +16,11 @@ public interface IGameResourceModels
     IFactionModelList Factions { get; }
 
     /// <summary>
+    /// Gets landmark names.
+    /// </summary>
+    IMacroNameModelList LandmarkNames { get; }
+
+    /// <summary>
     /// Gets the offset resource models.
     /// </summary>
     IOffsetModelReference Offsets { get; }

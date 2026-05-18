@@ -49,4 +49,9 @@ public interface IShipData : IHasTransform
     /// Gets the owner of the ship.
     /// </summary>
     string Owner { get; }
+
+    /// <summary>
+    /// Gets the state of the ship.
+    /// </summary>
+    string? State { get; }
 }

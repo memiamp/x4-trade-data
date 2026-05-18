@@ -22,5 +22,7 @@ internal class SectorModel : ModelWithIdBase, ISectorModel
 
     public required IShipModelList Ships { get; init; }
 
+    public required IStationModelList Stations { get; init; }
+
     public required ITransform3D Transform { get; init; }
 }

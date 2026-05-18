@@ -44,6 +44,7 @@ public static class Bootstrap
         servicesCollection.AddTransient<IDataParser<IColourDataDictionary>, ColourDataDictionaryParser>();
         servicesCollection.AddTransient<IDataParser<IFactionData>, FactionDataParser>();
         servicesCollection.AddTransient<IDataParser<IFactionDataDictionary>, FactionDataDictionaryParser>();
+        servicesCollection.AddTransient<IDataParser<ILandmarkNameResourceDataDictionary>, LandmarkNameResourceDataDictionaryParser>();
         servicesCollection.AddTransient<IDataParser<IMappingData>, MappingDataParser>();
         servicesCollection.AddTransient<IDataParser<IMappingDataDictionary>, MappingDataDictionaryParser>();
         servicesCollection.AddTransient<IDataParser<IOffsetDataDictionary>, OffsetDataDictionaryParser>();
@@ -104,6 +105,7 @@ public static class Bootstrap
         servicesCollection.AddTransient<IModelParser<ISaveGameData, ISaveGameModels>, SaveGameModelsParser>();
         servicesCollection.AddTransient<IModelParser<ISectorData, ISectorModel>, SectorModelParser>();
         servicesCollection.AddTransient<IModelParser<IShipData, IShipModel>, ShipModelParser>();
+        servicesCollection.AddTransient<IModelParser<IStationData, IStationModel>, StationModelParser>();
         servicesCollection.AddTransient<IModelParser<IUniverseData, IUniverseModel>, UniverseModelParser>();
     }
 

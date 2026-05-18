@@ -34,6 +34,7 @@ internal class ShipDataParser(
 
         var isKnown = GetIsKnownToPlayer(reader);
         reader.TryGetAttribute(Constants.XmlDataFile.AttributeName.Name, out string? name);
+        reader.TryGetAttribute(Constants.XmlDataFile.AttributeName.State, out string? state);
 
         var (cargo, modifications, transform) = await ParseElements(reader);
 
@@ -48,7 +49,8 @@ internal class ShipDataParser(
             Modifications = modifications,
             Name = name,
             Owner = owner,
-            Transform = transform
+            Transform = transform,
+            State = state
         };
     }
 

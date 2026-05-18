@@ -25,7 +25,7 @@ internal partial class TextResourceModelListParser(
     private TextResourceModel CreateModel(int pageId, int textId, string text, ITextResourcePageDictionary textResource)
         => new()
         {
-            Id = $"{pageId}|{textId}",
+            Id = TextResourceModel.MakeId(pageId, textId),
             PageId = pageId,
             Text = RecursiveMapText(text, textResource),
             TextId = textId

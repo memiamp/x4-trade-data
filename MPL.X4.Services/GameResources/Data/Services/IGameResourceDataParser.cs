@@ -22,6 +22,13 @@ public interface IGameResourceDataParser
     Task<IFactionDataDictionary> ReadFactions(IXmlReaderWrapper reader);
 
     /// <summary>
+    /// Parses the landmark names from the specified <paramref name="reader"/>.
+    /// </summary>
+    /// <param name="reader">An <see cref="IXmlReaderWrapper"/> containing the resource data to parse.</param>
+    /// <returns>A <see cref="Task{TResult}"/> representing the asynchronous operation.  An <see cref="IMacroNameResourceDataDictionary"/> containing the result.</returns>
+    Task<IMacroNameResourceDataDictionary> ReadLandmarkNames(IXmlReaderWrapper reader);
+
+    /// <summary>
     /// Reads offset data from the specified <paramref name="reader"/>.
     /// </summary>
     /// <param name="reader">An <see cref="IXmlReaderWrapper"/> containing the resource data to parse.</param>
