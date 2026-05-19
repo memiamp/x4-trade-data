@@ -30,6 +30,7 @@ internal class ShipModelParser(
         var cargo = modelParser.Parse<IEnumerable<IWareItemData>, ICargoItemModelList>(source.Cargo.Items);
         var model = ParseModel(source.Macro);
         var modifications = modelParser.Parse<IEnumerable<IModificationData>, IModificationModelList>(source.Modifications);
+        var owner = ParseOwner(source);
         var shipClass = ParseShipClass(source.Class);
         var transform = source.Transform.Add(parsingScope.CurrentOffset);
 
@@ -44,7 +45,7 @@ internal class ShipModelParser(
             Model = model,
             Modifications = modifications,
             Name = source.Name,
-            Owner = source.Owner,
+            Owner = owner,
             Transform = transform,
         };
     }
@@ -53,6 +54,17 @@ internal class ShipModelParser(
     {
         var returnValue = string.Empty;
         if (parsingScope.GameResources.ShipModels.TryGetValue(macro, out var model))
+        {
+            returnValue = model.Name;
+        }
+
+        return returnValue;
+    }
+
+    private string ParseOwner(IShipData source)
+    {
+        var returnValue = source.Owner;
+        if (parsingScope.GameResources.Factions.TryGetValue(source.Owner, out var model))
         {
             returnValue = model.Name;
         }

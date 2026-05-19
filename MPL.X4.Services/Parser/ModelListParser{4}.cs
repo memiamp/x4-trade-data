@@ -29,8 +29,8 @@ internal abstract class ModelListParser<TData, TKey, TModel, TModelList>(
         var returnValue = CreateTarget();
         foreach (var item in source)
         {
-            var mappedFaction = modelParser.Parse<TData, TModel>(item);
-            returnValue.Add(mappedFaction);
+            var model = modelParser.Parse<TData, TModel>(item);
+            returnValue.Add(model);
         }
 
         return returnValue;

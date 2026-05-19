@@ -80,13 +80,6 @@ internal class LockboxDataParser(
 
     private static async Task<IEnumerable<string>> ParseWares(IXmlReaderWrapper reader)
     {
-        /*
-		<wares>
-			<ware ware="inv_quantum_data_shard"/>
-			<ware ware="inv_seminar_piloting_4"/>
-			<ware ware="inv_kyondevice_03"/>
-		</wares>
-        */
         var returnValue = new List<string>();
 
         while (await reader.ReadAsync())

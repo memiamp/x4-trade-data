@@ -98,6 +98,8 @@ public static class Bootstrap
         servicesCollection.AddTransient<IModelParser<IWareItemData, ICargoItemModel>, CargoItemModelParser>();
         servicesCollection.AddTransient<IModelParser<IEnumerable<IWareItemData>, ICargoItemModelList>, CargoItemModelListParser>();
         servicesCollection.AddTransient<IModelParser<IEnumerable<ISectorData>, ISectorModelList>, SectorModelListParser>();
+        servicesCollection.AddTransient<IModelParser<IEnumerable<ITradeData>, ITradeModelList>, TradeModelListParser>();
+        servicesCollection.AddTransient<IModelParser<IEnumerable<string>, IProductionModelList>, ProductionModelListParser>();
         servicesCollection.AddTransient<IModelParser<IGateData, IGateModel>, GateModelParser>();
         servicesCollection.AddTransient<IModelParser<ILockboxData, ILockboxModel>, LockboxModelParser>();
         servicesCollection.AddTransient<IModelParser<IModificationData, IModificationModel>, ModificationModelParser>();

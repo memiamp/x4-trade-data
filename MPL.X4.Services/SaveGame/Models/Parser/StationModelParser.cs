@@ -8,16 +8,22 @@ namespace MPL.X4.SaveGame.Models.Parser;
 /// A class that implements a parser to a <see cref="IStationModel"/> from an <see cref="IStationData"/>.
 /// </summary>
 /// <param name="logger">An <see cref="ILogger{TCategoryName}"/> that is the logger to use.</param>
+/// <param name="modelParser">An <see cref="IModelParser"/> that is the model parser to use.</param>
 /// <param name="parsingScope">An <see cref="ISaveGameModelParsingScope"/> that is the parsing scope.</param>
 internal class StationModelParser(
                                   ILogger<StationModelParser> logger,
+                                  IModelParser modelParser,
                                   ISaveGameModelParsingScope parsingScope)
     : ModelParserBase<IStationData, IStationModel>(logger)
 {
     private protected override IStationModel OnParse(IStationData source)
     {
-        var name = ParseName(source);
+        var owner = parsingScope.ParseFactionName(source.Owner);
+        var productions = modelParser.Parse<IEnumerable<string>, IProductionModelList>(source.Productions);
+        var trades = modelParser.Parse<IEnumerable<ITradeData>, ITradeModelList>(source.Trades);
         var transform = source.Transform.Add(parsingScope.CurrentOffset);
+
+        var name = ParseName(source, owner, productions);
 
         return new StationModel
         {
@@ -27,17 +33,21 @@ internal class StationModelParser(
             IsUnderConstruction = source.State == Constants.XmlDataFile.AttributeValue.State.Construction,
             IsWreck = source.State == Constants.XmlDataFile.AttributeValue.State.Wreck,
             Name = name,
-            Owner = source.Owner,
+            Owner = owner,
+            Productions = productions,
+            Trades = trades,
             Transform = transform,
         };
     }
 
-    private string ParseName(IStationData source)
+    private string ParseName(IStationData source, string ownerName, IProductionModelList productions)
     {
         string returnValue;
 
-        parsingScope.GameResources.Factions.TryGetValue(source.Owner, out var owner);
-        var ownerName = owner?.Name ?? "Unknown";
+        if (string.IsNullOrWhiteSpace(ownerName))
+        {
+            ownerName = "Unknown";
+        }
 
         if (!string.IsNullOrWhiteSpace(source.Name))
         {
@@ -53,17 +63,17 @@ internal class StationModelParser(
         {
             returnValue = value.Text;
         }
-        else if (source.Productions?.Any() == true)
+        else if (productions.Any() == true)
         {
             returnValue = $"{ownerName} ";
 
-            if (source.Productions.Count() > 1)
+            if (productions.Count > 1)
             {
                 returnValue += "Refined Goods Complex";
             }
-            else if (parsingScope.GameResources.WareNames.TryGetValue(source.Productions.First(), out var ware))
+            else
             {
-                returnValue += $"{ware.Name} Factory";
+                returnValue += $"{productions.First().Name} Factory";
             }
 
             if (source.NameIndex > 0)

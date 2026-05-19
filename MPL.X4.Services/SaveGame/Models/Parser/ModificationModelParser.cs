@@ -17,7 +17,7 @@ internal class ModificationModelParser(
 {
     private protected override IModificationModel OnParse(IModificationData source)
     {
-        var name = ParseName(source);
+        var name = parsingScope.ParseWareName(source.Ware);
         var summary = ParseSummary(source);
         var type = ParseType(source);
 
@@ -28,17 +28,6 @@ internal class ModificationModelParser(
             Summary = summary,
             Type = type
         };
-    }
-
-    private string ParseName(IModificationData source)
-    {
-        var returnValue = string.Empty;
-        if (parsingScope.GameResources.WareNames.TryGetValue(source.Ware, out var model))
-        {
-            returnValue = model.Name;
-        }
-
-        return returnValue;
     }
 
     private static string ParseSummary(IEngineModificationData source)

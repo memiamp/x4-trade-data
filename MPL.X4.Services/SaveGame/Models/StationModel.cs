@@ -20,5 +20,9 @@ internal class StationModel : ModelWithIdBase, IStationModel
 
     public required string Owner { get; init; }
 
+    public required ITradeModelList Trades { get; init; }
+
+    public required IProductionModelList Productions { get; init; }
+
     public required ITransform3D Transform { get; init; }
 }

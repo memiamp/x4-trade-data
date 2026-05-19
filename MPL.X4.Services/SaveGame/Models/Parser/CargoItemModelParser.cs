@@ -16,7 +16,7 @@ internal class CargoItemModelParser(
 {
     private protected override ICargoItemModel OnParse(IWareItemData source)
     {
-        var name = ParseName(source);
+        var name = parsingScope.ParseWareName(source.Ware);
 
         return new CargoItemModel
         {
@@ -24,16 +24,5 @@ internal class CargoItemModelParser(
             Id = source.Ware,
             Name = name
         };
-    }
-
-    private string ParseName(IWareItemData source)
-    {
-        var returnValue = string.Empty;
-        if (parsingScope.GameResources.WareNames.TryGetValue(source.Ware, out var model))
-        {
-            returnValue = model.Name;
-        }
-
-        return returnValue;
     }
 }

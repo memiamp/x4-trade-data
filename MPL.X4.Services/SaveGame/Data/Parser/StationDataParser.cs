@@ -80,7 +80,7 @@ internal class StationDataParser(
             }
         }
 
-        return (defenceModuleCount, productions.Distinct());
+        return (defenceModuleCount, productions);
     }
 
     private async Task<StationElements> ParseElements(IXmlReaderWrapper reader)
@@ -131,8 +131,7 @@ internal class StationDataParser(
                     using var subtree = await reader.ReadSubtree();
 
                     var data = await ParseProduction(subtree);
-                    if (!string.IsNullOrWhiteSpace(data) &&
-                        !productions.Contains(data))
+                    if (!string.IsNullOrWhiteSpace(data))
                     {
                         productions.Add(data);
                     }
@@ -144,7 +143,7 @@ internal class StationDataParser(
             }
         }
 
-        return (defenceModuleCount, productions.Distinct());
+        return (defenceModuleCount, productions);
     }
 
     private static void ParseNames(IXmlReaderWrapper reader, out TextResourceReference? baseNameResource, out string? name, out int nameIndex, out TextResourceReference? nameResource)
@@ -217,7 +216,10 @@ internal class StationDataParser(
         {
             if (reader.CheckNodeMatches(Constants.XmlDataFile.ElementName.Production, XmlNodeType.Element, 2))
             {
-                returnValue = await ParseTrade(reader);
+                using var subtree = await reader.ReadSubtree();
+
+                returnValue = await ParseTrade(subtree);
+
                 break;
             }
         }

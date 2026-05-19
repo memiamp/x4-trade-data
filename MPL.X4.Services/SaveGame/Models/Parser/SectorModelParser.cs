@@ -25,7 +25,7 @@ internal class SectorModelParser(
         var stations = new StationModelList();
 
         var name = ParseName(source);
-        var owner = ParseOwner(source);
+        var owner = parsingScope.ParseFactionName(source.Owner);
         var transform = ParseTransform(source);
 
         ParseZones(source, gates, lockboxes, ships, stations);
@@ -56,22 +56,14 @@ internal class SectorModelParser(
         return returnValue;
     }
 
-    private string ParseOwner(ISectorData source)
-    {
-
-        var returnValue = source.Owner;
-        if (parsingScope.GameResources.Factions.TryGetValue(source.Owner, out var model))
-        {
-            returnValue = model.Name;
-        }
-
-        return returnValue;
-    }
-
     private ITransform3D ParseTransform(ISectorData source)
-        => parsingScope.GameResources.Offsets.Sectors.TryGetValue(source.Macro, out var offset)
-            ? offset.Offset
-            : ITransform3D.GetDefault();
+        => parsingScope
+                       .GameResources
+                       .Offsets
+                       .Sectors
+                       .TryGetValue(source.Macro, out var offset)
+                                                                  ? offset.Offset
+                                                                  : ITransform3D.GetDefault();
 
     private void ParseZone(IZoneData source, IGateModelList gates, ILockboxModelList lockboxes, IShipModelList ships, IStationModelList stations)
     {

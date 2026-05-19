@@ -34,6 +34,7 @@ internal class LockboxModelParser(
     {
         var rarity = ParseRarity(source.Macro);
         var transform = source.Transform.Add(parsingScope.CurrentOffset);
+        var wares = ParseWares(source.Wares);
 
         return new LockboxModel
         {
@@ -43,7 +44,7 @@ internal class LockboxModelParser(
             LockCount = source.LockCount,
             Rarity = rarity,
             Transform = transform,
-            Wares = source.Wares
+            Wares = wares
         };
     }
 
@@ -78,6 +79,25 @@ internal class LockboxModelParser(
         if (returnValue == LockboxRarity.Unknown)
         {
             Logger.LogWarning("Unable to map lockbox macro {Macro} to a rarity", macro);
+        }
+
+        return returnValue;
+    }
+
+    private IEnumerable<string> ParseWares(IEnumerable<string> source)
+    {
+        var returnValue = new List<string>();
+
+        foreach (var item in source)
+        {
+            if (parsingScope.TryParseWareName(item, out var ware))
+            {
+                returnValue.Add(ware);
+            }
+            else
+            {
+                returnValue.Add(item);
+            }
         }
 
         return returnValue;

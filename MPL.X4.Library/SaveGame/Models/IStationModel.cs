@@ -9,12 +9,7 @@ public interface IStationModel : IHasIsKnown, IHasTransform, IModelWithId
     /// Gets the code of the station.
     /// </summary>
     string Code { get; }
-    /*
-/// <summary>
-/// Gets the count of defence modules at the station.
-/// </summary>
-int DefenceModuleCount { get; }
-*/
+
     /// <summary>
     /// Gets an indication of whether this station is being constructed.
     /// </summary>
@@ -34,16 +29,14 @@ int DefenceModuleCount { get; }
     /// Gets the owner of the station.
     /// </summary>
     string Owner { get; }
-    /*
-/// <summary>
-/// Gets the productions at the station.
-/// </summary>
-IEnumerable<string> Productions { get; }
-*/
-    /*
-/// <summary>
-/// Gets the trades on offer at the station.
-/// </summary>
-IEnumerable<ITradeData> Trades { get; }
- */
+
+    /// <summary>
+    /// Gets the productions at the station.
+    /// </summary>
+    IProductionModelList Productions { get; }
+
+    /// <summary>
+    /// Gets the trades on offer at the station.
+    /// </summary>
+    ITradeModelList Trades { get; }
 }

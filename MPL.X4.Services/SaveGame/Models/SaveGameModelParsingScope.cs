@@ -14,6 +14,48 @@ internal class SaveGameModelParsingScope(
 {
     private ITransform3D _currentOffset = ITransform3D.GetDefault();
 
+    string ISaveGameModelParsingScope.ParseFactionName(string source, string defaultResult)
+    {
+        var returnValue = defaultResult;
+
+        if (((ISaveGameModelParsingScope)this).GameResources?.Factions.TryGetValue(source, out var model) == true)
+        {
+            returnValue = model.Name;
+        }
+        else
+        {
+            logger.LogDebug("Could not find faction name {Faction} in factions list", source);
+        }
+
+        return returnValue;
+    }
+
+    string ISaveGameModelParsingScope.ParseWareName(string source, string defaultResult)
+    {
+        if (!((ISaveGameModelParsingScope)this).TryParseWareName(source, out var returnValue))
+        {
+            logger.LogDebug("Could not find ware name {Ware} in factions list", source);
+
+            returnValue = defaultResult;
+        }
+
+        return returnValue;
+    }
+
+    bool ISaveGameModelParsingScope.TryParseWareName(string source, [NotNullWhen(true)] out string? wareName)
+    {
+        var returnValue = false;
+        wareName = null;
+
+        if (((ISaveGameModelParsingScope)this).GameResources?.WareNames.TryGetValue(source, out var model) == true)
+        {
+            wareName = model.Name;
+            returnValue = true;
+        }
+
+        return returnValue;
+    }
+
     ITransform3D ISaveGameModelParsingScope.CurrentOffset
     {
         get => _currentOffset;
