@@ -1,5 +1,7 @@
 ﻿using System.ComponentModel;
+using MPL.X4.SaveGame.Models;
 using MPL.X4.TradeData.UI.Models.SectorPlot;
+//using MPL.X4.TradeData.UI.Models.SectorPlot;
 
 namespace MPL.X4.TradeData.UI.Forms;
 
@@ -10,7 +12,7 @@ internal partial class SectorViewerForm : Form
 {
     #region Declarations
 
-    private ISector? _sector;
+    private ISectorModel? _sector;
 
     #endregion
 
@@ -28,21 +30,21 @@ internal partial class SectorViewerForm : Form
     private void LoadSectorData()
     {
         SectorPlot.Clear();
-        SectorPlot.AddRange(_sector?
-                                    .Gates
-                                    .Select(x => new GatePlot(x)));
+        //SectorPlot.AddRange(_sector?
+        //                            .Gates
+        //                            .Select(x => new GatePlot(x)));
 
-        SectorPlot.AddRange(_sector?
-                                    .Lockboxes
-                                    .Select(x => new LockboxPlot(x)));
+        //SectorPlot.AddRange(_sector?
+        //                            .Lockboxes
+        //                            .Select(x => new LockboxPlot(x)));
 
         SectorPlot.AddRange(_sector?
                                     .Ships
                                     .Select(x => new ShipPlot(x)));
 
-        SectorPlot.AddRange(_sector?
-                                    .Stations
-                                    .Select(x => new StationPlot(x)));
+        //SectorPlot.AddRange(_sector?
+        //                            .Stations
+        //                            .Select(x => new StationPlot(x)));
 
         SectorPlot.ResetView();
     }
@@ -52,18 +54,12 @@ internal partial class SectorViewerForm : Form
     #region Properties
 
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    internal Dictionary<string, IColour> ColourMap
-    {
-        get => SectorPlot.ColourMap;
-        set => SectorPlot.ColourMap = value;
-    }
-
-    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    internal ISector? Sector
+    internal ISectorModel? Sector
     {
         get
-        { 
-            return _sector; }
+        {
+            return _sector;
+        }
 
         set
         {

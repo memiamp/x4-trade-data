@@ -1,4 +1,6 @@
-﻿namespace MPL.X4.SaveGame.Models;
+﻿using MPL.X4.GameResources.Models;
+
+namespace MPL.X4.SaveGame.Models;
 
 /// <summary>
 /// A class that implements a model of a ship.
@@ -14,6 +16,8 @@ internal class ShipModel : ModelWithIdBase, IShipModel
 
     public required string Code { get; init; }
 
+    public required bool IsAbandoned { get; init; }
+
     public required bool IsKnown { get; init; }
 
     public required bool IsWreck { get; init; }
@@ -24,7 +28,8 @@ internal class ShipModel : ModelWithIdBase, IShipModel
 
     public required string? Name { get; init; }
 
-    public required string Owner { get; init; }
+    public required IFactionModel Owner { get; init; }
 
     public required ITransform3D Transform { get; init; }
+
 }

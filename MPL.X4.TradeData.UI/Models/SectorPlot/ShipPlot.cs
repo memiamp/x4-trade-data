@@ -1,22 +1,25 @@
-﻿namespace MPL.X4.TradeData.UI.Models.SectorPlot;
+﻿using MPL.X4.GameResources.Models;
+using MPL.X4.SaveGame.Models;
+
+namespace MPL.X4.TradeData.UI.Models.SectorPlot;
 
 /// <summary>
-/// A class that implements a sector plot for a <see cref="IShip"/>.
+/// A class that implements a sector plot for an <see cref="IShipModel"/>.
 /// </summary>
-/// <param name="item">An <see cref="IShip"/> to be plotted.</param>
+/// <param name="item">An <see cref="IShipModel"/> to be plotted.</param>
 internal class ShipPlot(
-                        IShip item)
+                        IShipModel item)
     : ISectorPlot
 {
-    string? ISectorPlot.ColourId => $"faction_{item.Owner}";
-    
-    string ISectorPlot.Name => $"{item.Class} {item.Macro}";
+    IColourModel ISectorPlot.Colour => item.Owner.Colour;
+
+    string ISectorPlot.Name => item.Name ?? string.Empty;
 
     SectorPlotType ISectorPlot.Type => SectorPlotType.Ship;
 
-    double ISectorPlot.X => item.Position.X;
+    double ISectorPlot.X => item.Transform.Position.X;
 
-    double ISectorPlot.Y => item.Position.Y;
+    double ISectorPlot.Y => item.Transform.Position.Y;
 
-    double ISectorPlot.Z => item.Position.Z;
+    double ISectorPlot.Z => item.Transform.Position.Z;
 }

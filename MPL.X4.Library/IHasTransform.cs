@@ -1,7 +1,7 @@
 ﻿namespace MPL.X4;
 
 /// <summary>
-/// An interface that defines an elements that supports a transform.
+/// An interface that defines an element that supports a transform.
 /// </summary>
 public interface IHasTransform
 {

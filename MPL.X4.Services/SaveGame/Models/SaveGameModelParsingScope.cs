@@ -14,20 +14,15 @@ internal class SaveGameModelParsingScope(
 {
     private ITransform3D _currentOffset = ITransform3D.GetDefault();
 
-    string ISaveGameModelParsingScope.ParseFactionName(string source, string defaultResult)
+    IFactionModel ISaveGameModelParsingScope.ParseFaction(string source)
     {
-        var returnValue = defaultResult;
-
-        if (((ISaveGameModelParsingScope)this).GameResources?.Factions.TryGetValue(source, out var model) == true)
+        if (((ISaveGameModelParsingScope)this).GameResources?.Factions.TryGetValue(source, out var returnValue) == true)
         {
-            returnValue = model.Name;
-        }
-        else
-        {
-            logger.LogDebug("Could not find faction name {Faction} in factions list", source);
+            return returnValue;
         }
 
-        return returnValue;
+        logger.LogDebug("Could not find faction {Faction} in factions list", source);
+        throw new ArgumentException("A faction {Faction} could not be parsed", source);
     }
 
     string ISaveGameModelParsingScope.ParseWareName(string source, string defaultResult)

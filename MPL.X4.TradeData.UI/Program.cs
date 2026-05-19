@@ -24,15 +24,16 @@ internal static class Program
         services.AddSingleton<IFileConfiguration>(new FileConfiguration());
 
         // Services
-        X4.Services.Bootstrap.AddServices(services);
-        TradeData.Services.Bootstrap.AddServices(services);
+        Imports.XmlPatch.Bootstrap.AddServices(services);
+        Bootstrap.AddServices(services);
 
         // Local forms
         services.AddTransient<DebugForm>();
         services.AddTransient<MainForm>();
 
         // Local services
-        services.AddTransient<IModelMapper, ModelMapper>();
+        services.AddSingleton<IGameDataService, GameDataService>();
+        //services.AddTransient<IModelMapper, ModelMapper>();
         services.AddTransient<ISaveGameFileSystemMonitor, SaveGameFileSystemMonitor>();
 
         return services.BuildServiceProvider();

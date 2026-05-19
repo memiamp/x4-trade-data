@@ -1,4 +1,6 @@
-﻿namespace MPL.X4.SaveGame.Models;
+﻿using MPL.X4.GameResources.Models;
+
+namespace MPL.X4.SaveGame.Models;
 
 /// <summary>
 /// A class that implements a model of a sector.
@@ -18,7 +20,7 @@ internal class SectorModel : ModelWithIdBase, ISectorModel
 
     public required string Name { get; init; }
 
-    public required string Owner { get; init; }
+    public required IFactionModel Owner { get; init; }
 
     public required IShipModelList Ships { get; init; }
 

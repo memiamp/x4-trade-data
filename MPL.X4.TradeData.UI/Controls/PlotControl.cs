@@ -142,7 +142,7 @@ internal class PlotControl : Panel
         var zero = WorldToScreen(0, 0);
 
         using var labelFont = new Font("Segoe UI", 9f, FontStyle.Regular);
-        using var labelBrush = new SolidBrush(Color.FromArgb(128, 180, 255, 100)); // light cyan, semi-transparent
+        using var labelBrush = new SolidBrush(Color.FromArgb(128, 180, 255, 100));
 
         using var gridPen = new Pen(Color.FromArgb(128, Color.LightGray), 1f);
 
@@ -174,7 +174,7 @@ internal class PlotControl : Panel
             }
         }
 
-        float thickness = Math.Max(1.5f, 3f / (float)_pixelsPerMeter); // gets thicker when zoomed in
+        float thickness = Math.Max(1.5f, 3f / (float)_pixelsPerMeter);
         using var axisPen = new Pen(Color.FromArgb(128, Color.LimeGreen), 2f) { DashStyle = DashStyle.Dash };
 
         if (zero.X > -50 && zero.X < Width + 50)
@@ -200,7 +200,7 @@ internal class PlotControl : Panel
 
         const int iconSize = 16;
         const int half = iconSize / 2;
-
+        
         foreach (var item in _items)
         {
             if (item.X < minX || item.X > maxX || item.Z < minY || item.Z > maxY)
@@ -219,10 +219,9 @@ internal class PlotControl : Panel
                 using var attributes = new ImageAttributes();
 
                 var tintColor = Color.Pink;
-                if (!string.IsNullOrWhiteSpace(item.ColourId) &&
-                    ColourMap.TryGetValue(item.ColourId, out var colour))
+                if (item.Colour is not null)
                 {
-                    tintColor = Color.FromArgb(colour.Alpha, colour.Red, colour.Green, colour.Blue);
+                    tintColor = item.Colour.Colour;
                 }
 
                 float r = tintColor.R / 255f;
@@ -256,7 +255,6 @@ internal class PlotControl : Panel
                 g.FillEllipse(brush, screen.X - 6, screen.Y - 6, 12, 12);
             }
         }
-
     }
 
     private static string FormatDistance(double metres, double gridStep)
@@ -289,7 +287,7 @@ internal class PlotControl : Panel
 
         return step;
     }
-
+    
     private ISectorPlot? HitTest(Point screenPoint)
     {
         const float hitRadius = 18f;
@@ -305,7 +303,7 @@ internal class PlotControl : Panel
         }
         return null;
     }
-
+    
     private void Initialise()
     {
         DoubleBuffered = true;
@@ -334,7 +332,7 @@ internal class PlotControl : Panel
     private void UpdateZoomLimits()
     {
         _maxPixelsPerMeter = Math.Max(0.1, Math.Min(Width, Height) / 1000.0);
-
+        
         if (_items.Count == 0)
         {
             _minPixelsPerMeter = 0.0005;
@@ -342,7 +340,7 @@ internal class PlotControl : Panel
             _maxCenterX = _maxCenterY = 1_000_000;
             return;
         }
-
+        
         double dataMinX = _items.Min(i => i.X);
         double dataMaxX = _items.Max(i => i.X);
         double dataMinY = _items.Min(i => i.Z);
@@ -461,7 +459,7 @@ internal class PlotControl : Panel
     private void OnMouseLeave(object? sender, EventArgs e)
     {
         _tooltip.Hide(this);
-        _lastHovered = null;
+       _lastHovered = null;
     }
 
     private void OnMouseMove(object? sender, MouseEventArgs e)
@@ -485,7 +483,7 @@ internal class PlotControl : Panel
             }
             return;
         }
-
+        
         var hovered = HitTest(e.Location);
         if (hovered != _lastHovered)
         {
@@ -525,16 +523,6 @@ internal class PlotControl : Panel
 
         Invalidate();
     }
-
-    #endregion
-
-    #region Properties
-
-    /// <summary>
-    /// Gets or sets the colour map to use.
-    /// </summary>
-    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    internal Dictionary<string, IColour> ColourMap { get; set; } = [];
 
     #endregion
 }

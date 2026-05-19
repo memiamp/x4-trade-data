@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using MPL.X4.SaveGame.Models;
 using MPL.X4.TradeData.UI.Models;
 
 namespace MPL.X4.TradeData.UI.Controls;
@@ -10,7 +11,7 @@ internal partial class SectorListControl : UserControl
 {
     #region Declarations
 
-    private IEnumerable<Sector> _items = [];
+    private IEnumerable<ISectorModel> _items = [];
 
     #endregion
 
@@ -54,24 +55,24 @@ internal partial class SectorListControl : UserControl
         ViewSectorButton.Enabled = GetSelectedItem() is not null;
     }
 
-    private static ListViewItem GenerateListViewItem(Sector source)
+    private static ListViewItem GenerateListViewItem(ISectorModel source)
     {
         var returnValue = new ListViewItem(source.Name);
         returnValue.SubItems.Add(source.Code);
-        returnValue.SubItems.Add(source.AbandonedShipCount.ToString());
-        returnValue.SubItems.Add(source.LockboxCount.ToString());
-        returnValue.SubItems.Add(source.ShipCount.ToString());
-        returnValue.SubItems.Add(source.StationCount.ToString());
+        returnValue.SubItems.Add(source.Ships.Count(x => x.CanBeCaptured).ToString());
+        returnValue.SubItems.Add(source.Lockboxes.Count.ToString());
+        returnValue.SubItems.Add(source.Ships.Count.ToString());
+        returnValue.SubItems.Add(source.Stations.Count.ToString());
 
         returnValue.Tag = source;
 
         return returnValue;
     }
 
-    private Sector? GetSelectedItem()
+    private ISectorModel? GetSelectedItem()
     {
         if (SectorListView.SelectedItems.Count == 1 &&
-            SectorListView.SelectedItems[0].Tag is Sector returnValue)
+            SectorListView.SelectedItems[0].Tag is ISectorModel returnValue)
         {
             return returnValue;
         }
@@ -105,11 +106,11 @@ internal partial class SectorListControl : UserControl
         DoRefresh();
     }
 
-    private void OnViewSectorRequest(string? sectorCode)
+    private void OnViewSectorRequest(ISectorModel sector)
     {
-        if (sectorCode is not null)
+        if (sector is not null)
         {
-            ViewSectorRequest?.Invoke(this, new SectorActionEventArgs(sectorCode));
+            ViewSectorRequest?.Invoke(this, new SectorActionEventArgs(sector));
         }
     }
 
@@ -132,7 +133,7 @@ internal partial class SectorListControl : UserControl
         var sector = GetSelectedItem();
         if (sector is not null)
         {
-            OnViewSectorRequest(sector.Code);
+            OnViewSectorRequest(sector);
         }
         else
         {
@@ -148,7 +149,7 @@ internal partial class SectorListControl : UserControl
     /// Gets or sets the items to be displayed in the control.
     /// </summary>
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    internal IEnumerable<Sector> Items
+    internal IEnumerable<ISectorModel> Items
     {
         get
         {

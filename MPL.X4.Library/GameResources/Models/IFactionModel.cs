@@ -16,6 +16,11 @@ public interface IFactionModel : IModelWithId
     IColourModel Colour { get; }
 
     /// <summary>
+    /// Gets an indication of whether this is an ownerless faction.
+    /// </summary>
+    bool IsOwnerless => Id == Constants.XmlDataFile.AttributeValue.Owner.Ownerless;
+
+    /// <summary>
     /// Gets the name of the faction.
     /// </summary>
     string Name { get; }

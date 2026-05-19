@@ -3,12 +3,17 @@
 /// <summary>
 /// An interface that defines a model of a station.
 /// </summary>
-public interface IStationModel : IHasIsKnown, IHasTransform, IModelWithId
+public interface IStationModel : IHasIsKnown, IHasOwner, IHasTransform, IModelWithId
 {
     /// <summary>
     /// Gets the code of the station.
     /// </summary>
     string Code { get; }
+
+    /// <summary>
+    /// Gets an indication of whether the station is abandoned.
+    /// </summary>
+    bool IsAbandoned { get; }
 
     /// <summary>
     /// Gets an indication of whether this station is being constructed.
@@ -24,11 +29,6 @@ public interface IStationModel : IHasIsKnown, IHasTransform, IModelWithId
     /// Gets the name of the station.
     /// </summary>
     string Name { get; }
-
-    /// <summary>
-    /// Gets the owner of the station.
-    /// </summary>
-    string Owner { get; }
 
     /// <summary>
     /// Gets the productions at the station.

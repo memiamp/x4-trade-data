@@ -25,7 +25,7 @@ internal class SectorModelParser(
         var stations = new StationModelList();
 
         var name = ParseName(source);
-        var owner = parsingScope.ParseFactionName(source.Owner);
+        var owner = parsingScope.ParseFaction(source.Owner);
         var transform = ParseTransform(source);
 
         ParseZones(source, gates, lockboxes, ships, stations);

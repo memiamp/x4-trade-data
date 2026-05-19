@@ -9,12 +9,11 @@ namespace MPL.X4.SaveGame.Models;
 internal interface ISaveGameModelParsingScope
 {
     /// <summary>
-    /// Parses the faction name of the specified <paramref name="source"/>.
+    /// Parses the faction of the specified <paramref name="source"/>.
     /// </summary>
     /// <param name="source">A <see cref="string"/> containing the source data to parse.</param>
-    /// <param name="defaultResult">A <see cref="string"/> containing the result result to return if not found.</param>
-    /// <returns>A <see cref="string"/> containing the result, or <paramref name="defaultResult"/> if not found.</returns>
-    string ParseFactionName(string source, string defaultResult = "");
+    /// <returns>An <see cref="IFactionModel"/> containing the result.</returns>
+    IFactionModel ParseFaction(string source);
 
     /// <summary>
     /// Parses the ware name of the specified <paramref name="source"/>.

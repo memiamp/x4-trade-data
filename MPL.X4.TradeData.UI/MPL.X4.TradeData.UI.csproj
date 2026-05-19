@@ -15,6 +15,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\MPL.X4.Services\MPL.X4.Services.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Update="MapIcons.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>

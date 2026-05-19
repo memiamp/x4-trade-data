@@ -1,4 +1,6 @@
-﻿namespace MPL.X4.TradeData.UI.Models.SectorPlot;
+﻿using MPL.X4.GameResources.Models;
+
+namespace MPL.X4.TradeData.UI.Models.SectorPlot;
 
 /// <summary>
 /// An interface that defines an item that can be plotted in a sector.
@@ -6,9 +8,9 @@
 internal interface ISectorPlot
 {
     /// <summary>
-    /// Gets the identifier of the colour this plot item should use.
+    /// Gets the the colour this plot item should use.
     /// </summary>
-    string? ColourId { get; }
+    IColourModel Colour { get; }
 
     /// <summary>
     /// Gets the name of the plot item.

@@ -1,9 +1,7 @@
-using System.Diagnostics.CodeAnalysis;
 using Microsoft.Extensions.Logging;
-using MPL.X4.GameResources.Data;
-using MPL.X4.Services;
-using MPL.X4.Services.DataParser;
-using MPL.X4.Services.GameResources;
+using MPL.X4.Catalog.Services;
+using MPL.X4.GameResources.Models.Services;
+using MPL.X4.SaveGame.Models;
 using MPL.X4.TradeData.UI.Configuration;
 using MPL.X4.TradeData.UI.Controls;
 using MPL.X4.TradeData.UI.Services;
@@ -20,16 +18,11 @@ internal partial class MainForm : Form
     private readonly ICatalogFileReader _catalogFileReader;
     private readonly DebugForm _debugForm;
     private readonly IFileConfiguration _fileConfiguration;
+    private readonly IGameDataService _gameDataService;
     private readonly ILogger _logger;
-    private readonly IModelMapper _modelMapper;
-    private readonly IGameResourceDataProvider _resourceDataProvider;
-    private readonly ISaveGameLoader _saveGameLoader;
     private readonly ISaveGameFileSystemMonitor _saveGameFileSystemMonitor;
-    private readonly IZoneParser _zoneParser;
 
-    [AllowNull]
-    private IGameResourceData _resourceData;
-    private ISaveGame? _saveGame;
+    private ISaveGameModels? _saveGame;
 
     #endregion
 
@@ -40,31 +33,25 @@ internal partial class MainForm : Form
     /// </summary>
     /// <param name="debugForm">An <see cref="DebugForm"/> that is the debug form to use.</param>
     /// <param name="fileConfiguration">An <see cref="IFileConfiguration"/> that is the file configuration to use.</param>
+    /// <param name="gameDataService">An <see cref="IGameDataService"/> that is the game data service to use.</param>
+    /// <param name="gameResourceModelLoader">An <see cref="IGameResourceModelLoader"/> that is the game resource model loader to use.</param>
     /// <param name="logger">An <see cref="ILogger{TCategoryName}"/> that is the logger to use.</param>
     /// <param name="modelMapper">An <see cref="IModelMapper"/> that is the model mapper to use.</param>
-    /// <param name="resourceDataProvider">An <see cref="IGameResourceDataProvider"/> that is the resource data loader to use.</param>
     /// <param name="saveGameFileSystemMonitor">An <see cref="ISaveGameFileSystemMonitor"/> that is the save game file system monitor to use.</param>
-    /// <param name="saveGameLoader">An <see cref="ISaveGameLoader"/> that is the save game loader to use.</param>
     public MainForm(
                     ICatalogFileReader catalogFileReader,
                     DebugForm debugForm,
                     IFileConfiguration fileConfiguration,
+                    IGameDataService gameDataService,
                     ILogger<MainForm> logger,
-                    IModelMapper modelMapper,
-                    IGameResourceDataProvider resourceDataProvider,
-                    ISaveGameFileSystemMonitor saveGameFileSystemMonitor,
-                    ISaveGameLoader saveGameLoader,
-                    IZoneParser zoneParser)
+                    ISaveGameFileSystemMonitor saveGameFileSystemMonitor)
     {
         _catalogFileReader = catalogFileReader;
         _debugForm = debugForm;
         _fileConfiguration = fileConfiguration;
+        _gameDataService = gameDataService;
         _logger = logger;
-        _modelMapper = modelMapper;
-        _resourceDataProvider = resourceDataProvider;
         _saveGameFileSystemMonitor = saveGameFileSystemMonitor;
-        _saveGameLoader = saveGameLoader;
-        _zoneParser = zoneParser;
 
         InitializeComponent();
         Initialise();
@@ -97,16 +84,16 @@ internal partial class MainForm : Form
 
     private async Task LoadData()
     {
-        _resourceData = await _resourceDataProvider.LoadFromCatalog(_fileConfiguration.CatalogFilePath);
-        _zoneParser.ZoneOffsets = _resourceData.ZoneOffsets;
+        await _gameDataService.ReloadResources();
+
         _saveGameFileSystemMonitor.Start();
     }
 
     private async Task LoadSaveGame(string filePath)
     {
         _logger.LogInformation("Loading save game file from {SaveGameFilePath}", filePath);
-        
-        _saveGame = await _saveGameLoader.LoadFrom(filePath);
+
+        _saveGame = await _gameDataService.LoadSaveGame(filePath);
 
         OnUpdateAfterSaveGameLoaded();
     }
@@ -124,49 +111,40 @@ internal partial class MainForm : Form
         UpdateTradeControl();
     }
 
-    private void ShowSectorView(string sectorCode)
+    private void ShowSectorView(ISectorModel sector)
     {
         if (InvokeRequired)
         {
-            BeginInvoke(() => ShowSectorView(sectorCode));
+            BeginInvoke(() => ShowSectorView(sector));
             return;
         }
 
-        var sector = _saveGame?.Universe.Sectors.FirstOrDefault(x => x.Code == sectorCode);
-        if (sector is not null)
+        var sectorViewer = new SectorViewerForm
         {
-            var sectorViewer = new SectorViewerForm
-            {
-                ColourMap = _resourceData.ColourMap,
-                Sector = sector
-            };
-            sectorViewer.Show();
-        }
-        else
-        {
-            MessageBox.Show($"The sector {sectorCode} could not be found", "View Sector", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-        }
+            Sector = sector
+        };
+        sectorViewer.Show();
     }
 
     private void UpdateSectorListControl()
     {
         SectorListControl.Items = _saveGame?.Universe.Sectors.Any() == true
-            ? _modelMapper.MapSectors(_saveGame.Universe.Sectors, _resourceData)
+            ? _saveGame.Universe.Sectors
             : [];
     }
 
     private void UpdateSpecialItemsControl()
     {
-        SpecialItemControl.Items = _saveGame?.Universe.Sectors.Any() == true
-            ? _modelMapper.MapSpecialItems(_saveGame.Universe.Sectors, _resourceData)
-            : [];
+        //SpecialItemControl.Items = _saveGame?.Universe.Sectors.Any() == true
+        //    ? _modelMapper.MapSpecialItems(_saveGame.Universe.Sectors, _resourceData)
+        //    : [];
     }
 
     private void UpdateTradeControl()
     {
-        TradeControl.Items = _saveGame?.Universe.Sectors.Any() == true
-            ? _modelMapper.MapTradeOffers(_saveGame.Universe.Sectors, _resourceData)
-            : [];
+        //TradeControl.Items = _saveGame?.Universe.Sectors.Any() == true
+        //    ? _modelMapper.MapTradeOffers(_saveGame.Universe.Sectors, _resourceData)
+        //    : [];
     }
 
     #endregion
@@ -180,7 +158,7 @@ internal partial class MainForm : Form
 
     private void SectorListControl_ViewSectorRequest(object? sender, SectorActionEventArgs e)
     {
-        ShowSectorView(e.SectorCode);
+        ShowSectorView(e.Sector);
     }
 
     #endregion

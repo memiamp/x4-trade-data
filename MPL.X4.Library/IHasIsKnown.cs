@@ -1,7 +1,7 @@
 ﻿namespace MPL.X4.SaveGame.Models;
 
 /// <summary>
-/// An interface that defines an elements that supports an Is Known attribute.
+/// An interface that defines an element that supports an Is Known attribute.
 /// </summary>
 public interface IHasIsKnown
 {

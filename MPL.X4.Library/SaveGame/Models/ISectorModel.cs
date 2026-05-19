@@ -3,7 +3,7 @@
 /// <summary>
 /// An interface that defines a model of a sector.
 /// </summary>
-public interface ISectorModel : IHasIsKnown, IHasTransform, IModelWithId
+public interface ISectorModel : IHasIsKnown, IHasOwner, IHasTransform, IModelWithId
 {
     /// <summary>
     /// Gets the code of the sector.
@@ -24,11 +24,6 @@ public interface ISectorModel : IHasIsKnown, IHasTransform, IModelWithId
     /// Gets the name of the sector.
     /// </summary>
     string Name { get; }
-
-    /// <summary>
-    /// Gets the owner of the sector.
-    /// </summary>
-    string Owner { get; }
 
     /// <summary>
     /// Gets the ships in the sector.

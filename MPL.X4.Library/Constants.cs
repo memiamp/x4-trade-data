@@ -219,10 +219,10 @@ public static class Constants
                 public const string Player = "player";
             }
 
-            //public static class Owner
-            //{
-            //    public const string Ownerless = "ownerless";
-            //}
+            public static class Owner
+            {
+                public const string Ownerless = "ownerless";
+            }
 
             public static class Reference
             {

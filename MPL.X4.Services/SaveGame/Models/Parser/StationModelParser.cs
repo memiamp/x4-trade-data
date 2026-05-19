@@ -18,16 +18,17 @@ internal class StationModelParser(
 {
     private protected override IStationModel OnParse(IStationData source)
     {
-        var owner = parsingScope.ParseFactionName(source.Owner);
+        var owner = parsingScope.ParseFaction(source.Owner);
         var productions = modelParser.Parse<IEnumerable<string>, IProductionModelList>(source.Productions);
         var trades = modelParser.Parse<IEnumerable<ITradeData>, ITradeModelList>(source.Trades);
         var transform = source.Transform.Add(parsingScope.CurrentOffset);
 
-        var name = ParseName(source, owner, productions);
+        var name = ParseName(source, owner.Name, productions);
 
         return new StationModel
         {
             Code = source.Code,
+            IsAbandoned = owner.IsOwnerless,
             IsKnown = source.IsKnown,
             Id = source.Id,
             IsUnderConstruction = source.State == Constants.XmlDataFile.AttributeValue.State.Construction,

@@ -3,8 +3,13 @@
 /// <summary>
 /// An interface that defines a model of a ship.
 /// </summary>
-public interface IShipModel : IHasIsKnown, IHasTransform, IModelWithId
+public interface IShipModel : IHasIsKnown, IHasOwner, IHasTransform, IModelWithId
 {
+    /// <summary>
+    /// Gets an indication of whether the ship can be captured.
+    /// </summary>
+    bool CanBeCaptured => IsAbandoned && !IsWreck;
+
     /// <summary>
     /// Gets the ship cargo.
     /// </summary>
@@ -19,6 +24,11 @@ public interface IShipModel : IHasIsKnown, IHasTransform, IModelWithId
     /// Gets the code of the ship.
     /// </summary>
     string Code { get; }
+
+    /// <summary>
+    /// Gets an indication of whether the ship is abandoned.
+    /// </summary>
+    bool IsAbandoned { get; }
 
     /// <summary>
     /// Gets an indication of whether the ship is a wreck.
@@ -39,9 +49,4 @@ public interface IShipModel : IHasIsKnown, IHasTransform, IModelWithId
     /// Gets the name of the ship (if any).
     /// </summary>
     string? Name { get; }
-
-    /// <summary>
-    /// Gets the owner of the ship.
-    /// </summary>
-    string Owner { get; }
 }
