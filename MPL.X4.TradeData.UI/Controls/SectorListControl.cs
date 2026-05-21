@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using MPL.X4.GameResources.Models;
 using MPL.X4.SaveGame.Models;
 using MPL.X4.TradeData.UI.Models;
 
@@ -41,6 +42,8 @@ internal partial class SectorListControl : UserControl
 
     private void DoRefresh()
     {
+        LoadItems();
+
         var displayNoItems = _items.Any() == false;
 
         SectorListView.Visible = !displayNoItems;
@@ -57,8 +60,20 @@ internal partial class SectorListControl : UserControl
 
     private static ListViewItem GenerateListViewItem(ISectorModel source)
     {
-        var returnValue = new ListViewItem(source.Name);
-        returnValue.SubItems.Add(source.Code);
+        var backColor = source.Owner?.Colour is not null
+                                                         ? source.Owner.Colour.Colour
+                                                         : Constants.Colours.Unset;
+
+        var owner = string.IsNullOrWhiteSpace(source.Owner?.Name)
+                                                                  ? Constants.Owner.Unowned
+                                                                  : source.Owner.Name;
+
+        var returnValue = new ListViewItem(source.Name)
+        {
+            BackColor = backColor
+        };
+
+        returnValue.SubItems.Add(owner);
         returnValue.SubItems.Add(source.Ships.Count(x => x.CanBeCaptured).ToString());
         returnValue.SubItems.Add(source.Lockboxes.Count.ToString());
         returnValue.SubItems.Add(source.Ships.Count.ToString());
@@ -82,19 +97,71 @@ internal partial class SectorListControl : UserControl
 
     private void Initialise()
     {
+        // Defaults
+        AbandonedShipsCheckBox.Checked = false;
+        LockboxesCheckBox.Checked = false;
+
+        // Controls
+        SectorOwnerComboBox.DisplayMember = "Name";
+        SectorOwnerComboBox.ValueMember = "Value";
+
         // Event wireup
+        AbandonedShipsCheckBox.CheckedChanged += AbandonedShipsCheckBox_CheckedChanged;
         Load += SpecialItemControl_Load;
+        LockboxesCheckBox.CheckedChanged += LockboxesCheckBox_CheckedChanged;
+        SectorListView.DoubleClick += SectorListView_DoubleClick;
         SectorListView.SelectedIndexChanged += SectorListView_SelectedIndexChanged;
+        SectorOwnerComboBox.SelectedIndexChanged += SectorOwnerComboBox_SelectedIndexChanged;
         ViewSectorButton.Click += ViewSectorButton_Click;
 
         DoRefresh();
     }
 
+    private void LoadFactions()
+    {
+        var factions = _items
+                             .Select(x => x.Owner)
+                             .Distinct()
+                             .Select(x => new
+                             {
+                                 Name = string.IsNullOrWhiteSpace(x.Name)
+                                                                          ? Constants.Owner.Unowned
+                                                                          : x.Name,
+                                 Value = (IFactionModel?)x
+                             })
+                             .OrderBy(x => x.Name)
+                             .Prepend(new
+                             {
+                                 Name = "Any",
+                                 Value = (IFactionModel?)null
+                             })
+                             .ToList();
+
+        SectorOwnerComboBox.DataSource = factions;
+    }
+
     private void LoadItems()
     {
-        var orderedItems = _items
-                                 .OrderBy(x => x.Name)
-                                 .Select(GenerateListViewItem);
+        var filteredItems = _items;
+
+        if (SectorOwnerComboBox.SelectedValue is IFactionModel faction)
+        {
+            filteredItems = filteredItems.Where(x => x.Owner == faction);
+        }
+
+        if (AbandonedShipsCheckBox.Checked)
+        {
+            filteredItems = filteredItems.Where(x => x.Ships.Any(x => x.CanBeCaptured));
+        }
+
+        if (LockboxesCheckBox.Checked)
+        {
+            filteredItems = filteredItems.Where(x => x.Lockboxes.Count > 0);
+        }
+
+        var orderedItems = filteredItems
+                                        .OrderBy(x => x.Name)
+                                        .Select(GenerateListViewItem);
 
         SectorListView.BeginUpdate();
 
@@ -102,8 +169,19 @@ internal partial class SectorListControl : UserControl
         SectorListView.Items.AddRange([.. orderedItems]);
 
         SectorListView.EndUpdate();
+    }
 
-        DoRefresh();
+    private void OnViewSectorRequest()
+    {
+        var sector = GetSelectedItem();
+        if (sector is not null)
+        {
+            OnViewSectorRequest(sector);
+        }
+        else
+        {
+            DoRefreshSectorItem();
+        }
     }
 
     private void OnViewSectorRequest(ISectorModel sector)
@@ -118,6 +196,21 @@ internal partial class SectorListControl : UserControl
 
     #region Event Handlers
 
+    private void AbandonedShipsCheckBox_CheckedChanged(object? sender, EventArgs e)
+    {
+        DoRefresh();
+    }
+
+    private void LockboxesCheckBox_CheckedChanged(object? sender, EventArgs e)
+    {
+        DoRefresh();
+    }
+
+    private void SectorListView_DoubleClick(object? sender, EventArgs e)
+    {
+        OnViewSectorRequest();
+    }
+
     private void SectorListView_SelectedIndexChanged(object? sender, EventArgs e)
     {
         DoRefreshSectorItem();
@@ -128,17 +221,14 @@ internal partial class SectorListControl : UserControl
         DoRefresh();
     }
 
+    private void SectorOwnerComboBox_SelectedIndexChanged(object? sender, EventArgs e)
+    {
+        DoRefresh();
+    }
+
     private void ViewSectorButton_Click(object? sender, EventArgs e)
     {
-        var sector = GetSelectedItem();
-        if (sector is not null)
-        {
-            OnViewSectorRequest(sector);
-        }
-        else
-        {
-            DoRefreshSectorItem();
-        }
+        OnViewSectorRequest();
     }
 
     #endregion
@@ -159,7 +249,8 @@ internal partial class SectorListControl : UserControl
         set
         {
             _items = value;
-            LoadItems();
+            LoadFactions();
+            DoRefresh();
         }
     }
 

@@ -1,22 +1,30 @@
-﻿//namespace MPL.X4.TradeData.UI.Models.SectorPlot;
+﻿using MPL.X4.GameResources.Models;
+using MPL.X4.SaveGame.Models;
 
-///// <summary>
-///// A class that implements a sector plot for a <see cref="IStation"/>.
-///// </summary>
-///// <param name="item">An <see cref="IStation"/> to be plotted.</param>
-//internal class StationPlot(
-//                           IStation item)
-//    : ISectorPlot
-//{
-//    string? ISectorPlot.ColourId => $"faction_{item.Owner}";
+namespace MPL.X4.TradeData.UI.Models.SectorPlot;
 
-//    string ISectorPlot.Name => $"{item.NameId}";
+/// <summary>
+/// A class that implements a sector plot for a <see cref="IStationModel"/>.
+/// </summary>
+/// <param name="item">An <see cref="IStationModel"/> to be plotted.</param>
+internal class StationPlot(
+                           IStationModel item)
+    : ISectorPlot
+{
+    Color ISectorPlot.Colour
+        => item.IsWreck switch
+        {
+            true => Constants.Colours.Wreck,
+            _ => item.Owner.Colour.Colour
+        };
 
-//    SectorPlotType ISectorPlot.Type => SectorPlotType.Station;
+    string ISectorPlot.Name => item.Name;
 
-//    double ISectorPlot.X => item.Position.X;
+    SectorPlotType ISectorPlot.Type => SectorPlotType.Station;
 
-//    double ISectorPlot.Y => item.Position.Y;
+    double ISectorPlot.X => item.Transform.Position.X;
 
-//    double ISectorPlot.Z => item.Position.Z;
-//}
+    double ISectorPlot.Y => item.Transform.Position.Y;
+
+    double ISectorPlot.Z => item.Transform.Position.Z;
+}

@@ -94,7 +94,7 @@ internal partial class MainForm : Form
         _logger.LogInformation("Loading save game file from {SaveGameFilePath}", filePath);
 
         _saveGame = await _gameDataService.LoadSaveGame(filePath);
-
+        
         OnUpdateAfterSaveGameLoaded();
     }
 

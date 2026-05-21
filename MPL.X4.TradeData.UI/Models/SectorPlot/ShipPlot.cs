@@ -11,7 +11,13 @@ internal class ShipPlot(
                         IShipModel item)
     : ISectorPlot
 {
-    IColourModel ISectorPlot.Colour => item.Owner.Colour;
+    Color ISectorPlot.Colour
+        => (item.CanBeCaptured, item.IsWreck) switch
+        {
+            (true, _) => Constants.Colours.AbandonedShip,
+            (_, true) => Constants.Colours.Wreck,
+            _ => item.Owner.Colour.Colour
+        };
 
     string ISectorPlot.Name => item.Name ?? string.Empty;
 

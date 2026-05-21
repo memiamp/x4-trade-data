@@ -1,22 +1,25 @@
-﻿//namespace MPL.X4.TradeData.UI.Models.SectorPlot;
+﻿using MPL.X4.GameResources.Models;
+using MPL.X4.SaveGame.Models;
 
-///// <summary>
-///// A class that implements a sector plot for a <see cref="ILockbox"/>.
-///// </summary>
-///// <param name="item">An <see cref="ILockbox"/> to be plotted.</param>
-//internal class LockboxPlot(
-//                           ILockbox item)
-//    : ISectorPlot
-//{
-//    string? ISectorPlot.ColourId => "azure_glow";
+namespace MPL.X4.TradeData.UI.Models.SectorPlot;
 
-//    string ISectorPlot.Name => $"{item.Code} ({item.LockCount})";
+/// <summary>
+/// A class that implements a sector plot for a <see cref="ILockboxModel"/>.
+/// </summary>
+/// <param name="item">An <see cref="ILockboxModel"/> to be plotted.</param>
+internal class LockboxPlot(
+                           ILockboxModel item)
+    : ISectorPlot
+{
+    Color ISectorPlot.Colour => Constants.Colours.Collectable;
 
-//    SectorPlotType ISectorPlot.Type => SectorPlotType.Lockbox;
+    string ISectorPlot.Name => $"{item.Code} ({item.LockCount})";
 
-//    double ISectorPlot.X => item.Position.X;
+    SectorPlotType ISectorPlot.Type => SectorPlotType.Lockbox;
 
-//    double ISectorPlot.Y => item.Position.Y;
+    double ISectorPlot.X => item.Transform.Position.X;
 
-//    double ISectorPlot.Z => item.Position.Z;
-//}
+    double ISectorPlot.Y => item.Transform.Position.Y;
+
+    double ISectorPlot.Z => item.Transform.Position.Z;
+}

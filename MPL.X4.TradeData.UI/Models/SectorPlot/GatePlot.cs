@@ -1,22 +1,32 @@
-﻿//namespace MPL.X4.TradeData.UI.Models.SectorPlot;
+﻿using MPL.X4.GameResources.Models;
+using MPL.X4.SaveGame.Models;
 
-///// <summary>
-///// A class that implements a sector plot for a <see cref="IGate"/>.
-///// </summary>
-///// <param name="item">An <see cref="IGate"/> to be plotted.</param>
-//internal class GatePlot(
-//                        IGate item)
-//    : ISectorPlot
-//{
-//    string? ISectorPlot.ColourId => "holomap_jumpgate";
+namespace MPL.X4.TradeData.UI.Models.SectorPlot;
 
-//    string ISectorPlot.Name => $"{item.Code}";
+/// <summary>
+/// A class that implements a sector plot for a <see cref="IGateModel"/>.
+/// </summary>
+/// <param name="item">An <see cref="IGateModel"/> to be plotted.</param>
+internal class GatePlot(
+                        IGateModel item)
+    : ISectorPlot
+{
+    Color ISectorPlot.Colour => Constants.Colours.Gate;
 
-//    SectorPlotType ISectorPlot.Type => SectorPlotType.JumpGate;
+    string ISectorPlot.Name => $"{item.Code}";
 
-//    double ISectorPlot.X => item.Position.X;
+    SectorPlotType ISectorPlot.Type
+        => item.Type switch
+        {
+            GateType.JumpGate => SectorPlotType.JumpGate,
+            GateType.Superhighway => SectorPlotType.Superhighway,
+            GateType.TransorbitalAccelerator => SectorPlotType.TransorbitalAccelerator,
+            _ => SectorPlotType.JumpGate
+        };
 
-//    double ISectorPlot.Y => item.Position.Y;
+    double ISectorPlot.X => item.Transform.Position.X;
 
-//    double ISectorPlot.Z => item.Position.Z;
-//}
+    double ISectorPlot.Y => item.Transform.Position.Y;
+
+    double ISectorPlot.Z => item.Transform.Position.Z;
+}

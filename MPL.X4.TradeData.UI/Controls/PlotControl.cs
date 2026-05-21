@@ -218,11 +218,7 @@ internal class PlotControl : Panel
 
                 using var attributes = new ImageAttributes();
 
-                var tintColor = Color.Pink;
-                if (item.Colour is not null)
-                {
-                    tintColor = item.Colour.Colour;
-                }
+                var tintColor = item.Colour;
 
                 float r = tintColor.R / 255f;
                 float gr = tintColor.G / 255f;

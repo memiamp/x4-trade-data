@@ -30,24 +30,28 @@
         {
             SectorListView = new ListView();
             SectorListView_Name = new ColumnHeader();
-            SectorListView_Code = new ColumnHeader();
+            SectorListView_Owner = new ColumnHeader();
             SectorListView_AbandonedShips = new ColumnHeader();
             SectorListView_LockBoxes = new ColumnHeader();
             SectorListView_Ships = new ColumnHeader();
             SectorListView_Stations = new ColumnHeader();
             ViewSectorButton = new Button();
             NoItemsLabel = new Label();
+            SectorOwnerComboBox = new ComboBox();
+            SectorOwnerLabel = new Label();
+            AbandonedShipsCheckBox = new CheckBox();
+            LockboxesCheckBox = new CheckBox();
             SuspendLayout();
             // 
             // SectorListView
             // 
             SectorListView.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            SectorListView.Columns.AddRange(new ColumnHeader[] { SectorListView_Name, SectorListView_Code, SectorListView_AbandonedShips, SectorListView_LockBoxes, SectorListView_Ships, SectorListView_Stations });
+            SectorListView.Columns.AddRange(new ColumnHeader[] { SectorListView_Name, SectorListView_Owner, SectorListView_AbandonedShips, SectorListView_LockBoxes, SectorListView_Ships, SectorListView_Stations });
             SectorListView.FullRowSelect = true;
-            SectorListView.Location = new Point(0, 0);
+            SectorListView.Location = new Point(0, 32);
             SectorListView.Name = "SectorListView";
-            SectorListView.Size = new Size(985, 503);
-            SectorListView.TabIndex = 12;
+            SectorListView.Size = new Size(985, 471);
+            SectorListView.TabIndex = 5;
             SectorListView.UseCompatibleStateImageBehavior = false;
             SectorListView.View = View.Details;
             // 
@@ -56,10 +60,10 @@
             SectorListView_Name.Text = "Name";
             SectorListView_Name.Width = 200;
             // 
-            // SectorListView_Code
+            // SectorListView_Owner
             // 
-            SectorListView_Code.Text = "Code";
-            SectorListView_Code.Width = 70;
+            SectorListView_Owner.Text = "Owner";
+            SectorListView_Owner.Width = 150;
             // 
             // SectorListView_AbandonedShips
             // 
@@ -87,7 +91,7 @@
             ViewSectorButton.Location = new Point(892, 509);
             ViewSectorButton.Name = "ViewSectorButton";
             ViewSectorButton.Size = new Size(90, 23);
-            ViewSectorButton.TabIndex = 13;
+            ViewSectorButton.TabIndex = 6;
             ViewSectorButton.Text = "View Sector";
             ViewSectorButton.UseVisualStyleBackColor = true;
             // 
@@ -98,32 +102,78 @@
             NoItemsLabel.Location = new Point(0, 0);
             NoItemsLabel.Name = "NoItemsLabel";
             NoItemsLabel.Size = new Size(985, 30);
-            NoItemsLabel.TabIndex = 15;
+            NoItemsLabel.TabIndex = 0;
             NoItemsLabel.Text = "No sectors are currently loaded.";
             NoItemsLabel.TextAlign = ContentAlignment.MiddleCenter;
+            // 
+            // SectorOwnerComboBox
+            // 
+            SectorOwnerComboBox.FormattingEnabled = true;
+            SectorOwnerComboBox.Location = new Point(87, 3);
+            SectorOwnerComboBox.Name = "SectorOwnerComboBox";
+            SectorOwnerComboBox.Size = new Size(241, 23);
+            SectorOwnerComboBox.TabIndex = 2;
+            // 
+            // SectorOwnerLabel
+            // 
+            SectorOwnerLabel.AutoSize = true;
+            SectorOwnerLabel.Location = new Point(0, 6);
+            SectorOwnerLabel.Name = "SectorOwnerLabel";
+            SectorOwnerLabel.Size = new Size(81, 15);
+            SectorOwnerLabel.TabIndex = 1;
+            SectorOwnerLabel.Text = "Sector Owner:";
+            // 
+            // AbandonedShipsCheckBox
+            // 
+            AbandonedShipsCheckBox.AutoSize = true;
+            AbandonedShipsCheckBox.Location = new Point(355, 5);
+            AbandonedShipsCheckBox.Name = "AbandonedShipsCheckBox";
+            AbandonedShipsCheckBox.Size = new Size(118, 19);
+            AbandonedShipsCheckBox.TabIndex = 3;
+            AbandonedShipsCheckBox.Text = "Abandoned ships";
+            AbandonedShipsCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // LockboxesCheckBox
+            // 
+            LockboxesCheckBox.AutoSize = true;
+            LockboxesCheckBox.Location = new Point(492, 5);
+            LockboxesCheckBox.Name = "LockboxesCheckBox";
+            LockboxesCheckBox.Size = new Size(82, 19);
+            LockboxesCheckBox.TabIndex = 4;
+            LockboxesCheckBox.Text = "Lockboxes";
+            LockboxesCheckBox.UseVisualStyleBackColor = true;
             // 
             // SectorListControl
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             Controls.Add(NoItemsLabel);
+            Controls.Add(LockboxesCheckBox);
+            Controls.Add(AbandonedShipsCheckBox);
+            Controls.Add(SectorOwnerLabel);
+            Controls.Add(SectorOwnerComboBox);
             Controls.Add(ViewSectorButton);
             Controls.Add(SectorListView);
             Name = "SectorListControl";
             Size = new Size(985, 535);
             ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
 
         private ListView SectorListView;
         private ColumnHeader SectorListView_Name;
-        private ColumnHeader SectorListView_Code;
+        private ColumnHeader SectorListView_Owner;
         private ColumnHeader SectorListView_AbandonedShips;
         private ColumnHeader SectorListView_LockBoxes;
         private ColumnHeader SectorListView_Ships;
         private ColumnHeader SectorListView_Stations;
         private Button ViewSectorButton;
         private Label NoItemsLabel;
+        private ComboBox SectorOwnerComboBox;
+        private Label SectorOwnerLabel;
+        private CheckBox AbandonedShipsCheckBox;
+        private CheckBox LockboxesCheckBox;
     }
 }

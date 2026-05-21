@@ -10,7 +10,7 @@ internal interface ISectorPlot
     /// <summary>
     /// Gets the the colour this plot item should use.
     /// </summary>
-    IColourModel Colour { get; }
+    Color Colour { get; }
 
     /// <summary>
     /// Gets the name of the plot item.
