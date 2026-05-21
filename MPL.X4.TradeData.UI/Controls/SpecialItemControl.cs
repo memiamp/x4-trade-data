@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel;
-using MPL.X4.TradeData.UI.Models;
+using MPL.X4.TradeData.UI.Models.SpecialItem;
 
 namespace MPL.X4.TradeData.UI.Controls;
 
@@ -10,7 +10,7 @@ internal partial class SpecialItemControl : UserControl
 {
     #region Declarations
 
-    private IEnumerable<SpecialItem> _items = [];
+    private IEnumerable<ISpecialItem> _items = [];
 
     #endregion
 
@@ -37,11 +37,13 @@ internal partial class SpecialItemControl : UserControl
         NoItemsLabel.Visible = displayNoItems;
     }
 
-    private static ListViewItem GenerateListViewItem(SpecialItem source)
+    private static ListViewItem GenerateListViewItem(ISpecialItem source)
     {
-        var returnValue = new ListViewItem(source.Type.ToString());
+        var returnValue = new ListViewItem(GetSpecialItemType(source.Type))
+        {
+            BackColor = source.Colour
+        };
         returnValue.SubItems.Add(source.Description);
-        returnValue.SubItems.Add(source.Code);
         returnValue.SubItems.Add(source.SectorName);
         returnValue.SubItems.Add(source.X);
         returnValue.SubItems.Add(source.Y);
@@ -49,6 +51,18 @@ internal partial class SpecialItemControl : UserControl
         returnValue.SubItems.Add(source.Comments);
         return returnValue;
     }
+
+    private static string GetSpecialItemType(SpecialItemType source)
+        => source switch
+        {
+            SpecialItemType.Lockbox => Constants.SpecialItemTypes.Lockbox,
+            SpecialItemType.ShipExtraLarge => Constants.SpecialItemTypes.ShipExtraLarge,
+            SpecialItemType.ShipExtraSmall => Constants.SpecialItemTypes.ShipExtraSmall,
+            SpecialItemType.ShipLarge => Constants.SpecialItemTypes.ShipLarge,
+            SpecialItemType.ShipMedium => Constants.SpecialItemTypes.ShipMedium,
+            SpecialItemType.ShipSmall => Constants.SpecialItemTypes.ShipSmall,
+            _ => string.Empty
+        };
 
     private void Initialise()
     {
@@ -90,10 +104,10 @@ internal partial class SpecialItemControl : UserControl
     #region Properties
 
     /// <summary>
-    /// Gets or sets the special items to be displayed in the control.
+    /// Gets or sets the items to be displayed in the control.
     /// </summary>
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    internal IEnumerable<SpecialItem> Items
+    internal IEnumerable<ISpecialItem> Items
     {
         get
         {

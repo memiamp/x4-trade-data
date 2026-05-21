@@ -4,6 +4,7 @@ using MPL.X4.GameResources.Models.Services;
 using MPL.X4.SaveGame.Models;
 using MPL.X4.TradeData.UI.Configuration;
 using MPL.X4.TradeData.UI.Controls;
+using MPL.X4.TradeData.UI.Models.SpecialItem;
 using MPL.X4.TradeData.UI.Services;
 
 namespace MPL.X4.TradeData.UI.Forms;
@@ -135,9 +136,32 @@ internal partial class MainForm : Form
 
     private void UpdateSpecialItemsControl()
     {
-        //SpecialItemControl.Items = _saveGame?.Universe.Sectors.Any() == true
-        //    ? _modelMapper.MapSpecialItems(_saveGame.Universe.Sectors, _resourceData)
-        //    : [];
+        var items = new List<ISpecialItem>();
+
+        var ships = _saveGame?
+                              .Universe
+                              .Sectors
+                              .SelectMany(sector => sector
+                                                          .Ships
+                                                          .Where(x => x.CanBeCaptured)
+                                                          .Select(x => new AbandonedShipSpecialItem(sector.Name, x)));
+        if (ships?.Any() == true)
+        {
+            items.AddRange(ships);
+        }
+
+        var lockboxes = _saveGame?
+                                  .Universe
+                                  .Sectors
+                                  .SelectMany(sector => sector
+                                                              .Lockboxes
+                                                              .Select(x => new LockboxSpecialItem(sector.Name, x)));
+        if (lockboxes?.Any() == true)
+        {
+            items.AddRange(lockboxes);
+        }
+
+        SpecialItemControl.Items = items;
     }
 
     private void UpdateTradeControl()

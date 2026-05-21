@@ -13,6 +13,8 @@ internal static class Constants
         internal static readonly Color AbandonedShip = Color.White;
         internal static readonly Color Collectable = Color.FromArgb(0, 149, 255);
         internal static readonly Color Gate = Color.LightGray;
+        internal static readonly Color Important = Color.Green;
+        internal static readonly Color ImportantLess = Color.LightGreen;
         internal static readonly Color Unset = SystemColors.Window;
         internal static readonly Color Wreck = Color.Gray;
     }
@@ -23,5 +25,15 @@ internal static class Constants
     internal static class Owner
     {
         internal static string Unowned = "None";
+    }
+
+    internal static class SpecialItemTypes
+    {
+        internal static string Lockbox = "Lockbox";
+        internal static string ShipExtraLarge = "Extra large ship";
+        internal static string ShipExtraSmall = "Extra small ship";
+        internal static string ShipLarge = "Large ship";
+        internal static string ShipMedium = "Medium ship";
+        internal static string ShipSmall = "Small ship";
     }
 }

@@ -31,19 +31,18 @@
             SpecialItemListView = new ListView();
             SpecialItemListView_ItemType = new ColumnHeader();
             SpecialItemListView_Description = new ColumnHeader();
-            SpecialItemListView_Code = new ColumnHeader();
             SpecialItemListView_Sector = new ColumnHeader();
             SpecialItemListView_PositionX = new ColumnHeader();
             SpecialItemListView_PositionY = new ColumnHeader();
             SpecialItemListView_PositionZ = new ColumnHeader();
-            NoItemsLabel = new Label();
             SpecialItemListView_Comments = new ColumnHeader();
+            NoItemsLabel = new Label();
             SuspendLayout();
             // 
             // SpecialItemListView
             // 
             SpecialItemListView.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            SpecialItemListView.Columns.AddRange(new ColumnHeader[] { SpecialItemListView_ItemType, SpecialItemListView_Description, SpecialItemListView_Code, SpecialItemListView_Sector, SpecialItemListView_PositionX, SpecialItemListView_PositionY, SpecialItemListView_PositionZ, SpecialItemListView_Comments });
+            SpecialItemListView.Columns.AddRange(new ColumnHeader[] { SpecialItemListView_ItemType, SpecialItemListView_Description, SpecialItemListView_Sector, SpecialItemListView_PositionX, SpecialItemListView_PositionY, SpecialItemListView_PositionZ, SpecialItemListView_Comments });
             SpecialItemListView.FullRowSelect = true;
             SpecialItemListView.Location = new Point(0, 0);
             SpecialItemListView.Name = "SpecialItemListView";
@@ -61,11 +60,6 @@
             // 
             SpecialItemListView_Description.Text = "Description";
             SpecialItemListView_Description.Width = 220;
-            // 
-            // SpecialItemListView_Code
-            // 
-            SpecialItemListView_Code.Text = "Code";
-            SpecialItemListView_Code.Width = 70;
             // 
             // SpecialItemListView_Sector
             // 
@@ -90,6 +84,11 @@
             SpecialItemListView_PositionZ.TextAlign = HorizontalAlignment.Right;
             SpecialItemListView_PositionZ.Width = 100;
             // 
+            // SpecialItemListView_Comments
+            // 
+            SpecialItemListView_Comments.Text = "Comments";
+            SpecialItemListView_Comments.Width = 200;
+            // 
             // NoItemsLabel
             // 
             NoItemsLabel.Dock = DockStyle.Top;
@@ -100,11 +99,6 @@
             NoItemsLabel.TabIndex = 14;
             NoItemsLabel.Text = "No special items are currently loaded.";
             NoItemsLabel.TextAlign = ContentAlignment.MiddleCenter;
-            // 
-            // SpecialItemListView_Comments
-            // 
-            SpecialItemListView_Comments.Text = "Comments";
-            SpecialItemListView_Comments.Width = 200;
             // 
             // SpecialItemControl
             // 
@@ -121,7 +115,6 @@
         private ListView SpecialItemListView;
         private ColumnHeader SpecialItemListView_ItemType;
         private ColumnHeader SpecialItemListView_Description;
-        private ColumnHeader SpecialItemListView_Code;
         private ColumnHeader SpecialItemListView_Sector;
         private ColumnHeader SpecialItemListView_PositionX;
         private ColumnHeader SpecialItemListView_PositionY;

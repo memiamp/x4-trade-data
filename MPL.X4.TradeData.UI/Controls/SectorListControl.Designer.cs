@@ -63,7 +63,7 @@
             // SectorListView_Owner
             // 
             SectorListView_Owner.Text = "Owner";
-            SectorListView_Owner.Width = 150;
+            SectorListView_Owner.Width = 170;
             // 
             // SectorListView_AbandonedShips
             // 
