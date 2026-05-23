@@ -1,4 +1,4 @@
-﻿namespace MPL.X4.TradeData.UI.Models;
+﻿namespace MPL.X4.TradeData.UI.Models.SectorPlot;
 
 /// <summary>
 /// An enumeration that defines the type of a sector plot item.
