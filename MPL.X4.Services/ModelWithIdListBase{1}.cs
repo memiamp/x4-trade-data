@@ -21,7 +21,7 @@ internal abstract class ModelWithIdListBase<TModel> : List<TModel>, IModelWithId
 
     bool IModelWithIdList<TModel>.TryGetValue(string id, [NotNullWhen(true)] out TModel? value)
     {
-        ArgumentNullException.ThrowIfNullOrWhiteSpace(id);
+        ArgumentException.ThrowIfNullOrWhiteSpace(id);
 
         value = this.FirstOrDefault(x => x.Id == id);
 

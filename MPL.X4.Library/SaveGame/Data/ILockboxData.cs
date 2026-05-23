@@ -33,5 +33,5 @@ public interface ILockboxData : IHasTransform
     /// <summary>
     /// Gets explicit wares in the lockbox.
     /// </summary>
-    IEnumerable<string> Wares { get; }
+    IEnumerable<IWareItemData> Wares { get; }
 }

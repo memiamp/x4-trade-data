@@ -56,7 +56,8 @@ public static class Bootstrap
         servicesCollection.AddTransient<IDataParser<ITextResourceItem>, TextResourceItemParser>();
         servicesCollection.AddTransient<IDataParser<ITextResourcePage>, TextResourcePageParser>();
         servicesCollection.AddTransient<IDataParser<ITransform3D>, Transform3DParser>();
-        servicesCollection.AddTransient<IDataParser<IWareNameResourceDataDictionary>, WareNameResourceDataDictionaryParser>();
+        servicesCollection.AddTransient<IDataParser<IWareData>, WareDataParser>();
+        servicesCollection.AddTransient<IDataParser<IWareDataDictionary>, WareDataDictionaryParser>();
         
         // Model parsers
         servicesCollection.AddTransient<IModelParser<IFactionData, IFactionModel>, FactionModelParser>();
@@ -69,6 +70,8 @@ public static class Bootstrap
         servicesCollection.AddTransient<IModelParser<IMacroNameResourceData, IMacroNameModel>, MacroNameModelParser>();
         servicesCollection.AddTransient<IModelParser<IMacroNameResourceDataDictionary, IMacroNameModelList>, MacroNameModelListParser>();
         servicesCollection.AddTransient<IModelParser<ITextResourcePageDictionary, ITextResourceModelList>, TextResourceModelListParser>();
+        servicesCollection.AddTransient<IModelParser<IWareData, IWareModel>, WareModelParser>();
+        servicesCollection.AddTransient<IModelParser<IWareDataDictionary, IWareModelList>, WareModelListParser>();
     }
 
     private static void AddSaveGameServices(IServiceCollection servicesCollection)
@@ -82,10 +85,14 @@ public static class Bootstrap
 
         // Data parsers
         servicesCollection.AddTransient<IDataParser, X4.Parser.DataParser>();
+        servicesCollection.AddTransient<IDataParser<IAmmunitionItemData>, AmmunitionItemDataParser>();
         servicesCollection.AddTransient<IDataParser<ICargoData>, CargoDataParser>();
+        servicesCollection.AddTransient<IDataParser<ICollectableAmmoData>, CollectableAmmoDataParser>();
+        servicesCollection.AddTransient<IDataParser<ICollectableWareData>, CollectableWareDataParser>();
         servicesCollection.AddTransient<IDataParser<IGateData>, GateDataParser>();
         servicesCollection.AddTransient<IDataParser<ILockboxData>, LockboxDataParser>();
         servicesCollection.AddTransient<IDataParser<IEnumerable<IModificationData>>, ModificationParser>();
+        servicesCollection.AddTransient<IDataParser<IEnumerable<IWareItemData>>, WareItemsDataParser>();
         servicesCollection.AddTransient<IDataParser<ISectorData>, SectorDataParser>();
         servicesCollection.AddTransient<IDataParser<IShipData>, ShipDataParser>();
         servicesCollection.AddTransient<IDataParser<IStationData>, StationDataParser>();
@@ -95,7 +102,8 @@ public static class Bootstrap
         servicesCollection.AddTransient<IDataParser<IZoneData>, ZoneDataParser>();
 
         // Model parsers
-        servicesCollection.AddTransient<IModelParser<IWareItemData, ICargoItemModel>, CargoItemModelParser>();
+        servicesCollection.AddTransient<IModelParser<ICollectableAmmoData, ICollectableDropModelList>, CollectableDropAmmoModelParser>();
+        servicesCollection.AddTransient<IModelParser<ICollectableWareData, ICollectableDropModelList>, CollectableDropWareModelParser>();
         servicesCollection.AddTransient<IModelParser<IEnumerable<IWareItemData>, ICargoItemModelList>, CargoItemModelListParser>();
         servicesCollection.AddTransient<IModelParser<IEnumerable<ISectorData>, ISectorModelList>, SectorModelListParser>();
         servicesCollection.AddTransient<IModelParser<IEnumerable<ITradeData>, ITradeModelList>, TradeModelListParser>();
@@ -109,6 +117,7 @@ public static class Bootstrap
         servicesCollection.AddTransient<IModelParser<IShipData, IShipModel>, ShipModelParser>();
         servicesCollection.AddTransient<IModelParser<IStationData, IStationModel>, StationModelParser>();
         servicesCollection.AddTransient<IModelParser<IUniverseData, IUniverseModel>, UniverseModelParser>();
+        servicesCollection.AddTransient<IModelParser<IWareItemData, ICargoItemModel>, CargoItemModelParser>();
     }
 
     /// <summary>

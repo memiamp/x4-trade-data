@@ -99,16 +99,16 @@ public interface IGameResourceDataLoader
     Task<ITextResourcePageDictionary> LoadTextResourcesFromCatalogs(string catalogsFilePath);
 
     /// <summary>
-    /// Loads ware names from catalogs in the specified <paramref name="catalogsFilePath"/>.
+    /// Loads wares from catalogs in the specified <paramref name="catalogsFilePath"/>.
     /// </summary>
     /// <param name="catalogsFilePath">A <see cref="string"/> containing the path to the catalog files.</param>
-    /// <returns>A <see cref="Task{TResult}"/> representing the asynchronous operation.  An <see cref="IMacroNameResourceDataDictionary"/> that is the result.</returns>
-    Task<IMacroNameResourceDataDictionary> LoadWareNamesFromCatalogs(string catalogsFilePath);
+    /// <returns>A <see cref="Task{TResult}"/> representing the asynchronous operation.  An <see cref="IWareDataDictionary"/> that is the result.</returns>
+    Task<IWareDataDictionary> LoadWaresFromCatalogs(string catalogsFilePath);
 
     /// <summary>
-    /// Loads ware names from entries in the specified <paramref name="index"/>.
+    /// Loads wares from entries in the specified <paramref name="index"/>.
     /// </summary>
     /// <param name="index">An <see cref="IEnumerable{ICatalogIndex}"/> that is the catalog file index.</param>
-    /// <returns>A <see cref="Task{TResult}"/> representing the asynchronous operation.  An <see cref="IMacroNameResourceDataDictionary"/> that is the result.</returns>
-    Task<IMacroNameResourceDataDictionary> LoadWareNamesFromIndex(IEnumerable<ICatalogIndex> index);
+    /// <returns>A <see cref="Task{TResult}"/> representing the asynchronous operation.  An <see cref="IWareDataDictionary"/> that is the result.</returns>
+    Task<IWareDataDictionary> LoadWaresFromIndex(IEnumerable<ICatalogIndex> index);
 }

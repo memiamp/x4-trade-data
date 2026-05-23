@@ -3,7 +3,7 @@
 /// <summary>
 /// An interface that defines a data model of a ship.
 /// </summary>
-public interface IShipData : IHasTransform
+public interface IShipData : IHasIsKnown, IHasState, IHasTransform
 {
     /// <summary>
     /// Gets the ship cargo.
@@ -26,11 +26,6 @@ public interface IShipData : IHasTransform
     string Id { get; }
 
     /// <summary>
-    /// Gets an indication of whether the ship is known to the player.
-    /// </summary>
-    bool IsKnown { get; }
-
-    /// <summary>
     /// Gets the macro of the ship.
     /// </summary>
     string Macro { get; }
@@ -49,9 +44,4 @@ public interface IShipData : IHasTransform
     /// Gets the owner of the ship.
     /// </summary>
     string Owner { get; }
-
-    /// <summary>
-    /// Gets the state of the ship.
-    /// </summary>
-    string? State { get; }
 }

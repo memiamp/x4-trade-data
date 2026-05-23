@@ -1,6 +1,6 @@
 ﻿using MPL.X4.GameResources.Models;
 
-namespace MPL.X4;
+namespace MPL.X4.SaveGame.Models;
 
 /// <summary>
 /// An interface that defines an element that has an owner.

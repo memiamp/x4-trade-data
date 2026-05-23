@@ -11,6 +11,11 @@ internal enum SectorPlotType
     Undefined = 0,
 
     /// <summary>
+    /// The plot item is a collectable ammo drop.
+    /// </summary>
+    AmmoDrop,
+
+    /// <summary>
     /// The plot item is a jump gate.
     /// </summary>
     JumpGate,
@@ -38,5 +43,10 @@ internal enum SectorPlotType
     /// <summary>
     /// The plot item is a trans-orbital accelerator.
     /// </summary>
-    TransorbitalAccelerator
+    TransorbitalAccelerator,
+
+    /// <summary>
+    /// The plot item is a collectable ware drop.
+    /// </summary>
+    WareDrop
 }

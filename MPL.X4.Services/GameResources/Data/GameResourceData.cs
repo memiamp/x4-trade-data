@@ -19,5 +19,5 @@ internal class GameResourceData : IGameResourceData
 
     public required ITextResourcePageDictionary Text { get; init; }
 
-    public required IMacroNameResourceDataDictionary WareNames { get; init; }
+    public required IWareDataDictionary Wares { get; init; }
 }

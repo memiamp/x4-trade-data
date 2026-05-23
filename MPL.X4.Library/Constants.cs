@@ -133,10 +133,13 @@ public static class Constants
             public const string Desired = "desired";
             public const string Description = "descr";
             public const string Drag = "drag";
+            public const string Exact = "exact";
             public const string FactionId = "id";
+            public const string FactoryName = "factoryname";
             public const string ForwardThrust = "forwardthrust";
             public const string GateId = "id";
             public const string Generated = "generated";
+            public const string Group = "group";
             public const string KnownTo = "knownto";
             public const string Lifetime = "lifetime";
             public const string LockboxId = "id";
@@ -180,11 +183,13 @@ public static class Constants
             public const string TextId = "id";
             public const string Title = "title";
             public const string TradeId = "id";
+            public const string Transport = "transport";
             public const string TravelAttackTime = "travelattacktime";
             public const string TravelChargeTime = "travelchargetime";
             public const string TravelStartThrust = "travelstartthrust";
             public const string TravelThrust = "travelthrust";
             public const string UnitCapacity = "unitcapacity";
+            public const string Volume = "volume";
             public const string Ware = "ware";
             public const string WareId = "id";
             public const string X = "x";
@@ -198,6 +203,8 @@ public static class Constants
         {
             public static class Class
             {
+                public const string CollectableAmmo = "collectableammo";
+                public const string CollectableWares = "collectablewares";
                 public const string DefenceModule = "defencemodule";
                 public const string Gate = "gate";
                 public const string Lock = "lock";
@@ -212,6 +219,11 @@ public static class Constants
                 public const string ShipSmall = "ship_s";
                 public const string Station = "station";
                 public const string Zone = "zone";
+            }
+
+            public static class Connection
+            {
+                public const string Drops = "drops";
             }
 
             public static class KnownTo
@@ -235,10 +247,21 @@ public static class Constants
                 public const string Construction = "construction";
                 public const string Wreck = "wreck";
             }
+
+            public static class WareTransport
+            {
+                public const string Container = "container";
+                public const string Equipment = "equipment";
+                public const string Inventory = "inventory";
+                public const string Liquid = "liquid";
+                public const string Ship = "ship";
+                public const string Solid = "solid";
+            }
         }
 
         public static class ElementName
         {
+            public const string Ammunition = "ammunition";
             public const string Cargo = "cargo";
             public const string Colour = "color";
             public const string Colours = "colors";

@@ -11,6 +11,11 @@ public interface ISectorModel : IHasIsKnown, IHasOwner, IHasTransform, IModelWit
     string Code { get; }
 
     /// <summary>
+    /// Gets the collectable drops in the sector.
+    /// </summary>
+    ICollectableDropModelList CollectableDrops { get; }
+
+    /// <summary>
     /// Gets the gates in the sector.
     /// </summary>
     IGateModelList Gates { get; }

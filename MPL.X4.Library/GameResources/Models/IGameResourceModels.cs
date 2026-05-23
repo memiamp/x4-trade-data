@@ -41,7 +41,7 @@ public interface IGameResourceModels
     ITextResourceModelList Text { get; }
 
     /// <summary>
-    /// Gets ware names.
+    /// Gets wares.
     /// </summary>
-    IMacroNameModelList WareNames { get; }
+    IWareModelList Wares { get; }
 }

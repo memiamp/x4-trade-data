@@ -184,9 +184,9 @@ internal class GameResourceDataParser(
         return returnValue;
     }
 
-    async Task<IMacroNameResourceDataDictionary> IGameResourceDataParser.ReadWareNames(IXmlReaderWrapper reader)
+    async Task<IWareDataDictionary> IGameResourceDataParser.ReadWares(IXmlReaderWrapper reader)
     {
-        IMacroNameResourceDataDictionary returnValue = new MacroNameResourceDataDictionary();
+        IWareDataDictionary returnValue = new WareDataDictionary();
 
         while (await reader.ReadAsync())
         {
@@ -194,15 +194,14 @@ internal class GameResourceDataParser(
             {
                 using var subtree = await reader.ReadSubtree();
 
-                returnValue = await dataParser.Parse<IWareNameResourceDataDictionary>(subtree);
+                returnValue = await dataParser.Parse<IWareDataDictionary>(subtree);
 
                 break;
             }
         }
 
-        logger.LogDebug("{Count} ware names parsed", returnValue.Count);
+        logger.LogDebug("{Count} wares parsed", returnValue.Count);
 
         return returnValue;
     }
-
 }

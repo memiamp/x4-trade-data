@@ -84,20 +84,19 @@ internal class LockboxModelParser(
         return returnValue;
     }
 
-    private IEnumerable<string> ParseWares(IEnumerable<string> source)
+    private IEnumerable<string> ParseWares(IEnumerable<IWareItemData> source)
     {
         var returnValue = new List<string>();
 
         foreach (var item in source)
         {
-            if (parsingScope.TryParseWareName(item, out var ware))
+            if (!parsingScope.TryParseWareName(item.Ware, out var ware))
             {
-                returnValue.Add(ware);
+                ware = item.Ware;
             }
-            else
-            {
-                returnValue.Add(item);
-            }
+
+            returnValue.Add(ware);
+
         }
 
         return returnValue;

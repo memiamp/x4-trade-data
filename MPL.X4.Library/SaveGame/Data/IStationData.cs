@@ -3,7 +3,7 @@
 /// <summary>
 /// An interface that defines a data model of a station.
 /// </summary>
-public interface IStationData : IHasTransform
+public interface IStationData : IHasIsKnown, IHasState, IHasTransform
 {
     /// <summary>
     /// Gets the base name resource of the station (if any).
@@ -24,11 +24,6 @@ public interface IStationData : IHasTransform
     /// Gets the identifier of the station.
     /// </summary>
     string Id { get; }
-
-    /// <summary>
-    /// Gets an indication of whether the station is known to the player.
-    /// </summary>
-    bool IsKnown { get; }
 
     /// <summary>
     /// Gets the macro of the station.
@@ -59,11 +54,6 @@ public interface IStationData : IHasTransform
     /// Gets the productions at the station.
     /// </summary>
     IEnumerable<string> Productions { get; }
-
-    /// <summary>
-    /// Gets the state of the station.
-    /// </summary>
-    string? State { get; }
 
     /// <summary>
     /// Gets the trades on offer at the station.

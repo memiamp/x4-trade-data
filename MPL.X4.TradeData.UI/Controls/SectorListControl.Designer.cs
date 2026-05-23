@@ -41,12 +41,14 @@
             SectorOwnerLabel = new Label();
             AbandonedShipsCheckBox = new CheckBox();
             LockboxesCheckBox = new CheckBox();
+            SectorListView_Drops = new ColumnHeader();
+            DropsCheckBox = new CheckBox();
             SuspendLayout();
             // 
             // SectorListView
             // 
             SectorListView.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            SectorListView.Columns.AddRange(new ColumnHeader[] { SectorListView_Name, SectorListView_Owner, SectorListView_AbandonedShips, SectorListView_LockBoxes, SectorListView_Ships, SectorListView_Stations });
+            SectorListView.Columns.AddRange(new ColumnHeader[] { SectorListView_Name, SectorListView_Owner, SectorListView_AbandonedShips, SectorListView_LockBoxes, SectorListView_Ships, SectorListView_Stations, SectorListView_Drops });
             SectorListView.FullRowSelect = true;
             SectorListView.Location = new Point(0, 32);
             SectorListView.Name = "SectorListView";
@@ -102,7 +104,7 @@
             NoItemsLabel.Location = new Point(0, 0);
             NoItemsLabel.Name = "NoItemsLabel";
             NoItemsLabel.Size = new Size(985, 30);
-            NoItemsLabel.TabIndex = 0;
+            NoItemsLabel.TabIndex = 7;
             NoItemsLabel.Text = "No sectors are currently loaded.";
             NoItemsLabel.TextAlign = ContentAlignment.MiddleCenter;
             // 
@@ -112,7 +114,7 @@
             SectorOwnerComboBox.Location = new Point(87, 3);
             SectorOwnerComboBox.Name = "SectorOwnerComboBox";
             SectorOwnerComboBox.Size = new Size(241, 23);
-            SectorOwnerComboBox.TabIndex = 2;
+            SectorOwnerComboBox.TabIndex = 1;
             // 
             // SectorOwnerLabel
             // 
@@ -120,7 +122,7 @@
             SectorOwnerLabel.Location = new Point(0, 6);
             SectorOwnerLabel.Name = "SectorOwnerLabel";
             SectorOwnerLabel.Size = new Size(81, 15);
-            SectorOwnerLabel.TabIndex = 1;
+            SectorOwnerLabel.TabIndex = 0;
             SectorOwnerLabel.Text = "Sector Owner:";
             // 
             // AbandonedShipsCheckBox
@@ -129,25 +131,41 @@
             AbandonedShipsCheckBox.Location = new Point(355, 5);
             AbandonedShipsCheckBox.Name = "AbandonedShipsCheckBox";
             AbandonedShipsCheckBox.Size = new Size(118, 19);
-            AbandonedShipsCheckBox.TabIndex = 3;
+            AbandonedShipsCheckBox.TabIndex = 2;
             AbandonedShipsCheckBox.Text = "Abandoned ships";
             AbandonedShipsCheckBox.UseVisualStyleBackColor = true;
             // 
             // LockboxesCheckBox
             // 
             LockboxesCheckBox.AutoSize = true;
-            LockboxesCheckBox.Location = new Point(492, 5);
+            LockboxesCheckBox.Location = new Point(542, 5);
             LockboxesCheckBox.Name = "LockboxesCheckBox";
             LockboxesCheckBox.Size = new Size(82, 19);
             LockboxesCheckBox.TabIndex = 4;
             LockboxesCheckBox.Text = "Lockboxes";
             LockboxesCheckBox.UseVisualStyleBackColor = true;
             // 
+            // SectorListView_Drops
+            // 
+            SectorListView_Drops.Text = "Drops";
+            SectorListView_Drops.TextAlign = HorizontalAlignment.Right;
+            // 
+            // DropsCheckBox
+            // 
+            DropsCheckBox.AutoSize = true;
+            DropsCheckBox.Location = new Point(479, 5);
+            DropsCheckBox.Name = "DropsCheckBox";
+            DropsCheckBox.Size = new Size(57, 19);
+            DropsCheckBox.TabIndex = 3;
+            DropsCheckBox.Text = "Drops";
+            DropsCheckBox.UseVisualStyleBackColor = true;
+            // 
             // SectorListControl
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             Controls.Add(NoItemsLabel);
+            Controls.Add(DropsCheckBox);
             Controls.Add(LockboxesCheckBox);
             Controls.Add(AbandonedShipsCheckBox);
             Controls.Add(SectorOwnerLabel);
@@ -175,5 +193,7 @@
         private Label SectorOwnerLabel;
         private CheckBox AbandonedShipsCheckBox;
         private CheckBox LockboxesCheckBox;
+        private ColumnHeader SectorListView_Drops;
+        private CheckBox DropsCheckBox;
     }
 }

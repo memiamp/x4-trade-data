@@ -57,9 +57,9 @@ public interface IGameResourceDataParser
     Task<ITextResourcePageDictionary> ReadTextResources(IXmlReaderWrapper reader);
 
     /// <summary>
-    /// Parses the ware names from the specified <paramref name="reader"/>.
+    /// Parses the wares from the specified <paramref name="reader"/>.
     /// </summary>
     /// <param name="reader">An <see cref="IXmlReaderWrapper"/> containing the resource data to parse.</param>
-    /// <returns>A <see cref="Task{TResult}"/> representing the asynchronous operation.  An <see cref="IMacroNameResourceDataDictionary"/> containing the result.</returns>
-    Task<IMacroNameResourceDataDictionary> ReadWareNames(IXmlReaderWrapper reader);
+    /// <returns>A <see cref="Task{TResult}"/> representing the asynchronous operation.  An <see cref="IWareDataDictionary"/> containing the result.</returns>
+    Task<IWareDataDictionary> ReadWares(IXmlReaderWrapper reader);
 }

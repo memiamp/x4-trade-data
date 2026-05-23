@@ -19,5 +19,5 @@ internal class GameResourceModels : IGameResourceModels
 
     public required ITextResourceModelList Text { get; init; }
 
-    public required IMacroNameModelList WareNames { get; init; }
+    public required IWareModelList Wares { get; init; }
 }

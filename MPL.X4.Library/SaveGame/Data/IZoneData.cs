@@ -11,6 +11,16 @@ public interface IZoneData : IHasTransform
     string Code { get; }
 
     /// <summary>
+    /// Gets the collectable ammos in the zone.
+    /// </summary>
+    IEnumerable<ICollectableAmmoData> CollectableAmmos { get; }
+
+    /// <summary>
+    /// Gets the collectable wares in the zone.
+    /// </summary>
+    IEnumerable<ICollectableWareData> CollectableWares { get; }
+
+    /// <summary>
     /// Gets the gates in the zone.
     /// </summary>
     IEnumerable<IGateData> Gates { get; }

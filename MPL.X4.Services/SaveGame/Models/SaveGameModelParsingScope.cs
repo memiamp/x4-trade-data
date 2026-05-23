@@ -42,7 +42,7 @@ internal class SaveGameModelParsingScope(
         var returnValue = false;
         wareName = null;
 
-        if (((ISaveGameModelParsingScope)this).GameResources?.WareNames.TryGetValue(source, out var model) == true)
+        if (((ISaveGameModelParsingScope)this).GameResources?.Wares.TryGetValue(source, out var model) == true)
         {
             wareName = model.Name;
             returnValue = true;

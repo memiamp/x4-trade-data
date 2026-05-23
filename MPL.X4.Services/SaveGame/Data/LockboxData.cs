@@ -18,5 +18,5 @@ internal class LockboxData : HasTransformBase, ILockboxData
 
     public required string Macro { get; init; }
 
-    public required IEnumerable<string> Wares { get; init; }
+    public required IEnumerable<IWareItemData> Wares { get; init; }
 }

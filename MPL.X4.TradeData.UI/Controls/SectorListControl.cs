@@ -78,6 +78,7 @@ internal partial class SectorListControl : UserControl
         returnValue.SubItems.Add(source.Lockboxes.Count.ToString());
         returnValue.SubItems.Add(source.Ships.Count.ToString());
         returnValue.SubItems.Add(source.Stations.Count.ToString());
+        returnValue.SubItems.Add(source.CollectableDrops.Count.ToString());
 
         returnValue.Tag = source;
 
@@ -99,6 +100,7 @@ internal partial class SectorListControl : UserControl
     {
         // Defaults
         AbandonedShipsCheckBox.Checked = false;
+        DropsCheckBox.Checked = false;
         LockboxesCheckBox.Checked = false;
 
         // Controls
@@ -107,6 +109,7 @@ internal partial class SectorListControl : UserControl
 
         // Event wireup
         AbandonedShipsCheckBox.CheckedChanged += AbandonedShipsCheckBox_CheckedChanged;
+        DropsCheckBox.CheckedChanged += DropsCheckBox_CheckedChanged;
         Load += SpecialItemControl_Load;
         LockboxesCheckBox.CheckedChanged += LockboxesCheckBox_CheckedChanged;
         SectorListView.DoubleClick += SectorListView_DoubleClick;
@@ -154,6 +157,11 @@ internal partial class SectorListControl : UserControl
             filteredItems = filteredItems.Where(x => x.Ships.Any(x => x.CanBeCaptured));
         }
 
+        if (DropsCheckBox.Checked)
+        {
+            filteredItems = filteredItems.Where(x => x.CollectableDrops.Count > 0);
+        }
+
         if (LockboxesCheckBox.Checked)
         {
             filteredItems = filteredItems.Where(x => x.Lockboxes.Count > 0);
@@ -197,6 +205,11 @@ internal partial class SectorListControl : UserControl
     #region Event Handlers
 
     private void AbandonedShipsCheckBox_CheckedChanged(object? sender, EventArgs e)
+    {
+        DoRefresh();
+    }
+
+    private void DropsCheckBox_CheckedChanged(object? sender, EventArgs e)
     {
         DoRefresh();
     }

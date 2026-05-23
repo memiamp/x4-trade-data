@@ -41,7 +41,7 @@ public interface IGameResourceData
     ITextResourcePageDictionary Text { get; }
 
     /// <summary>
-    /// Gets ware name data.
+    /// Gets wares data.
     /// </summary>
-    IMacroNameResourceDataDictionary WareNames { get; }
+    IWareDataDictionary Wares { get; }
 }

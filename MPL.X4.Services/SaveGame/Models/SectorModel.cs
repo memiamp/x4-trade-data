@@ -12,6 +12,8 @@ internal class SectorModel : ModelWithIdBase, ISectorModel
 
     public required string Code { get; init; }
 
+    public required ICollectableDropModelList CollectableDrops { get; init; }
+
     public required IGateModelList Gates { get; init; }
 
     public required bool IsKnown { get; init; }

@@ -8,7 +8,7 @@ namespace MPL.X4.SaveGame.Data.Parser;
 using LockboxElements = (
                          int LockCount,
                          ITransform3D Transform,
-                         IEnumerable<string> Wares);
+                         IEnumerable<IWareItemData> Wares);
 
 /// <summary>
 /// A class that implements a data parser for a <see cref="ILockboxData"/>.
@@ -50,7 +50,7 @@ internal class LockboxDataParser(
     {
         var lockCount = 0;
         ITransform3D transform = ITransform3D.GetDefault();
-        List<string> wares = [];
+        List<IWareItemData> wares = [];
 
         while (await reader.ReadAsync())
         {
@@ -64,7 +64,7 @@ internal class LockboxDataParser(
             {
                 using var subtree = await reader.ReadSubtree();
 
-                var data = await ParseWares(subtree);
+                var data = await DataParser.Parse<IEnumerable<IWareItemData>>(subtree);
 
                 wares.AddRange(data);
             }
@@ -78,19 +78,19 @@ internal class LockboxDataParser(
         return (lockCount, transform, wares);
     }
 
-    private static async Task<IEnumerable<string>> ParseWares(IXmlReaderWrapper reader)
-    {
-        var returnValue = new List<string>();
+    //private static async Task<IEnumerable<IWareItemData>> ParseWares(IXmlReaderWrapper reader)
+    //{
+    //    var returnValue = new List<string>();
 
-        while (await reader.ReadAsync())
-        {
-            if (reader.CheckNodeMatches(Constants.XmlDataFile.ElementName.Ware, XmlNodeType.Element, 1) &&
-                reader.TryGetAttribute(Constants.XmlDataFile.AttributeName.Ware, out string? ware))
-            {
-                returnValue.Add(ware);
-            }
-        }
+    //    while (await reader.ReadAsync())
+    //    {
+    //        if (reader.CheckNodeMatches(Constants.XmlDataFile.ElementName.Ware, XmlNodeType.Element, 1) &&
+    //            reader.TryGetAttribute(Constants.XmlDataFile.AttributeName.Ware, out string? ware))
+    //        {
+    //            returnValue.Add(ware);
+    //        }
+    //    }
 
-        return returnValue;
-    }
+    //    return returnValue;
+    //}
 }

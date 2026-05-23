@@ -23,13 +23,8 @@ internal class FactionDataParser(
             throw new ArgumentException("Could not load faction", nameof(reader));
         }
 
-        ITextResourceReference? nameResource = reader.TryGetAttribute(Constants.XmlDataFile.AttributeName.Name, out string? value)
-            ? TextResourceReference.Parse(value)
-            : null;
-
-        ITextResourceReference? acronymResource = reader.TryGetAttribute(Constants.XmlDataFile.AttributeName.ShortName, out value)
-            ? TextResourceReference.Parse(value)
-            : null;
+        var acronymResource = reader.ParseTextResourceReference(Constants.XmlDataFile.AttributeName.ShortName);
+        var nameResource = reader.ParseTextResourceReference(Constants.XmlDataFile.AttributeName.Name);
 
         var colourReference = await ParseElements(reader);
      
@@ -42,20 +37,19 @@ internal class FactionDataParser(
         };
     }
 
-
     private static async Task<string?> ParseElements(IXmlReaderWrapper reader)
     {
-        string? colourReference = null;
+        string? returnValue = null;
 
         while (await reader.ReadAsync())
         {
             if (reader.CheckNodeMatches(Constants.XmlDataFile.ElementName.Colour, XmlNodeType.Element, 1) &&
-                reader.TryGetAttribute(Constants.XmlDataFile.AttributeName.Reference, out colourReference))
+                reader.TryGetAttribute(Constants.XmlDataFile.AttributeName.Reference, out returnValue))
             {
                 break;
             }
         }
 
-        return colourReference;
+        return returnValue;
     }
 }

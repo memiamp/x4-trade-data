@@ -261,27 +261,27 @@ internal class GameResourceDataLoader(
         return await resourceDataParser.ReadTextResources(reader);
     }
 
-    async Task<IMacroNameResourceDataDictionary> IGameResourceDataLoader.LoadWareNamesFromCatalogs(string catalogsFilePath)
+    async Task<IWareDataDictionary> IGameResourceDataLoader.LoadWaresFromCatalogs(string catalogsFilePath)
     {
-        logger.LogInformation("Loading ware names from catalogs at {CatalogsFilePath}", catalogsFilePath);
+        logger.LogInformation("Loading wares from catalogs at {CatalogsFilePath}", catalogsFilePath);
 
         var entries = await catalogFileReader.ParseIndexes(catalogsFilePath, Constants.CatalogFile.FileName.WareDefinition, Constants.CatalogFile.FileExtensions.XmlData, true);
 
-        return await ((IGameResourceDataLoader)this).LoadWareNamesFromIndex(entries);
+        return await ((IGameResourceDataLoader)this).LoadWaresFromIndex(entries);
     }
 
-    async Task<IMacroNameResourceDataDictionary> IGameResourceDataLoader.LoadWareNamesFromIndex(IEnumerable<ICatalogIndex> index)
+    async Task<IWareDataDictionary> IGameResourceDataLoader.LoadWaresFromIndex(IEnumerable<ICatalogIndex> index)
     {
-        logger.LogInformation("Loading ware names from supplied index");
+        logger.LogInformation("Loading wares from supplied index");
 
         var file = await MergeIndexEntriesToXml(index, x => x.FilePath.Contains(Constants.CatalogFile.FileName.WareDefinition, StringComparison.OrdinalIgnoreCase));
         if (file is not null)
         {
             using var reader = xmlReaderWrapperFactory.CreateXmlReaderFromXmlString(file);
 
-            return await resourceDataParser.ReadWareNames(reader);
+            return await resourceDataParser.ReadWares(reader);
         }
 
-        return new MacroNameResourceDataDictionary();
+        return new WareDataDictionary();
     }
 }

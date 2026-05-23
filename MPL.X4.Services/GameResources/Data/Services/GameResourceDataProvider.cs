@@ -28,7 +28,7 @@ internal partial class GameResourceDataProvider(
         var sectorNames = await gameResourceDataLoader.LoadSectorNamesFromIndex(index);
         var shipModels = await gameResourceDataLoader.LoadShipModelsFromIndex(index);
         var textResource = await gameResourceDataLoader.LoadTextResourcesFromCatalogs(catalogFilePath);
-        var wareNames = await gameResourceDataLoader.LoadWareNamesFromIndex(index);
+        var wares = await gameResourceDataLoader.LoadWaresFromIndex(index);
 
         return new GameResourceData
         {
@@ -39,7 +39,7 @@ internal partial class GameResourceDataProvider(
             SectorNames = sectorNames,
             ShipModels = shipModels,
             Text = textResource,
-            WareNames = wareNames
+            Wares = wares
         };
     }
 }

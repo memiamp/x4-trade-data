@@ -10,6 +10,10 @@ internal class ZoneData : HasTransformBase, IZoneData
 
     public required string Code { get; init; }
 
+    public required IEnumerable<ICollectableAmmoData> CollectableAmmos { get; init; }
+
+    public required IEnumerable<ICollectableWareData> CollectableWares { get; init; }
+
     public required IEnumerable<IGateData> Gates { get; init; }
 
     public required string Id { get; init; }

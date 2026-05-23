@@ -30,6 +30,10 @@ internal partial class SectorViewerForm : Form
     {
         SectorPlot.Clear();
         SectorPlot.AddRange(_sector?
+                                    .CollectableDrops
+                                    .Select(x => new DropPlot(x)));
+
+        SectorPlot.AddRange(_sector?
                                     .Gates
                                     .Select(x => new GatePlot(x)));
 
