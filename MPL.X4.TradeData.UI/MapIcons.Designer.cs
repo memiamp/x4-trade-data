@@ -63,6 +63,26 @@ namespace MPL.X4.TradeData.UI {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap Icon_CollectableAmmo {
+            get {
+                object obj = ResourceManager.GetObject("Icon_CollectableAmmo", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Icon_CollectableWare {
+            get {
+                object obj = ResourceManager.GetObject("Icon_CollectableWare", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap Icon_JumpGate {
             get {
                 object obj = ResourceManager.GetObject("Icon_JumpGate", resourceCulture);

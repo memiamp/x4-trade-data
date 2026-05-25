@@ -317,14 +317,14 @@ internal class PlotControl : Panel
         MouseUp += OnMouseUp;
         MouseWheel += OnMouseWheel;
 
-        _iconCache[SectorPlotType.AmmoDrop] = MapIcons.Icon_Superhighway;
+        _iconCache[SectorPlotType.AmmoDrop] = MapIcons.Icon_CollectableAmmo;
         _iconCache[SectorPlotType.JumpGate] = MapIcons.Icon_JumpGate;
         _iconCache[SectorPlotType.Lockbox] = MapIcons.Icon_Lockbox;
         _iconCache[SectorPlotType.Ship] = MapIcons.Icon_Ship;
         _iconCache[SectorPlotType.Station] = MapIcons.Icon_Station;
         _iconCache[SectorPlotType.Superhighway] = MapIcons.Icon_Superhighway;
         _iconCache[SectorPlotType.TransorbitalAccelerator] = MapIcons.Icon_Transorbital;
-        _iconCache[SectorPlotType.WareDrop] = MapIcons.Icon_Superhighway;
+        _iconCache[SectorPlotType.WareDrop] = MapIcons.Icon_CollectableWare;
     }
 
     private void UpdateZoomLimits()
