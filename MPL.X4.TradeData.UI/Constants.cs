@@ -27,6 +27,31 @@ internal static class Constants
         internal static string Unowned = "None";
     }
 
+    /// <summary>
+    /// A class containing sector-related constants.
+    /// </summary>
+    internal static class Sectors
+    {
+        internal static readonly IEnumerable<string> HyperloopSectors =
+        [
+            "Argon Prime",
+            "Bright Promise",
+            "Hatikvah's Choice I",
+            "Holy Vision",
+            "Pious Mists II",
+            "Pontifex's Claim",
+            "Profit Center Alpha",
+            "Second Contact II Flashpoint",
+            "Silent Witness I",
+            "Trinity Sanctum III",
+            "True Sight",
+            "Unholy Retribution"
+        ];
+    }
+
+    /// <summary>
+    /// A class containing special item type constants.
+    /// </summary>
     internal static class SpecialItemTypes
     {
         internal static string Lockbox = "Lockbox";

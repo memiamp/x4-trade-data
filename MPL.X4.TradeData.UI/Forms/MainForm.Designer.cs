@@ -17,19 +17,19 @@
         {
             LayoutControl = new TabControl();
             TradesTab = new TabPage();
-            TradeControl = new MPL.X4.TradeData.UI.Controls.TradeControl();
             SpecialItemsTab = new TabPage();
             SpecialItemControl = new MPL.X4.TradeData.UI.Controls.SpecialItemControl();
+            SectorListTab = new TabPage();
+            SectorListControl = new MPL.X4.TradeData.UI.Controls.SectorListControl();
             menuStrip1 = new MenuStrip();
             fileToolStripMenuItem = new ToolStripMenuItem();
             exitToolStripMenuItem = new ToolStripMenuItem();
-            SectorListTab = new TabPage();
-            SectorListControl = new MPL.X4.TradeData.UI.Controls.SectorListControl();
+            TradeControl = new MPL.X4.TradeData.UI.Controls.TradeControl();
             LayoutControl.SuspendLayout();
             TradesTab.SuspendLayout();
             SpecialItemsTab.SuspendLayout();
-            menuStrip1.SuspendLayout();
             SectorListTab.SuspendLayout();
+            menuStrip1.SuspendLayout();
             SuspendLayout();
             // 
             // LayoutControl
@@ -55,14 +55,6 @@
             TradesTab.Text = "Trades";
             TradesTab.UseVisualStyleBackColor = true;
             // 
-            // TradeControl
-            // 
-            TradeControl.Dock = DockStyle.Fill;
-            TradeControl.Location = new Point(3, 3);
-            TradeControl.Name = "TradeControl";
-            TradeControl.Size = new Size(1066, 503);
-            TradeControl.TabIndex = 0;
-            // 
             // SpecialItemsTab
             // 
             SpecialItemsTab.Controls.Add(SpecialItemControl);
@@ -81,6 +73,25 @@
             SpecialItemControl.Name = "SpecialItemControl";
             SpecialItemControl.Size = new Size(1066, 503);
             SpecialItemControl.TabIndex = 0;
+            // 
+            // SectorListTab
+            // 
+            SectorListTab.Controls.Add(SectorListControl);
+            SectorListTab.Location = new Point(4, 24);
+            SectorListTab.Name = "SectorListTab";
+            SectorListTab.Padding = new Padding(3);
+            SectorListTab.Size = new Size(1072, 509);
+            SectorListTab.TabIndex = 2;
+            SectorListTab.Text = "Sectors";
+            SectorListTab.UseVisualStyleBackColor = true;
+            // 
+            // SectorListControl
+            // 
+            SectorListControl.Dock = DockStyle.Fill;
+            SectorListControl.Location = new Point(3, 3);
+            SectorListControl.Name = "SectorListControl";
+            SectorListControl.Size = new Size(1066, 503);
+            SectorListControl.TabIndex = 0;
             // 
             // menuStrip1
             // 
@@ -104,24 +115,13 @@
             exitToolStripMenuItem.Size = new Size(93, 22);
             exitToolStripMenuItem.Text = "E&xit";
             // 
-            // SectorListTab
+            // TradeControl
             // 
-            SectorListTab.Controls.Add(SectorListControl);
-            SectorListTab.Location = new Point(4, 24);
-            SectorListTab.Name = "SectorListTab";
-            SectorListTab.Padding = new Padding(3);
-            SectorListTab.Size = new Size(1072, 509);
-            SectorListTab.TabIndex = 2;
-            SectorListTab.Text = "Sectors";
-            SectorListTab.UseVisualStyleBackColor = true;
-            // 
-            // SectorListControl
-            // 
-            SectorListControl.Dock = DockStyle.Fill;
-            SectorListControl.Location = new Point(3, 3);
-            SectorListControl.Name = "SectorListControl";
-            SectorListControl.Size = new Size(1066, 503);
-            SectorListControl.TabIndex = 0;
+            TradeControl.Dock = DockStyle.Fill;
+            TradeControl.Location = new Point(3, 3);
+            TradeControl.Name = "TradeControl";
+            TradeControl.Size = new Size(1066, 503);
+            TradeControl.TabIndex = 0;
             // 
             // MainForm
             // 
@@ -137,9 +137,9 @@
             LayoutControl.ResumeLayout(false);
             TradesTab.ResumeLayout(false);
             SpecialItemsTab.ResumeLayout(false);
+            SectorListTab.ResumeLayout(false);
             menuStrip1.ResumeLayout(false);
             menuStrip1.PerformLayout();
-            SectorListTab.ResumeLayout(false);
             ResumeLayout(false);
             PerformLayout();
         }
@@ -152,9 +152,9 @@
         private MenuStrip menuStrip1;
         private ToolStripMenuItem fileToolStripMenuItem;
         private ToolStripMenuItem exitToolStripMenuItem;
-        private Controls.TradeControl TradeControl;
         private Controls.SpecialItemControl SpecialItemControl;
         private TabPage SectorListTab;
         private Controls.SectorListControl SectorListControl;
+        private Controls.TradeControl TradeControl;
     }
 }

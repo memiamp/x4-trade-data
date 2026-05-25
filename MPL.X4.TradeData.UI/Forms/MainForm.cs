@@ -5,6 +5,7 @@ using MPL.X4.SaveGame.Models;
 using MPL.X4.TradeData.UI.Configuration;
 using MPL.X4.TradeData.UI.Controls;
 using MPL.X4.TradeData.UI.Models.SpecialItem;
+using MPL.X4.TradeData.UI.Models.Trade;
 using MPL.X4.TradeData.UI.Services;
 
 namespace MPL.X4.TradeData.UI.Forms;
@@ -166,9 +167,21 @@ internal partial class MainForm : Form
 
     private void UpdateTradeControl()
     {
-        //TradeControl.Items = _saveGame?.Universe.Sectors.Any() == true
-        //    ? _modelMapper.MapTradeOffers(_saveGame.Universe.Sectors, _resourceData)
-        //    : [];
+        if (_saveGame?.Universe.Sectors.Any() == true)
+        {
+            var trades = _saveGame
+                                  .Universe
+                                  .Sectors
+                                  .SelectMany(se => se.Stations
+                                                               .SelectMany(st => st.Trades
+                                                                                          .Select(t => new TradeListItem(se, st, t))));
+
+            TradeControl.Items = trades;
+        }
+        else
+        {
+            TradeControl.Items = [];
+        }
     }
 
     #endregion

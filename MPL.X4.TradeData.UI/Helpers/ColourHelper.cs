@@ -7,11 +7,13 @@ internal static class ColourHelper
 {
     private static Color ColorFromHsl(double hue, double saturation, double lightness)
     {
-        double c = (1 - Math.Abs(2 * lightness - 1)) * saturation;
-        double x = c * (1 - Math.Abs((hue / 60) % 2 - 1));
-        double m = lightness - c / 2;
+        var c = (1 - Math.Abs(2 * lightness - 1)) * saturation;
+        var x = c * (1 - Math.Abs((hue / 60) % 2 - 1));
+        var m = lightness - c / 2;
 
-        double r1 = 0, g1 = 0, b1 = 0;
+        var r1 = 0D;
+        var g1 = 0D;
+        var b1 = 0D;
 
         if (hue < 60) { r1 = c; g1 = x; }
         else if (hue < 120) { r1 = x; g1 = c; }
@@ -31,13 +33,13 @@ internal static class ColourHelper
         if (average == 0)
             return Color.LightGray;
 
-        double deviation = (value - average) / average;
-        double t = Math.Clamp(deviation / maxDeviationPercent, -1.0, 1.0);
+        var deviation = (value - average) / average;
+        var t = Math.Clamp(deviation / maxDeviationPercent, -1.0, 1.0);
 
-        double hue = 60 + (60 * t);
+        var hue = 60 + (60 * t);
 
-        double saturation = 0.95;
-        double lightness = 0.52;
+        var saturation = 0.95;
+        var lightness = 0.52;
 
         return ColorFromHsl(hue, saturation, lightness);
     }
