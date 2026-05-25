@@ -64,7 +64,8 @@
             Controls.Add(LayoutPanel);
             MinimumSize = new Size(764, 720);
             Name = "SectorViewerForm";
-            Text = "SectorViewerForm";
+            StartPosition = FormStartPosition.CenterParent;
+            Text = "Sector Viewer";
             LayoutPanel.ResumeLayout(false);
             ResumeLayout(false);
         }

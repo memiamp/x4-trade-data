@@ -17,14 +17,16 @@
         {
             LayoutControl = new TabControl();
             TradesTab = new TabPage();
+            TradeControl = new MPL.X4.TradeData.UI.Controls.TradeControl();
             SpecialItemsTab = new TabPage();
             SpecialItemControl = new MPL.X4.TradeData.UI.Controls.SpecialItemControl();
             SectorListTab = new TabPage();
             SectorListControl = new MPL.X4.TradeData.UI.Controls.SectorListControl();
             menuStrip1 = new MenuStrip();
-            fileToolStripMenuItem = new ToolStripMenuItem();
-            exitToolStripMenuItem = new ToolStripMenuItem();
-            TradeControl = new MPL.X4.TradeData.UI.Controls.TradeControl();
+            FileMenu = new ToolStripMenuItem();
+            FileMenu_Exit = new ToolStripMenuItem();
+            ToolMenu = new ToolStripMenuItem();
+            ToolMenu_Options = new ToolStripMenuItem();
             LayoutControl.SuspendLayout();
             TradesTab.SuspendLayout();
             SpecialItemsTab.SuspendLayout();
@@ -54,6 +56,14 @@
             TradesTab.TabIndex = 0;
             TradesTab.Text = "Trades";
             TradesTab.UseVisualStyleBackColor = true;
+            // 
+            // TradeControl
+            // 
+            TradeControl.Dock = DockStyle.Fill;
+            TradeControl.Location = new Point(3, 3);
+            TradeControl.Name = "TradeControl";
+            TradeControl.Size = new Size(1066, 503);
+            TradeControl.TabIndex = 0;
             // 
             // SpecialItemsTab
             // 
@@ -95,33 +105,38 @@
             // 
             // menuStrip1
             // 
-            menuStrip1.Items.AddRange(new ToolStripItem[] { fileToolStripMenuItem });
+            menuStrip1.Items.AddRange(new ToolStripItem[] { FileMenu, ToolMenu });
             menuStrip1.Location = new Point(0, 0);
             menuStrip1.Name = "menuStrip1";
             menuStrip1.Size = new Size(1080, 24);
             menuStrip1.TabIndex = 1;
-            menuStrip1.Text = "menuStrip1";
+            menuStrip1.Text = "MainMenu";
             // 
-            // fileToolStripMenuItem
+            // FileMenu
             // 
-            fileToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { exitToolStripMenuItem });
-            fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            fileToolStripMenuItem.Size = new Size(37, 20);
-            fileToolStripMenuItem.Text = "&File";
+            FileMenu.DropDownItems.AddRange(new ToolStripItem[] { FileMenu_Exit });
+            FileMenu.Name = "FileMenu";
+            FileMenu.Size = new Size(37, 20);
+            FileMenu.Text = "&File";
             // 
-            // exitToolStripMenuItem
+            // FileMenu_Exit
             // 
-            exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            exitToolStripMenuItem.Size = new Size(93, 22);
-            exitToolStripMenuItem.Text = "E&xit";
+            FileMenu_Exit.Name = "FileMenu_Exit";
+            FileMenu_Exit.Size = new Size(180, 22);
+            FileMenu_Exit.Text = "E&xit";
             // 
-            // TradeControl
+            // ToolMenu
             // 
-            TradeControl.Dock = DockStyle.Fill;
-            TradeControl.Location = new Point(3, 3);
-            TradeControl.Name = "TradeControl";
-            TradeControl.Size = new Size(1066, 503);
-            TradeControl.TabIndex = 0;
+            ToolMenu.DropDownItems.AddRange(new ToolStripItem[] { ToolMenu_Options });
+            ToolMenu.Name = "ToolMenu";
+            ToolMenu.Size = new Size(46, 20);
+            ToolMenu.Text = "&Tools";
+            // 
+            // ToolMenu_Options
+            // 
+            ToolMenu_Options.Name = "ToolMenu_Options";
+            ToolMenu_Options.Size = new Size(125, 22);
+            ToolMenu_Options.Text = "&Options...";
             // 
             // MainForm
             // 
@@ -133,7 +148,8 @@
             MainMenuStrip = menuStrip1;
             MinimumSize = new Size(1096, 600);
             Name = "MainForm";
-            Text = "Form1";
+            StartPosition = FormStartPosition.CenterScreen;
+            Text = "MPL X4 Trade Data";
             LayoutControl.ResumeLayout(false);
             TradesTab.ResumeLayout(false);
             SpecialItemsTab.ResumeLayout(false);
@@ -150,11 +166,13 @@
         private TabPage TradesTab;
         private TabPage SpecialItemsTab;
         private MenuStrip menuStrip1;
-        private ToolStripMenuItem fileToolStripMenuItem;
-        private ToolStripMenuItem exitToolStripMenuItem;
+        private ToolStripMenuItem FileMenu;
+        private ToolStripMenuItem FileMenu_Exit;
         private Controls.SpecialItemControl SpecialItemControl;
         private TabPage SectorListTab;
         private Controls.SectorListControl SectorListControl;
         private Controls.TradeControl TradeControl;
+        private ToolStripMenuItem ToolMenu;
+        private ToolStripMenuItem ToolMenu_Options;
     }
 }

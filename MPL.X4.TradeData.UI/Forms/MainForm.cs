@@ -1,8 +1,5 @@
 using Microsoft.Extensions.Logging;
-using MPL.X4.Catalog.Services;
-using MPL.X4.GameResources.Models.Services;
 using MPL.X4.SaveGame.Models;
-using MPL.X4.TradeData.UI.Configuration;
 using MPL.X4.TradeData.UI.Controls;
 using MPL.X4.TradeData.UI.Models.SpecialItem;
 using MPL.X4.TradeData.UI.Models.Trade;
@@ -17,11 +14,10 @@ internal partial class MainForm : Form
 {
     #region Declarations
 
-    private readonly ICatalogFileReader _catalogFileReader;
     private readonly DebugForm _debugForm;
-    private readonly IFileConfiguration _fileConfiguration;
     private readonly IGameDataService _gameDataService;
     private readonly ILogger _logger;
+    private readonly OptionsForm _optionsForm;
     private readonly ISaveGameFileSystemMonitor _saveGameFileSystemMonitor;
 
     private ISaveGameModels? _saveGame;
@@ -33,26 +29,22 @@ internal partial class MainForm : Form
     /// <summary>
     /// Creates a new instance of the <see cref="MainForm"/> class with the specified parameters.
     /// </summary>
-    /// <param name="debugForm">An <see cref="DebugForm"/> that is the debug form to use.</param>
-    /// <param name="fileConfiguration">An <see cref="IFileConfiguration"/> that is the file configuration to use.</param>
+    /// <param name="debugForm">A <see cref="DebugForm"/> that is the debug form to use.</param>
     /// <param name="gameDataService">An <see cref="IGameDataService"/> that is the game data service to use.</param>
-    /// <param name="gameResourceModelLoader">An <see cref="IGameResourceModelLoader"/> that is the game resource model loader to use.</param>
     /// <param name="logger">An <see cref="ILogger{TCategoryName}"/> that is the logger to use.</param>
-    /// <param name="modelMapper">An <see cref="IModelMapper"/> that is the model mapper to use.</param>
+    /// <param name="optionsForm">A <see cref="OptionsForm"/> that is the options form to use.</param>
     /// <param name="saveGameFileSystemMonitor">An <see cref="ISaveGameFileSystemMonitor"/> that is the save game file system monitor to use.</param>
     public MainForm(
-                    ICatalogFileReader catalogFileReader,
                     DebugForm debugForm,
-                    IFileConfiguration fileConfiguration,
                     IGameDataService gameDataService,
                     ILogger<MainForm> logger,
+                    OptionsForm optionsForm,
                     ISaveGameFileSystemMonitor saveGameFileSystemMonitor)
     {
-        _catalogFileReader = catalogFileReader;
         _debugForm = debugForm;
-        _fileConfiguration = fileConfiguration;
         _gameDataService = gameDataService;
         _logger = logger;
+        _optionsForm = optionsForm;
         _saveGameFileSystemMonitor = saveGameFileSystemMonitor;
 
         InitializeComponent();
@@ -77,18 +69,41 @@ internal partial class MainForm : Form
     private void Initialise()
     {
         // Event handlers
+        FileMenu_Exit.Click += FileMenu_Exit_Click;
         Load += async (sender, e) => await LoadData();
         SectorListControl.ViewSectorRequest += SectorListControl_ViewSectorRequest;
         _saveGameFileSystemMonitor.SaveGameFileUpdated += SaveGameFileSystemMonitor_SaveGameFileUpdated;
+        ToolMenu_Options.Click += ToolMenu_Options_Click;
 
         _debugForm.Show();
     }
 
     private async Task LoadData()
     {
-        await _gameDataService.ReloadResources();
+        var isLoaded = false;
 
-        _saveGameFileSystemMonitor.Start();
+        while (!isLoaded)
+        {
+            try
+            {
+                await _gameDataService.ReloadResources();
+
+                _saveGameFileSystemMonitor.Start();
+
+                isLoaded = true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Could not load data");
+
+                MessageBox.Show("Could not load resources. Please ensure options are set", "Load Resources", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                if (_optionsForm.ShowDialog() == DialogResult.Cancel)
+                {
+                    Application.Exit();
+                }
+            }
+        }
     }
 
     private async Task LoadSaveGame(string filePath)
@@ -188,6 +203,11 @@ internal partial class MainForm : Form
 
     #region Event Handlers
 
+    private void FileMenu_Exit_Click(object? sender, EventArgs e)
+    {
+        Application.Exit();
+    }
+
     private async void SaveGameFileSystemMonitor_SaveGameFileUpdated(object? sender, SaveGameFileUpdatedEventArgs e)
     {
         await LoadSaveGame(e.SaveGameFilePath);
@@ -196,6 +216,11 @@ internal partial class MainForm : Form
     private void SectorListControl_ViewSectorRequest(object? sender, SectorActionEventArgs e)
     {
         ShowSectorView(e.Sector);
+    }
+
+    private void ToolMenu_Options_Click(object? sender, EventArgs e)
+    {
+        _optionsForm.ShowDialog();
     }
 
     #endregion

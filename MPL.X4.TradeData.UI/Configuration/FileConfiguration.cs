@@ -5,13 +5,38 @@
 /// </summary>
 internal class FileConfiguration : IFileConfiguration
 {
-    string IFileConfiguration.CatalogFilePath => @"";
+    void IFileConfiguration.Save()
+    {
+        Properties.Settings.Default.Save();
+    }
 
-    uint IFileConfiguration.CheckIntervalSeconds => 10;
+    string IFileConfiguration.CatalogFilePath
+    {
+        get => Properties.Settings.Default.CatalogFilePath;
+        set => Properties.Settings.Default.CatalogFilePath = value;
+    }
+    
+    uint IFileConfiguration.CheckIntervalSeconds
+    {
+        get => Properties.Settings.Default.CheckIntervalSeconds;
+        set => Properties.Settings.Default.CheckIntervalSeconds = value;
+    }
 
-    uint IFileConfiguration.SaveGameFileAgeSeconds => 30;
+    uint IFileConfiguration.SaveGameFileAgeSeconds
+    {
+        get => Properties.Settings.Default.SaveGameFileAgeSeconds;
+        set => Properties.Settings.Default.SaveGameFileAgeSeconds = value;
+    }
 
-    string IFileConfiguration.SaveGameFileFilter => "*.xml.gz";
+    string IFileConfiguration.SaveGameFileFilter
+    {
+        get => Properties.Settings.Default.SaveGameFileFilter;
+        set => Properties.Settings.Default.SaveGameFileFilter = value;
+    }
 
-    string IFileConfiguration.SaveGameFilePath => @"";
+    string IFileConfiguration.SaveGameFilePath
+    {
+        get => Properties.Settings.Default.SaveGameFilePath;
+        set => Properties.Settings.Default.SaveGameFilePath = value;
+    }
 }

@@ -30,10 +30,10 @@ internal static class Program
         // Local forms
         services.AddTransient<DebugForm>();
         services.AddTransient<MainForm>();
+        services.AddTransient<OptionsForm>();
 
         // Local services
         services.AddSingleton<IGameDataService, GameDataService>();
-        //services.AddTransient<IModelMapper, ModelMapper>();
         services.AddTransient<ISaveGameFileSystemMonitor, SaveGameFileSystemMonitor>();
 
         return services.BuildServiceProvider();

@@ -20,15 +20,28 @@ internal partial class SectorViewerForm : Form
     public SectorViewerForm()
     {
         InitializeComponent();
+        Initialise();
     }
 
     #endregion
 
     #region Methods
 
+    private void Display()
+    {
+        Text = $"Sector Viewer: {_sector?.Name}";
+    }
+
+    private void Initialise()
+    {
+        // Event handlers
+        this.Load += SectorViewerForm_Load;
+    }
+
     private void LoadSectorData()
     {
         SectorPlot.Clear();
+
         SectorPlot.AddRange(_sector?
                                     .CollectableDrops
                                     .Select(x => new DropPlot(x)));
@@ -50,6 +63,17 @@ internal partial class SectorViewerForm : Form
                                     .Select(x => new StationPlot(x)));
 
         SectorPlot.ResetView();
+
+        Display();
+    }
+
+    #endregion
+
+    #region Event Handlers
+
+    private void SectorViewerForm_Load(object? sender, EventArgs e)
+    {
+        Display();
     }
 
     #endregion
