@@ -19,6 +19,7 @@ internal class SectorModelParser(
 {
     private protected override ISectorModel OnParse(ISectorData source)
     {
+        var buildStorages = new BuildStorageModelList();
         var collectableDrops = new CollectableDropModelList();
         var gates = new GateModelList();
         var lockboxes = new LockboxModelList();
@@ -29,10 +30,11 @@ internal class SectorModelParser(
         var owner = parsingScope.ParseFaction(source.Owner);
         var transform = ParseTransform(source);
 
-        ParseZones(source, collectableDrops,gates, lockboxes, ships, stations);
+        ParseZones(source, buildStorages, collectableDrops, gates, lockboxes, ships, stations);
 
         return new SectorModel
         {
+            BuildStorages = buildStorages,
             Code = source.Code,
             CollectableDrops = collectableDrops,
             Gates = gates,
@@ -67,7 +69,7 @@ internal class SectorModelParser(
                                                                   ? offset.Offset
                                                                   : ITransform3D.GetDefault();
 
-    private void ParseZone(IZoneData source, ICollectableDropModelList collectableDrops, IGateModelList gates, ILockboxModelList lockboxes, IShipModelList ships, IStationModelList stations)
+    private void ParseZone(IZoneData source, IBuildStorageModelList buildStorages, ICollectableDropModelList collectableDrops, IGateModelList gates, ILockboxModelList lockboxes, IShipModelList ships, IStationModelList stations)
     {
         var zoneOffset = parsingScope
                                      .GameResources
@@ -77,6 +79,7 @@ internal class SectorModelParser(
                                                                                 ? offset.Offset
                                                                                 : ITransform3D.GetDefault();
 
+        parsingScope.CurrentBuildStorages = source.BuildStorages;
         parsingScope.CurrentOffset = zoneOffset;
 
         foreach (var item in source.CollectableAmmos)
@@ -114,13 +117,25 @@ internal class SectorModelParser(
             var model = modelParser.Parse<IStationData, IStationModel>(item);
             stations.Add(model);
         }
+
+        var processedBuildStorages = stations
+                                             .Where(x => x.BuildStorage is not null)
+                                             .Select(x => x.BuildStorage!.Id);
+        foreach (var item in source.BuildStorages)
+        {
+            if (!processedBuildStorages.Contains(item.Id))
+            {
+                var model = modelParser.Parse<IBuildStorageData, IBuildStorageModel>(item);
+                buildStorages.Add(model);
+            }
+        }
     }
 
-    private void ParseZones(ISectorData source, ICollectableDropModelList collectableDrops, IGateModelList gates, ILockboxModelList lockboxes, IShipModelList ships, IStationModelList stations)
+    private void ParseZones(ISectorData source, IBuildStorageModelList buildStorages, ICollectableDropModelList collectableDrops, IGateModelList gates, ILockboxModelList lockboxes, IShipModelList ships, IStationModelList stations)
     {
         foreach (var zone in source.Zones)
         {
-            ParseZone(zone, collectableDrops, gates, lockboxes, ships, stations);
+            ParseZone(zone, buildStorages, collectableDrops, gates, lockboxes, ships, stations);
         }
     }
 }

@@ -16,7 +16,7 @@ internal partial class TradePanelControl : UserControl
 
     private decimal _averagePrice = 0m;
     private TradeDisplayMode _displaymode;
-    private IEnumerable<TradeListItem> _items = [];
+    private IEnumerable<ITradeListItem> _items = [];
     private IFactionModel? _sectorOwner;
     private IFactionModel? _stationOwner;
     private string? _wareName;
@@ -52,7 +52,7 @@ internal partial class TradePanelControl : UserControl
         }
     }
 
-    private ListViewItem GenerateListViewItem(TradeListItem source)
+    private ListViewItem GenerateListViewItem(ITradeListItem source)
     {
         var deviation = _displaymode == TradeDisplayMode.Buy ? 0.5 : -0.5;
         var price = source.Trade.Price / 100D;
@@ -213,7 +213,7 @@ internal partial class TradePanelControl : UserControl
     /// Gets or sets the trades to be displayed in the control.
     /// </summary>
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    internal IEnumerable<TradeListItem> Trades
+    internal IEnumerable<ITradeListItem> Trades
     {
         get
         {

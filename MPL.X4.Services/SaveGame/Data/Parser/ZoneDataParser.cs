@@ -6,6 +6,7 @@ using MPL.X4.Services.Xml;
 namespace MPL.X4.SaveGame.Data.Parser;
 
 using ZoneElements = (
+                      IEnumerable<IBuildStorageData> BuildStorages,
                       IEnumerable<ICollectableAmmoData> CollectableAmmos,
                       IEnumerable<ICollectableWareData> CollectableWares,
                       IEnumerable<IGateData> Gates,
@@ -36,10 +37,11 @@ internal class ZoneDataParser(
         var isKnown = GetIsKnownToPlayer(reader);
         reader.TryGetAttribute(Constants.XmlDataFile.AttributeName.Macro, out string? macro);
 
-        var (collectableAmmos, collectableWares, gates, lockboxes, ships, stations, transform) = await ParseElements(reader);
+        var (buildStorages, collectableAmmos, collectableWares, gates, lockboxes, ships, stations, transform) = await ParseElements(reader);
 
         return new ZoneData
         {
+            BuildStorages = buildStorages,
             Code = code,
             CollectableAmmos = collectableAmmos,
             CollectableWares = collectableWares,
@@ -86,6 +88,7 @@ internal class ZoneDataParser(
 
     private async Task<ZoneElements> ParseElements(IXmlReaderWrapper reader)
     {
+        List<IBuildStorageData> buildStorages = [];
         List<ICollectableAmmoData> collectableAmmos = [];
         List<ICollectableWareData> collectableWares = [];
         List<IGateData> gates = [];
@@ -101,6 +104,15 @@ internal class ZoneDataParser(
                 using var subtree = await reader.ReadSubtree();
 
                 transform = await DataParser.Parse<ITransform3D>(subtree);
+            }
+            else if (reader.CheckNodeMatches(Constants.XmlDataFile.ElementName.Component, XmlNodeType.Element) &&
+                     reader.TryGetAttribute(Constants.XmlDataFile.AttributeName.Class, x => x == Constants.XmlDataFile.AttributeValue.Class.BuildStorage))
+            {
+                using var subtree = await reader.ReadSubtree();
+
+                var data = await DataParser.Parse<IBuildStorageData>(subtree);
+
+                buildStorages.Add(data);
             }
             else if (reader.CheckNodeMatches(Constants.XmlDataFile.ElementName.Component, XmlNodeType.Element) &&
                      reader.TryGetAttribute(Constants.XmlDataFile.AttributeName.Class, x => x == Constants.XmlDataFile.AttributeValue.Class.CollectableAmmo))
@@ -159,6 +171,6 @@ internal class ZoneDataParser(
             }
         }
 
-        return (collectableAmmos, collectableWares, gates, lockboxes, ships, stations, transform);
+        return (buildStorages, collectableAmmos, collectableWares, gates, lockboxes, ships, stations, transform);
     }
 }

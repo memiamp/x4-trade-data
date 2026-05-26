@@ -110,8 +110,11 @@ public static class Constants
             public const string Amount = "amount";
             public const string BaseName = "basename";
             public const string BoostAcceleration = "boostacc";
+            public const string BuildAnchorId = "id";
+            public const string BuildingModuleId = "id";
             public const string BoostDuration = "boostduration";
             public const string BoostThrust = "boostthrust";
+            public const string BuildStorageId = "id";
             public const string Buy = "buy";
             public const string Buyer = "buyer";
             public const string Capacity = "capacity";
@@ -203,6 +206,9 @@ public static class Constants
         {
             public static class Class
             {
+                public const string BuildModule = "buildmodule";
+                public const string BuildProcessor = "buildprocessor";
+                public const string BuildStorage = "buildstorage";
                 public const string CollectableAmmo = "collectableammo";
                 public const string CollectableWares = "collectablewares";
                 public const string DefenceModule = "defencemodule";
@@ -218,12 +224,17 @@ public static class Constants
                 public const string ShipMedium = "ship_m";
                 public const string ShipSmall = "ship_s";
                 public const string Station = "station";
+                public const string Storage = "storage";
                 public const string Zone = "zone";
             }
 
             public static class Connection
             {
+                public const string BuildAnchor = "buildanchor";
+                public const string BuildModule = "con_buildmodule";
+                public const string BuildingModule = "buildingmodule";
                 public const string Drops = "drops";
+                public const string Storage = "con_storage";
             }
 
             public static class KnownTo
@@ -266,6 +277,7 @@ public static class Constants
             public const string Colour = "color";
             public const string Colours = "colors";
             public const string Component = "component";
+            public const string Connected = "connected";
             public const string Connection = "connection";
             public const string Connections = "connections";
             public const string Dataset = "dataset";
@@ -295,5 +307,14 @@ public static class Constants
             public const string Ware = "ware";
             public const string Wares = "wares";
         }
-    }
+
+        public static class XPath
+        {
+            public static class BuildStorage
+            {
+                public const string BuildAnchorConnection = $"//component[@class='{AttributeValue.Class.BuildModule}']//component[@class='{AttributeValue.Class.BuildProcessor}']//connection[@connection='{AttributeValue.Connection.BuildAnchor}']";
+                public const string BuildAnchorConnected =  $"{BuildAnchorConnection}/connected";
+            }
+            }
+        }
 }

@@ -17,7 +17,7 @@ internal partial class TradeControl : UserControl
     private const string ValueProperty = "Value";
     private const string WareAny = "Any";
 
-    private IEnumerable<TradeListItem> _items = [];
+    private IEnumerable<ITradeListItem> _items = [];
     private IFactionModel? _selectedSectorOwner;
     private IFactionModel? _selectedStationOwner;
     private string? _selectedWare;
@@ -79,7 +79,7 @@ internal partial class TradeControl : UserControl
         DoRefresh();
     }
 
-    private void LoadFactionDataSource(ComboBox target, string anyText, Func<TradeListItem, IFactionModel> selector)
+    private void LoadFactionDataSource(ComboBox target, string anyText, Func<ITradeListItem, IFactionModel> selector)
     {
         var data = _items
                           .Select(selector)
@@ -196,7 +196,7 @@ internal partial class TradeControl : UserControl
     /// Gets or sets the trade offers to be displayed in the control.
     /// </summary>
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    internal IEnumerable<TradeListItem> Items
+    internal IEnumerable<ITradeListItem> Items
     {
         get
         {

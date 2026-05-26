@@ -86,6 +86,7 @@ public static class Bootstrap
         // Data parsers
         servicesCollection.AddTransient<IDataParser, X4.Parser.DataParser>();
         servicesCollection.AddTransient<IDataParser<IAmmunitionItemData>, AmmunitionItemDataParser>();
+        servicesCollection.AddTransient<IDataParser<IBuildStorageData>, BuildStorageDataParser>();
         servicesCollection.AddTransient<IDataParser<ICargoData>, CargoDataParser>();
         servicesCollection.AddTransient<IDataParser<ICollectableAmmoData>, CollectableAmmoDataParser>();
         servicesCollection.AddTransient<IDataParser<ICollectableWareData>, CollectableWareDataParser>();
@@ -102,6 +103,7 @@ public static class Bootstrap
         servicesCollection.AddTransient<IDataParser<IZoneData>, ZoneDataParser>();
 
         // Model parsers
+        servicesCollection.AddTransient<IModelParser<IBuildStorageData, IBuildStorageModel>, BuildStorageModelParser>();
         servicesCollection.AddTransient<IModelParser<ICollectableAmmoData, ICollectableDropModelList>, CollectableDropAmmoModelParser>();
         servicesCollection.AddTransient<IModelParser<ICollectableWareData, ICollectableDropModelList>, CollectableDropWareModelParser>();
         servicesCollection.AddTransient<IModelParser<IEnumerable<IWareItemData>, ICargoItemModelList>, CargoItemModelListParser>();
@@ -130,6 +132,7 @@ public static class Bootstrap
         servicesCollection.AddTransient<IDataParser<ContentFileData>, ContentFileDataParser>();
 
         // General services
+        servicesCollection.AddTransient<IXDocumentWrapperFactory, XDocumentWrapperFactory>();
         servicesCollection.AddTransient<IXmlReaderWrapper, XmlReaderWrapper>();
         servicesCollection.AddTransient<IXmlReaderWrapperFactory, XmlReaderWrapperFactory>();
 

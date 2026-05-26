@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using Microsoft.Extensions.Logging;
 using MPL.X4.GameResources.Models;
+using MPL.X4.SaveGame.Data;
 
 namespace MPL.X4.SaveGame.Models;
 
@@ -12,8 +13,6 @@ internal class SaveGameModelParsingScope(
                                          ILogger<SaveGameModelParsingScope> logger)
     : ISaveGameModelParsingScope
 {
-    private ITransform3D _currentOffset = ITransform3D.GetDefault();
-
     IFactionModel ISaveGameModelParsingScope.ParseFaction(string source)
     {
         if (((ISaveGameModelParsingScope)this).GameResources?.Factions.TryGetValue(source, out var returnValue) == true)
@@ -51,11 +50,9 @@ internal class SaveGameModelParsingScope(
         return returnValue;
     }
 
-    ITransform3D ISaveGameModelParsingScope.CurrentOffset
-    {
-        get => _currentOffset;
-        set => _currentOffset = value;
-    }
+    IEnumerable<IBuildStorageData> ISaveGameModelParsingScope.CurrentBuildStorages { get; set; } = [];
+
+    ITransform3D ISaveGameModelParsingScope.CurrentOffset { get; set; } = ITransform3D.GetDefault();
 
     [AllowNull]
     IGameResourceModels ISaveGameModelParsingScope.GameResources { get; set; }

@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using MPL.X4.GameResources.Models;
+using MPL.X4.SaveGame.Data;
 
 namespace MPL.X4.SaveGame.Models;
 
@@ -30,6 +31,11 @@ internal interface ISaveGameModelParsingScope
     /// <param name="wareName">A nullable <see cref="string"/> that will be set to the result, or <see langword="null"/> if not found.</param>
     /// <returns>A <see cref="bool"/> indicating success.</returns>
     bool TryParseWareName(string source, [NotNullWhen(true)] out string? wareName);
+
+    /// <summary>
+    /// Gets or sets the current build storages.
+    /// </summary>
+    IEnumerable<IBuildStorageData> CurrentBuildStorages { get; set; }
 
     /// <summary>
     /// Gets or sets the current offset.

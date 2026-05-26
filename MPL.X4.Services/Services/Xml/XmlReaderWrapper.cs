@@ -7,9 +7,11 @@ namespace MPL.X4.Services.Xml;
 /// A class that implements a wrapper around a <see cref="XmlReader"/>.
 /// </summary>
 /// <param name="xmlReader">An <see cref="XmlReader"/> that is the Xml Reader being wrapped.</param>
-/// <param name="xmlReaderFactory">An <see cref="IXmlReaderWrapperFactory"/> that is the XmlReader factory to use.</param>
+/// <param name="xdocumentWrapperFactory">An <see cref="IXDocumentWrapperFactory"/> that is the XDocument wrapper factory to use.</param>
+/// <param name="xmlReaderFactory">An <see cref="IXmlReaderWrapperFactory"/> that is the XmlReader wrapper factory to use.</param>
 internal sealed class XmlReaderWrapper(
                                        XmlReader xmlReader,
+                                       IXDocumentWrapperFactory xdocumentWrapperFactory,
                                        IXmlReaderWrapperFactory xmlReaderFactory)
     : IXmlReaderWrapper
 {
@@ -68,6 +70,14 @@ internal sealed class XmlReaderWrapper(
         return returnValue;
     }
 
+    Task<IXDocumentWrapper> IXmlReaderWrapper.ReadSubtreeToXDocument()
+    {
+        // The caller is expected to dispose this once consumed
+        var subtree = xmlReader.ReadSubtree();
+        var reader = xmlReaderFactory.CreateXmlReader(subtree);
+        return xdocumentWrapperFactory.CreateInstance(reader);
+    }
+
     bool IXmlReaderWrapper.TryGetAttribute(string name, Func<string, bool> predicate, [NotNullWhen(true)] out string? value)
     {
         value = null;
@@ -123,4 +133,6 @@ internal sealed class XmlReaderWrapper(
     string IXmlReaderWrapper.Name => xmlReader.Name;
 
     XmlNodeType IXmlReaderWrapper.NodeType => xmlReader.NodeType;
+
+    XmlReader IXmlReaderWrapper.SourceReader => xmlReader;
 }

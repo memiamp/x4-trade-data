@@ -6,6 +6,11 @@
 public interface IStationModel : IHasIsKnown, IHasOwner, IHasTransform, IModelWithId
 {
     /// <summary>
+    /// Gets the build storage for this station.
+    /// </summary>
+    IBuildStorageModel? BuildStorage { get; }
+
+    /// <summary>
     /// Gets the code of the station.
     /// </summary>
     string Code { get; }

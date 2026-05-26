@@ -11,6 +11,16 @@ public interface IStationData : IHasIsKnown, IHasState, IHasTransform
     ITextResourceReference? BaseNameResource { get; }
 
     /// <summary>
+    /// Gets the building module connection identifier for this station.
+    /// </summary>
+    string? BuildingModuleConnectionId { get; }
+
+    /// <summary>
+    /// Gets the building module identifier for this station.
+    /// </summary>
+    string? BuildingModuleId { get; }
+
+    /// <summary>
     /// Gets the code of the station.
     /// </summary>
     string Code { get; }

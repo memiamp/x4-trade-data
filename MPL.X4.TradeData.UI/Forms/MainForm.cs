@@ -189,7 +189,7 @@ internal partial class MainForm : Form
                                   .Sectors
                                   .SelectMany(se => se.Stations
                                                                .SelectMany(st => st.Trades
-                                                                                          .Select(t => new TradeListItem(se, st, t))));
+                                                                                          .Select(t => new StationTradeListItem(se, st, t))));
 
             TradeControl.Items = trades;
         }

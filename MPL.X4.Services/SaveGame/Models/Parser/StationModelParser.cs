@@ -18,27 +18,47 @@ internal class StationModelParser(
 {
     private protected override IStationModel OnParse(IStationData source)
     {
+        var isWreck = source.State == Constants.XmlDataFile.AttributeValue.State.Wreck;
         var owner = parsingScope.ParseFaction(source.Owner);
         var productions = modelParser.Parse<IEnumerable<string>, IProductionModelList>(source.Productions);
         var trades = modelParser.Parse<IEnumerable<ITradeData>, ITradeModelList>(source.Trades);
         var transform = source.Transform.Add(parsingScope.CurrentOffset);
 
+        var buildStorage = ParseBuildStorage(source);
+
         var name = ParseName(source, owner.Name, productions);
 
         return new StationModel
         {
+            BuildStorage = buildStorage,
             Code = source.Code,
             IsAbandoned = owner.IsOwnerless,
             IsKnown = source.IsKnown,
             Id = source.Id,
             IsUnderConstruction = source.State == Constants.XmlDataFile.AttributeValue.State.Construction,
-            IsWreck = source.State == Constants.XmlDataFile.AttributeValue.State.Wreck,
+            IsWreck = isWreck,
             Name = name,
             Owner = owner,
             Productions = productions,
             Trades = trades,
             Transform = transform,
         };
+    }
+
+    private IBuildStorageModel? ParseBuildStorage(IStationData source)
+    {
+        var buildStorage = parsingScope
+                                       .CurrentBuildStorages
+                                       .FirstOrDefault(x => x.BuildAnchorConnectionId == source.BuildingModuleId &&
+                                                            x.BuildAnchorId == source.BuildingModuleConnectionId);
+
+        if (buildStorage is null)
+        {
+            Logger.LogInformation("Build storage could not be located for station code {StationCode}", source.Code);
+            return null;
+        }
+
+        return modelParser.Parse<IBuildStorageData, IBuildStorageModel>(buildStorage);
     }
 
     private string ParseName(IStationData source, string ownerName, IProductionModelList productions)

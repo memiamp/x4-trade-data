@@ -6,6 +6,11 @@
 public interface IZoneData : IHasTransform
 {
     /// <summary>
+    /// Gets the build storages in the zone.
+    /// </summary>
+    IEnumerable<IBuildStorageData> BuildStorages { get; }
+
+    /// <summary>
     /// Gets the code of the zone.
     /// </summary>
     string Code { get; }

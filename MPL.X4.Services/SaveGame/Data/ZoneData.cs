@@ -8,6 +8,8 @@ internal class ZoneData : HasTransformBase, IZoneData
     public override string ToString()
         => $"{Code} {Transform} - Gates {Gates.Count()} Lockboxes {Lockboxes.Count()} Ships {Ships.Count()} Stations {Stations.Count()} - {Id}";
 
+    public required IEnumerable<IBuildStorageData> BuildStorages { get; init; }
+   
     public required string Code { get; init; }
 
     public required IEnumerable<ICollectableAmmoData> CollectableAmmos { get; init; }

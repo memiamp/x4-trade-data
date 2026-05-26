@@ -10,6 +10,10 @@ internal class StationData : HasTransformBase, IStationData
 
     public required ITextResourceReference? BaseNameResource { get; init; }
 
+    public required string? BuildingModuleConnectionId { get; init; }
+
+    public required string? BuildingModuleId { get; init; }
+
     public required string Code { get; init; }
 
     public required int DefenceModuleCount { get; init; }

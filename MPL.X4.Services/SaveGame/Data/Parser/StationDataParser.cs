@@ -5,7 +5,13 @@ using MPL.X4.Services.Xml;
 
 namespace MPL.X4.SaveGame.Data.Parser;
 
+using BuildProcessorElements = (
+                                string? BuildModuleId,
+                                string? BuildModuleConnectionId);
+
 using StationElements = (
+                         string? BuildModuleId,
+                         string? BuildModuleConnectionId,
                          int DefenceModuleCount,
                          IEnumerable<string> Productions,
                          IEnumerable<ITradeData> Trades,
@@ -41,11 +47,13 @@ internal class StationDataParser(
 
         ParseNames(reader, out var baseNameResource, out var name, out var nameIndex, out var nameResource);
 
-        var (defenceModuleCount, productions, trades, transform) = await ParseElements(reader);
+        var (buildModuleId, buildModuleConnectionId, defenceModuleCount, productions, trades, transform) = await ParseElements(reader);
 
         return new StationData
         {
             BaseNameResource = baseNameResource,
+            BuildingModuleConnectionId = buildModuleConnectionId,
+            BuildingModuleId = buildModuleId,
             Code = code,
             DefenceModuleCount = defenceModuleCount,
             Id = id,
@@ -62,8 +70,27 @@ internal class StationDataParser(
         };
     }
 
-    private static async Task<StationModuleElements> ParseConnections(IXmlReaderWrapper reader)
+    private static async Task<BuildProcessorElements> ParseBuildingModule(IXmlReaderWrapper reader)
     {
+        string? buildModuleConnectionId = null;
+
+        reader.TryGetAttribute(Constants.XmlDataFile.AttributeName.BuildingModuleId, out string? buildModuleId);
+        while (await reader.ReadAsync())
+        {
+            if (reader.CheckNodeMatches(Constants.XmlDataFile.ElementName.Connected, XmlNodeType.Element, 1) &&
+                reader.TryGetAttribute(Constants.XmlDataFile.AttributeName.Connection, out buildModuleConnectionId))
+            {
+                break;
+            }
+        }
+
+        return (buildModuleId, buildModuleConnectionId);
+    }
+
+    private static async Task<(BuildProcessorElements, StationModuleElements)> ParseConnections(IXmlReaderWrapper reader)
+    {
+        string? buildModuleConnectionId = null;
+        string? buildModuleId = null;
         int defenceModuleCount = 0;
         List<string> productions = [];
 
@@ -71,20 +98,31 @@ internal class StationDataParser(
         {
             if (reader.CheckNodeMatches(Constants.XmlDataFile.ElementName.Connection, XmlNodeType.Element, 1))
             {
-                using var subtree = await reader.ReadSubtree();
+                if (reader.TryGetAttribute(Constants.XmlDataFile.AttributeName.Connection, x => x == Constants.XmlDataFile.AttributeValue.Connection.BuildingModule))
+                {
+                    using var subtree = await reader.ReadSubtree();
 
-                var (newDefenceModuleCount, newProductions) = await ParseModules(subtree);
+                    (buildModuleId, buildModuleConnectionId) = await ParseBuildingModule(subtree);
+                }
+                else
+                {
+                    using var subtree = await reader.ReadSubtree();
 
-                defenceModuleCount += newDefenceModuleCount;
-                productions.AddRange(newProductions);
+                    var (newDefenceModuleCount, newProductions) = await ParseModules(subtree);
+
+                    defenceModuleCount += newDefenceModuleCount;
+                    productions.AddRange(newProductions);
+                }
             }
         }
 
-        return (defenceModuleCount, productions);
+        return ((buildModuleId, buildModuleConnectionId), (defenceModuleCount, productions));
     }
 
     private async Task<StationElements> ParseElements(IXmlReaderWrapper reader)
     {
+        string? buildModuleConnectionId = null;
+        string? buildModuleId = null;
         int defenceModuleCount = 0;
         IEnumerable<string> productions = [];
         List<ITradeData> trades = [];
@@ -102,7 +140,7 @@ internal class StationDataParser(
             {
                 using var subtree = await reader.ReadSubtree();
 
-                (defenceModuleCount, productions) = await ParseConnections(subtree);
+                ((buildModuleId, buildModuleConnectionId), (defenceModuleCount, productions)) = await ParseConnections(subtree);
             }
             else if (reader.CheckNodeMatches(Constants.XmlDataFile.ElementName.Trade, XmlNodeType.Element, 1))
             {
@@ -113,7 +151,7 @@ internal class StationDataParser(
             }
         }
 
-        return (defenceModuleCount, productions, trades, transform);
+        return (buildModuleId, buildModuleConnectionId, defenceModuleCount, productions, trades, transform);
     }
 
     private static async Task<StationModuleElements> ParseModules(IXmlReaderWrapper reader)

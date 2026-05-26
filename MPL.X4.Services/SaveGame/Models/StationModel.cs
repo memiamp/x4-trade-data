@@ -10,6 +10,8 @@ internal class StationModel : ModelWithIdBase, IStationModel
     public override string ToString()
         => $"{Name} {Owner} - IsKnown {IsKnown} - {Id}";
 
+    public required IBuildStorageModel? BuildStorage { get; init; }
+
     public required string Code { get; init; }
 
     public required bool IsAbandoned { get; init; }

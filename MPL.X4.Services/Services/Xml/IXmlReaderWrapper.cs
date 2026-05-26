@@ -58,6 +58,12 @@ public interface IXmlReaderWrapper : IDisposable
     Task<IXmlReaderWrapper> ReadSubtree(bool moveToFirstElement = true);
 
     /// <summary>
+    /// Reads the subtree from the current node into a new <see cref="IXDocumentWrapper"/>.
+    /// </summary>
+    /// <returns>A <see cref="Task{TResult}"/> representing the asynchronous operation. An <see cref="IXDocumentWrapper"/> that is the result.</returns>
+    Task<IXDocumentWrapper> ReadSubtreeToXDocument();
+    
+    /// <summary>
     /// Tries to get an attribute with the specified <paramref name="name"/> that matches <paramref name="predicate"/>.
     /// </summary>
     /// <param name="name">A <see cref="string"/> that is the name of the attribute to try and get.</param>
@@ -112,4 +118,9 @@ public interface IXmlReaderWrapper : IDisposable
     /// Gets the type of the current node.
     /// </summary>
     XmlNodeType NodeType { get; }
+
+    /// <summary>
+    /// Gets the source reader.
+    /// </summary>
+    internal XmlReader SourceReader { get; }
 }

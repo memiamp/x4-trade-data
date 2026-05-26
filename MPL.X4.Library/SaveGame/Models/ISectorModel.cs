@@ -6,6 +6,11 @@
 public interface ISectorModel : IHasIsKnown, IHasOwner, IHasTransform, IModelWithId
 {
     /// <summary>
+    /// Gets the build storages in the sector.
+    /// </summary>
+    IBuildStorageModelList BuildStorages { get; }
+
+    /// <summary>
     /// Gets the code of the sector.
     /// </summary>
     string Code { get; }

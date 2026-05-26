@@ -10,6 +10,8 @@ internal class SectorModel : ModelWithIdBase, ISectorModel
     public override string ToString()
         => $"{Name} {Owner} {Code} - IsKnown {IsKnown} - {Id}";
 
+    public required IBuildStorageModelList BuildStorages { get; init; }
+
     public required string Code { get; init; }
 
     public required ICollectableDropModelList CollectableDrops { get; init; }
