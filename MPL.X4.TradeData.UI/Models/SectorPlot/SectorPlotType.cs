@@ -16,6 +16,11 @@ internal enum SectorPlotType
     AmmoDrop,
 
     /// <summary>
+    /// The plot item is a build storage.
+    /// </summary>
+    BuildStorage,
+
+    /// <summary>
     /// The plot item is a jump gate.
     /// </summary>
     JumpGate,

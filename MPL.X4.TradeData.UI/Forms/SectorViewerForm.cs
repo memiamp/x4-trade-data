@@ -35,7 +35,7 @@ internal partial class SectorViewerForm : Form
     private void Initialise()
     {
         // Event handlers
-        this.Load += SectorViewerForm_Load;
+        Load += SectorViewerForm_Load;
     }
 
     private void LoadSectorData()
@@ -43,24 +43,28 @@ internal partial class SectorViewerForm : Form
         SectorPlot.Clear();
 
         SectorPlot.AddRange(_sector?
-                                    .CollectableDrops
-                                    .Select(x => new DropPlot(x)));
-
-        SectorPlot.AddRange(_sector?
                                     .Gates
                                     .Select(x => new GatePlot(x)));
 
         SectorPlot.AddRange(_sector?
-                                    .Lockboxes
-                                    .Select(x => new LockboxPlot(x)));
+                                    .Stations
+                                    .Select(x => new StationPlot(x)));
 
         SectorPlot.AddRange(_sector?
                                     .Ships
                                     .Select(x => new ShipPlot(x)));
 
         SectorPlot.AddRange(_sector?
-                                    .Stations
-                                    .Select(x => new StationPlot(x)));
+                                    .CollectableDrops
+                                    .Select(x => new DropPlot(x)));
+
+        SectorPlot.AddRange(_sector?
+                                    .Lockboxes
+                                    .Select(x => new LockboxPlot(x)));
+
+        SectorPlot.AddRange(_sector?
+                                    .BuildStorages
+                                    .Select(x => new BuildStoragePlot(x)));
 
         SectorPlot.ResetView();
 

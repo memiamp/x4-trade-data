@@ -54,6 +54,7 @@ internal static class Constants
     /// </summary>
     internal static class SpecialItemTypes
     {
+        internal static string BuildStorage = "Build Storage";
         internal static string Lockbox = "Lockbox";
         internal static string ShipExtraLarge = "Extra large ship";
         internal static string ShipExtraSmall = "Extra small ship";

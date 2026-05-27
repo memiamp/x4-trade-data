@@ -1,7 +1,5 @@
-﻿using System.ComponentModel;
-using System.Drawing.Drawing2D;
+﻿using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
-using MPL.X4.TradeData.UI.Models;
 using MPL.X4.TradeData.UI.Models.SectorPlot;
 
 namespace MPL.X4.TradeData.UI.Controls;
@@ -318,6 +316,7 @@ internal class PlotControl : Panel
         MouseWheel += OnMouseWheel;
 
         _iconCache[SectorPlotType.AmmoDrop] = MapIcons.Icon_CollectableAmmo;
+        _iconCache[SectorPlotType.BuildStorage] = MapIcons.Icon_BuildStorage;
         _iconCache[SectorPlotType.JumpGate] = MapIcons.Icon_JumpGate;
         _iconCache[SectorPlotType.Lockbox] = MapIcons.Icon_Lockbox;
         _iconCache[SectorPlotType.Ship] = MapIcons.Icon_Ship;

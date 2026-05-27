@@ -1,6 +1,4 @@
-﻿using MPL.X4.GameResources.Models;
-
-namespace MPL.X4.TradeData.UI.Models.SectorPlot;
+﻿namespace MPL.X4.TradeData.UI.Models.SectorPlot;
 
 /// <summary>
 /// An interface that defines an item that can be plotted in a sector.

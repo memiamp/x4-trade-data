@@ -35,25 +35,27 @@
             SectorListView_LockBoxes = new ColumnHeader();
             SectorListView_Ships = new ColumnHeader();
             SectorListView_Stations = new ColumnHeader();
+            SectorListView_Drops = new ColumnHeader();
+            SectorList_BuildStorages = new ColumnHeader();
             ViewSectorButton = new Button();
             NoItemsLabel = new Label();
             SectorOwnerComboBox = new ComboBox();
             SectorOwnerLabel = new Label();
             AbandonedShipsCheckBox = new CheckBox();
             LockboxesCheckBox = new CheckBox();
-            SectorListView_Drops = new ColumnHeader();
             DropsCheckBox = new CheckBox();
+            BuildStorageCheckBox = new CheckBox();
             SuspendLayout();
             // 
             // SectorListView
             // 
             SectorListView.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            SectorListView.Columns.AddRange(new ColumnHeader[] { SectorListView_Name, SectorListView_Owner, SectorListView_AbandonedShips, SectorListView_LockBoxes, SectorListView_Ships, SectorListView_Stations, SectorListView_Drops });
+            SectorListView.Columns.AddRange(new ColumnHeader[] { SectorListView_Name, SectorListView_Owner, SectorListView_AbandonedShips, SectorListView_LockBoxes, SectorListView_Ships, SectorListView_Stations, SectorListView_Drops, SectorList_BuildStorages });
             SectorListView.FullRowSelect = true;
             SectorListView.Location = new Point(0, 32);
             SectorListView.Name = "SectorListView";
             SectorListView.Size = new Size(985, 471);
-            SectorListView.TabIndex = 5;
+            SectorListView.TabIndex = 6;
             SectorListView.UseCompatibleStateImageBehavior = false;
             SectorListView.View = View.Details;
             // 
@@ -87,13 +89,23 @@
             SectorListView_Stations.Text = "Stations";
             SectorListView_Stations.TextAlign = HorizontalAlignment.Right;
             // 
+            // SectorListView_Drops
+            // 
+            SectorListView_Drops.Text = "Drops";
+            SectorListView_Drops.TextAlign = HorizontalAlignment.Right;
+            // 
+            // SectorList_BuildStorages
+            // 
+            SectorList_BuildStorages.Text = "Build Storages";
+            SectorList_BuildStorages.TextAlign = HorizontalAlignment.Right;
+            // 
             // ViewSectorButton
             // 
             ViewSectorButton.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
             ViewSectorButton.Location = new Point(892, 509);
             ViewSectorButton.Name = "ViewSectorButton";
             ViewSectorButton.Size = new Size(90, 23);
-            ViewSectorButton.TabIndex = 6;
+            ViewSectorButton.TabIndex = 7;
             ViewSectorButton.Text = "View Sector";
             ViewSectorButton.UseVisualStyleBackColor = true;
             // 
@@ -104,7 +116,7 @@
             NoItemsLabel.Location = new Point(0, 0);
             NoItemsLabel.Name = "NoItemsLabel";
             NoItemsLabel.Size = new Size(985, 30);
-            NoItemsLabel.TabIndex = 7;
+            NoItemsLabel.TabIndex = 8;
             NoItemsLabel.Text = "No sectors are currently loaded.";
             NoItemsLabel.TextAlign = ContentAlignment.MiddleCenter;
             // 
@@ -138,32 +150,38 @@
             // LockboxesCheckBox
             // 
             LockboxesCheckBox.AutoSize = true;
-            LockboxesCheckBox.Location = new Point(542, 5);
+            LockboxesCheckBox.Location = new Point(649, 5);
             LockboxesCheckBox.Name = "LockboxesCheckBox";
             LockboxesCheckBox.Size = new Size(82, 19);
-            LockboxesCheckBox.TabIndex = 4;
+            LockboxesCheckBox.TabIndex = 5;
             LockboxesCheckBox.Text = "Lockboxes";
             LockboxesCheckBox.UseVisualStyleBackColor = true;
-            // 
-            // SectorListView_Drops
-            // 
-            SectorListView_Drops.Text = "Drops";
-            SectorListView_Drops.TextAlign = HorizontalAlignment.Right;
             // 
             // DropsCheckBox
             // 
             DropsCheckBox.AutoSize = true;
-            DropsCheckBox.Location = new Point(479, 5);
+            DropsCheckBox.Location = new Point(586, 5);
             DropsCheckBox.Name = "DropsCheckBox";
             DropsCheckBox.Size = new Size(57, 19);
-            DropsCheckBox.TabIndex = 3;
+            DropsCheckBox.TabIndex = 4;
             DropsCheckBox.Text = "Drops";
             DropsCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // BuildStorageCheckBox
+            // 
+            BuildStorageCheckBox.AutoSize = true;
+            BuildStorageCheckBox.Location = new Point(479, 5);
+            BuildStorageCheckBox.Name = "BuildStorageCheckBox";
+            BuildStorageCheckBox.Size = new Size(101, 19);
+            BuildStorageCheckBox.TabIndex = 3;
+            BuildStorageCheckBox.Text = "Build Storages";
+            BuildStorageCheckBox.UseVisualStyleBackColor = true;
             // 
             // SectorListControl
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
+            Controls.Add(BuildStorageCheckBox);
             Controls.Add(NoItemsLabel);
             Controls.Add(DropsCheckBox);
             Controls.Add(LockboxesCheckBox);
@@ -195,5 +213,7 @@
         private CheckBox LockboxesCheckBox;
         private ColumnHeader SectorListView_Drops;
         private CheckBox DropsCheckBox;
+        private ColumnHeader SectorList_BuildStorages;
+        private CheckBox BuildStorageCheckBox;
     }
 }

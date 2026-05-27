@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using MPL.X4.Parser;
 using MPL.X4.SaveGame.Data;
 

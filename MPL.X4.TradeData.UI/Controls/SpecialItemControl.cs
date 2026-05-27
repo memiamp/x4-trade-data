@@ -55,6 +55,7 @@ internal partial class SpecialItemControl : UserControl
     private static string GetSpecialItemType(SpecialItemType source)
         => source switch
         {
+            SpecialItemType.BuildStorage => Constants.SpecialItemTypes.BuildStorage,
             SpecialItemType.Lockbox => Constants.SpecialItemTypes.Lockbox,
             SpecialItemType.ShipExtraLarge => Constants.SpecialItemTypes.ShipExtraLarge,
             SpecialItemType.ShipExtraSmall => Constants.SpecialItemTypes.ShipExtraSmall,

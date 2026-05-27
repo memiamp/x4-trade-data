@@ -1,5 +1,4 @@
-﻿using MPL.X4.GameResources.Models;
-using MPL.X4.SaveGame.Models;
+﻿using MPL.X4.SaveGame.Models;
 
 namespace MPL.X4.TradeData.UI.Models.SectorPlot;
 

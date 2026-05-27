@@ -1,6 +1,4 @@
-﻿using MPL.X4.SaveGame.Models;
-
-namespace MPL.X4.TradeData.UI.Models.SpecialItem;
+﻿namespace MPL.X4.TradeData.UI.Models.SpecialItem;
 
 /// <summary>
 /// A class that implements the base functionality of a special item.

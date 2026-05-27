@@ -150,32 +150,82 @@ internal partial class MainForm : Form
             : [];
     }
 
-    private void UpdateSpecialItemsControl()
+    private void UpdateSpecialItemAbandonedBuildStorage(List<ISpecialItem> target)
     {
-        var items = new List<ISpecialItem>();
+        var items = _saveGame?
+                              .Universe
+                              .Sectors
+                              .SelectMany(sector => sector
+                                                          .BuildStorages
+                                                          .Select(x => new AbandonedBuildStorageSpecialItem(sector.Name, x)));
+        if (items?.Any() == true)
+        {
+            target.AddRange(items);
+        }
+    }
 
-        var ships = _saveGame?
+    private void UpdateSpecialItemAbandonedShips(List<ISpecialItem> target)
+    {
+        var items = _saveGame?
                               .Universe
                               .Sectors
                               .SelectMany(sector => sector
                                                           .Ships
                                                           .Where(x => x.CanBeCaptured)
                                                           .Select(x => new AbandonedShipSpecialItem(sector.Name, x)));
-        if (ships?.Any() == true)
+        if (items?.Any() == true)
         {
-            items.AddRange(ships);
+            target.AddRange(items);
         }
+    }
 
-        var lockboxes = _saveGame?
-                                  .Universe
-                                  .Sectors
-                                  .SelectMany(sector => sector
-                                                              .Lockboxes
-                                                              .Select(x => new LockboxSpecialItem(sector.Name, x)));
-        if (lockboxes?.Any() == true)
+    private void UpdateSpecialItemLockboxes(List<ISpecialItem> target)
+    {
+        var items = _saveGame?
+                              .Universe
+                              .Sectors
+                              .SelectMany(sector => sector
+                                                          .Lockboxes
+                                                          .Select(x => new LockboxSpecialItem(sector.Name, x)));
+        if (items?.Any() == true)
         {
-            items.AddRange(lockboxes);
+            target.AddRange(items);
         }
+    }
+
+    private void UpdateSpecialItemTopBuildStorage(List<ISpecialItem> target)
+    {
+        int n = 10;
+
+        var items = _saveGame?
+                              .Universe
+                              .Sectors
+                              .SelectMany(sector => sector.Stations.Select(station => new
+                              {
+                                  SectorName = sector.Name,
+                                  station.BuildStorage,
+                                  TotalAmount = station.BuildStorage?.Cargo.Sum(c => c.Amount) ?? 0,
+                                  WareCount = station.BuildStorage?.Cargo.Count ?? 0
+                              }))
+                              .Where(x => x.BuildStorage is not null)
+                              .OrderByDescending(x => x.TotalAmount)
+                              .ThenBy(x => x.WareCount)
+                              .Take(n)
+                              .Select(x => new TopBuildStorageSpecialItem(x.SectorName, x.BuildStorage!));
+        if (items?.Any() == true)
+        {
+            target.AddRange(items);
+        }
+    }
+
+    private void UpdateSpecialItemsControl()
+    {
+        var items = new List<ISpecialItem>();
+
+        UpdateSpecialItemAbandonedBuildStorage(items);
+        UpdateSpecialItemAbandonedShips(items);
+        UpdateSpecialItemLockboxes(items);
+        UpdateSpecialItemTopBuildStorage(items);
 
         SpecialItemControl.Items = items;
     }

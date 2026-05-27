@@ -3,11 +3,11 @@
 namespace MPL.X4.TradeData.UI.Models.SectorPlot;
 
 /// <summary>
-/// A class that implements a sector plot for a <see cref="IStationModel"/>.
+/// A class that implements a sector plot for a <see cref="IBuildStorageModel"/>.
 /// </summary>
-/// <param name="item">An <see cref="IStationModel"/> to be plotted.</param>
-internal class StationPlot(
-                           IStationModel item)
+/// <param name="item">An <see cref="IBuildStorageModel"/> to be plotted.</param>
+internal class BuildStoragePlot(
+                                IBuildStorageModel item)
     : ISectorPlot
 {
     Color ISectorPlot.Colour
@@ -17,9 +17,9 @@ internal class StationPlot(
             _ => item.Owner.Colour.Colour
         };
 
-    string ISectorPlot.Name => item.Name;
+    string ISectorPlot.Name => item.Code;
 
-    SectorPlotType ISectorPlot.Type => SectorPlotType.Station;
+    SectorPlotType ISectorPlot.Type => SectorPlotType.BuildStorage;
 
     double ISectorPlot.X => item.Transform.Position.X;
 

@@ -11,6 +11,11 @@ public enum SpecialItemType
     Unknown = 0,
 
     /// <summary>
+    /// The special item is a build storage.
+    /// </summary>
+    BuildStorage,
+
+    /// <summary>
     /// The special item is a lockbox.
     /// </summary>
     Lockbox,
