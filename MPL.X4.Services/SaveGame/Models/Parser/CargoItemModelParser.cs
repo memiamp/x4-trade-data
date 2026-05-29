@@ -16,13 +16,17 @@ internal class CargoItemModelParser(
 {
     private protected override ICargoItemModel OnParse(IWareItemData source)
     {
-        var name = parsingScope.ParseWareName(source.Ware);
+        var ware = parsingScope.GameResources.Wares.GetValue(source.Ware);
+
+        var name = ware.Name;
+        var value = source.Amount * ware.PriceAverage;
 
         return new CargoItemModel
         {
             Amount = source.Amount,
             Id = source.Ware,
-            Name = name
+            Name = name,
+            Value = value
         };
     }
 }

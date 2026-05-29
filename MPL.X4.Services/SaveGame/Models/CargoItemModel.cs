@@ -11,4 +11,6 @@ internal class CargoItemModel : ModelWithIdBase, ICargoItemModel
     public required int Amount { get; init; }
 
     public required string Name { get; init; }
+
+    public required int Value { get; init; }
 }

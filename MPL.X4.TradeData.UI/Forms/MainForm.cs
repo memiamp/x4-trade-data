@@ -1,7 +1,6 @@
 using Microsoft.Extensions.Logging;
 using MPL.X4.SaveGame.Models;
 using MPL.X4.TradeData.UI.Controls;
-using MPL.X4.TradeData.UI.Models.SpecialItem;
 using MPL.X4.TradeData.UI.Models.Trade;
 using MPL.X4.TradeData.UI.Services;
 
@@ -19,6 +18,7 @@ internal partial class MainForm : Form
     private readonly ILogger _logger;
     private readonly OptionsForm _optionsForm;
     private readonly ISaveGameFileSystemMonitor _saveGameFileSystemMonitor;
+    private readonly ISpecialItemDataProvider _specialItemDataProvider;
 
     private ISaveGameModels? _saveGame;
 
@@ -34,18 +34,21 @@ internal partial class MainForm : Form
     /// <param name="logger">An <see cref="ILogger{TCategoryName}"/> that is the logger to use.</param>
     /// <param name="optionsForm">A <see cref="OptionsForm"/> that is the options form to use.</param>
     /// <param name="saveGameFileSystemMonitor">An <see cref="ISaveGameFileSystemMonitor"/> that is the save game file system monitor to use.</param>
+    /// <param name="specialItemDataProvider">An <see cref="ISpecialItemDataProvider"/> that is the special item data provider to use.</param>
     public MainForm(
                     DebugForm debugForm,
                     IGameDataService gameDataService,
                     ILogger<MainForm> logger,
                     OptionsForm optionsForm,
-                    ISaveGameFileSystemMonitor saveGameFileSystemMonitor)
+                    ISaveGameFileSystemMonitor saveGameFileSystemMonitor,
+                    ISpecialItemDataProvider specialItemDataProvider)
     {
         _debugForm = debugForm;
         _gameDataService = gameDataService;
         _logger = logger;
         _optionsForm = optionsForm;
         _saveGameFileSystemMonitor = saveGameFileSystemMonitor;
+        _specialItemDataProvider = specialItemDataProvider;
 
         InitializeComponent();
         Initialise();
@@ -73,6 +76,7 @@ internal partial class MainForm : Form
         Load += async (sender, e) => await LoadData();
         SectorListControl.ViewSectorRequest += SectorListControl_ViewSectorRequest;
         _saveGameFileSystemMonitor.SaveGameFileUpdated += SaveGameFileSystemMonitor_SaveGameFileUpdated;
+        SpecialItemControl.DataProvider = _specialItemDataProvider;
         ToolMenu_Options.Click += ToolMenu_Options_Click;
 
         _debugForm.Show();
@@ -150,84 +154,10 @@ internal partial class MainForm : Form
             : [];
     }
 
-    private void UpdateSpecialItemAbandonedBuildStorage(List<ISpecialItem> target)
-    {
-        var items = _saveGame?
-                              .Universe
-                              .Sectors
-                              .SelectMany(sector => sector
-                                                          .BuildStorages
-                                                          .Select(x => new AbandonedBuildStorageSpecialItem(sector.Name, x)));
-        if (items?.Any() == true)
-        {
-            target.AddRange(items);
-        }
-    }
-
-    private void UpdateSpecialItemAbandonedShips(List<ISpecialItem> target)
-    {
-        var items = _saveGame?
-                              .Universe
-                              .Sectors
-                              .SelectMany(sector => sector
-                                                          .Ships
-                                                          .Where(x => x.CanBeCaptured)
-                                                          .Select(x => new AbandonedShipSpecialItem(sector.Name, x)));
-        if (items?.Any() == true)
-        {
-            target.AddRange(items);
-        }
-    }
-
-    private void UpdateSpecialItemLockboxes(List<ISpecialItem> target)
-    {
-        var items = _saveGame?
-                              .Universe
-                              .Sectors
-                              .SelectMany(sector => sector
-                                                          .Lockboxes
-                                                          .Select(x => new LockboxSpecialItem(sector.Name, x)));
-        if (items?.Any() == true)
-        {
-            target.AddRange(items);
-        }
-    }
-
-    private void UpdateSpecialItemTopBuildStorage(List<ISpecialItem> target)
-    {
-        int n = 10;
-
-        var items = _saveGame?
-                              .Universe
-                              .Sectors
-                              .SelectMany(sector => sector.Stations.Select(station => new
-                              {
-                                  SectorName = sector.Name,
-                                  station.BuildStorage,
-                                  TotalAmount = station.BuildStorage?.Cargo.Sum(c => c.Amount) ?? 0,
-                                  WareCount = station.BuildStorage?.Cargo.Count ?? 0
-                              }))
-                              .Where(x => x.BuildStorage is not null)
-                              .OrderByDescending(x => x.TotalAmount)
-                              .ThenBy(x => x.WareCount)
-                              .Take(n)
-                              .Select(x => new TopBuildStorageSpecialItem(x.SectorName, x.BuildStorage!));
-        if (items?.Any() == true)
-        {
-            target.AddRange(items);
-        }
-    }
-
     private void UpdateSpecialItemsControl()
     {
-        var items = new List<ISpecialItem>();
-
-        UpdateSpecialItemAbandonedBuildStorage(items);
-        UpdateSpecialItemAbandonedShips(items);
-        UpdateSpecialItemLockboxes(items);
-        UpdateSpecialItemTopBuildStorage(items);
-
-        SpecialItemControl.Items = items;
+        _specialItemDataProvider.SaveGame = _saveGame;
+        SpecialItemControl.LoadData();
     }
 
     private void UpdateTradeControl()

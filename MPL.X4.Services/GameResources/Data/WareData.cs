@@ -18,6 +18,12 @@ internal class WareData : IWareData
 
     public required ITextResourceReference? NameResource { get; init; }
 
+    public required int PriceAverage { get; init; }
+
+    public required int PriceMaximum { get; init; }
+
+    public required int PriceMinimum { get; init; }
+
     public required string Transport { get; init; }
 
     public required int Volume { get; init; }

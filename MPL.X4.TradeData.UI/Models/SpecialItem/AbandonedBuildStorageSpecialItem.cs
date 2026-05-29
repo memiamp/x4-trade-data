@@ -12,7 +12,9 @@ internal class AbandonedBuildStorageSpecialItem(
                                                 IBuildStorageModel source)
     : BuildStorageSpecialItemBase(sectorName, source)
 {
-    private readonly string _description = $"Abandoned, {source.Cargo.Sum(x => x.Amount)}";
+    private readonly string _description = $"Abandoned - {source.Cargo.TotalValue:#,##0}c ({source.Owner.Acronym})";
+
+    public override Color Colour => Constants.Colours.ImportantLess;
 
     public override string Description => _description;
 }

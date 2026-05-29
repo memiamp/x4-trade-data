@@ -108,6 +108,7 @@ public static class Constants
         public static class AttributeName
         {
             public const string Amount = "amount";
+            public const string Average = "average";
             public const string BaseName = "basename";
             public const string BoostAcceleration = "boostacc";
             public const string BuildAnchorId = "id";
@@ -149,7 +150,9 @@ public static class Constants
             public const string Macro = "macro";
             public const string MappingId = "id";
             public const string Mass = "mass";
+            public const string Maximum = "max";
             public const string MaximumHull = "maxhull";
+            public const string Minimum = "min";
             public const string Mining = "mining";
             public const string MissileCapacity = "missilecapacity";
             public const string Name = "name";
@@ -295,6 +298,7 @@ public static class Constants
             public const string Page = "page";
             public const string Paint = "paint";
             public const string Position = "position";
+            public const string Price = "price";
             public const string Production = "production";
             public const string Quaternion = "quaternion";
             public const string Queue = "queue";

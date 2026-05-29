@@ -37,6 +37,12 @@
             SpecialItemListView_PositionZ = new ColumnHeader();
             SpecialItemListView_Comments = new ColumnHeader();
             NoItemsLabel = new Label();
+            BuildStorageAbandonedCheckBox = new CheckBox();
+            AbandonedShipCheckBox = new CheckBox();
+            LockboxCheckBox = new CheckBox();
+            BuildStorageTopCheckBox = new CheckBox();
+            BuildStorageTopNumericUpDown = new NumericUpDown();
+            ((System.ComponentModel.ISupportInitialize)BuildStorageTopNumericUpDown).BeginInit();
             SuspendLayout();
             // 
             // SpecialItemListView
@@ -44,10 +50,10 @@
             SpecialItemListView.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             SpecialItemListView.Columns.AddRange(new ColumnHeader[] { SpecialItemListView_ItemType, SpecialItemListView_Description, SpecialItemListView_Sector, SpecialItemListView_PositionX, SpecialItemListView_PositionY, SpecialItemListView_PositionZ, SpecialItemListView_Comments });
             SpecialItemListView.FullRowSelect = true;
-            SpecialItemListView.Location = new Point(0, 0);
+            SpecialItemListView.Location = new Point(0, 31);
             SpecialItemListView.Name = "SpecialItemListView";
-            SpecialItemListView.Size = new Size(997, 396);
-            SpecialItemListView.TabIndex = 11;
+            SpecialItemListView.Size = new Size(997, 365);
+            SpecialItemListView.TabIndex = 5;
             SpecialItemListView.UseCompatibleStateImageBehavior = false;
             SpecialItemListView.View = View.Details;
             // 
@@ -96,19 +102,76 @@
             NoItemsLabel.Location = new Point(0, 0);
             NoItemsLabel.Name = "NoItemsLabel";
             NoItemsLabel.Size = new Size(997, 30);
-            NoItemsLabel.TabIndex = 14;
+            NoItemsLabel.TabIndex = 6;
             NoItemsLabel.Text = "No special items are currently loaded.";
             NoItemsLabel.TextAlign = ContentAlignment.MiddleCenter;
+            // 
+            // BuildStorageAbandonedCheckBox
+            // 
+            BuildStorageAbandonedCheckBox.AutoSize = true;
+            BuildStorageAbandonedCheckBox.Location = new Point(3, 3);
+            BuildStorageAbandonedCheckBox.Name = "BuildStorageAbandonedCheckBox";
+            BuildStorageAbandonedCheckBox.Size = new Size(161, 19);
+            BuildStorageAbandonedCheckBox.TabIndex = 0;
+            BuildStorageAbandonedCheckBox.Text = "Abandoned Build Storage";
+            BuildStorageAbandonedCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // AbandonedShipCheckBox
+            // 
+            AbandonedShipCheckBox.AutoSize = true;
+            AbandonedShipCheckBox.Location = new Point(170, 3);
+            AbandonedShipCheckBox.Name = "AbandonedShipCheckBox";
+            AbandonedShipCheckBox.Size = new Size(114, 19);
+            AbandonedShipCheckBox.TabIndex = 1;
+            AbandonedShipCheckBox.Text = "Abandoned Ship";
+            AbandonedShipCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // LockboxCheckBox
+            // 
+            LockboxCheckBox.AutoSize = true;
+            LockboxCheckBox.Location = new Point(290, 3);
+            LockboxCheckBox.Name = "LockboxCheckBox";
+            LockboxCheckBox.Size = new Size(71, 19);
+            LockboxCheckBox.TabIndex = 2;
+            LockboxCheckBox.Text = "Lockbox";
+            LockboxCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // BuildStorageTopCheckBox
+            // 
+            BuildStorageTopCheckBox.AutoSize = true;
+            BuildStorageTopCheckBox.Location = new Point(367, 3);
+            BuildStorageTopCheckBox.Name = "BuildStorageTopCheckBox";
+            BuildStorageTopCheckBox.Size = new Size(118, 19);
+            BuildStorageTopCheckBox.TabIndex = 3;
+            BuildStorageTopCheckBox.Text = "Top Build Storage";
+            BuildStorageTopCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // BuildStorageTopNumericUpDown
+            // 
+            BuildStorageTopNumericUpDown.Location = new Point(491, 2);
+            BuildStorageTopNumericUpDown.Maximum = new decimal(new int[] { 20, 0, 0, 0 });
+            BuildStorageTopNumericUpDown.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
+            BuildStorageTopNumericUpDown.Name = "BuildStorageTopNumericUpDown";
+            BuildStorageTopNumericUpDown.Size = new Size(59, 23);
+            BuildStorageTopNumericUpDown.TabIndex = 4;
+            BuildStorageTopNumericUpDown.Value = new decimal(new int[] { 5, 0, 0, 0 });
             // 
             // SpecialItemControl
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             Controls.Add(NoItemsLabel);
+            Controls.Add(BuildStorageTopNumericUpDown);
+            Controls.Add(BuildStorageTopCheckBox);
+            Controls.Add(LockboxCheckBox);
+            Controls.Add(AbandonedShipCheckBox);
+            Controls.Add(BuildStorageAbandonedCheckBox);
             Controls.Add(SpecialItemListView);
             Name = "SpecialItemControl";
             Size = new Size(997, 396);
+            ((System.ComponentModel.ISupportInitialize)BuildStorageTopNumericUpDown).EndInit();
             ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
@@ -121,5 +184,10 @@
         private ColumnHeader SpecialItemListView_PositionZ;
         private Label NoItemsLabel;
         private ColumnHeader SpecialItemListView_Comments;
+        private CheckBox BuildStorageAbandonedCheckBox;
+        private CheckBox AbandonedShipCheckBox;
+        private CheckBox LockboxCheckBox;
+        private CheckBox BuildStorageTopCheckBox;
+        private NumericUpDown BuildStorageTopNumericUpDown;
     }
 }

@@ -32,6 +32,21 @@ public interface IWareData
     ITextResourceReference? NameResource { get; }
 
     /// <summary>
+    /// Gets the average price for the ware.
+    /// </summary>
+    int PriceAverage { get; }
+
+    /// <summary>
+    /// Gets the maximum price for the ware.
+    /// </summary>
+    int PriceMaximum { get; }
+
+    /// <summary>
+    /// Gets the minimum price for the ware.
+    /// </summary>
+    int PriceMinimum { get; }
+
+    /// <summary>
     /// Gets the transport mechanism of the ware.
     /// </summary>
     string Transport { get; }

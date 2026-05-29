@@ -16,6 +16,12 @@ internal class WareModel : ModelWithIdBase, IWareModel
 
     public required string Name { get; init; }
 
+    public required int PriceAverage { get; init; }
+
+    public required int PriceMaximum { get; init; }
+
+    public required int PriceMinimum { get; init; }
+
     public required string Transport { get; init; }
 
     public required WareType Type { get; init; }

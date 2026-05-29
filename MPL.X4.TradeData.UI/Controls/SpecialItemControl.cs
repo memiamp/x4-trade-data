@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using MPL.X4.TradeData.UI.Models.SpecialItem;
+using MPL.X4.TradeData.UI.Services;
 
 namespace MPL.X4.TradeData.UI.Controls;
 
@@ -10,7 +11,7 @@ internal partial class SpecialItemControl : UserControl
 {
     #region Declarations
 
-    private IEnumerable<ISpecialItem> _items = [];
+    private ISpecialItemDataProvider? _dataProvider;
 
     #endregion
 
@@ -31,10 +32,8 @@ internal partial class SpecialItemControl : UserControl
 
     private void DoRefresh()
     {
-        var displayNoItems = _items.Any() == false;
-
-        SpecialItemListView.Visible = !displayNoItems;
-        NoItemsLabel.Visible = displayNoItems;
+        NoItemsLabel.Visible = !(_dataProvider?.HasSaveGame == true);
+        SpecialItemListView.Visible = _dataProvider?.HasSaveGame == true;
     }
 
     private static ListViewItem GenerateListViewItem(ISpecialItem source)
@@ -67,33 +66,93 @@ internal partial class SpecialItemControl : UserControl
 
     private void Initialise()
     {
+        AbandonedShipCheckBox.Checked = true;
+        BuildStorageAbandonedCheckBox.Checked = true;
+        BuildStorageTopCheckBox.Checked = true;
+        LockboxCheckBox.Checked = true;
+
         // Event wireup
         Load += SpecialItemControl_Load;
+        AbandonedShipCheckBox.CheckedChanged += AbandonedShipCheckBox_CheckedChanged;
+        BuildStorageAbandonedCheckBox.CheckedChanged += BuildStorageAbandonedCheckBox_CheckedChanged;
+        BuildStorageTopCheckBox.CheckedChanged += BuildStorageTopCheckBox_CheckedChanged;
+        BuildStorageTopNumericUpDown.ValueChanged += BuildStorageTopNumericUpDown_ValueChanged;
+        LockboxCheckBox.CheckedChanged += LockboxCheckBox_CheckedChanged;
 
         DoRefresh();
     }
 
-    private void LoadSpecialItems()
+    internal void LoadData()
     {
-        var orderedItems = _items
-                                 .OrderBy(x => x.SectorName)
-                                 .ThenBy(x => x.Type)
-                                 .ThenBy(x => x.Description)
-                                 .Select(GenerateListViewItem);
+        var items = new List<ISpecialItem>();
 
-        SpecialItemListView.BeginUpdate();
+        if (_dataProvider is not null)
+        {
+            if (AbandonedShipCheckBox.Checked)
+            {
+                items.AddRange(_dataProvider.GetAbandonedShips());
+            }
 
-        SpecialItemListView.Items.Clear();
-        SpecialItemListView.Items.AddRange([.. orderedItems]);
+            if (BuildStorageAbandonedCheckBox.Checked)
+            {
+                items.AddRange(_dataProvider.GetAbandonedBuildStorages());
+            }
 
-        SpecialItemListView.EndUpdate();
-   
+            if (BuildStorageTopCheckBox.Checked)
+            {
+                items.AddRange(_dataProvider.GetTopBuildStorages((int)BuildStorageTopNumericUpDown.Value));
+            }
+
+            if (LockboxCheckBox.Checked)
+            {
+                items.AddRange(_dataProvider.GetLockboxes());
+            }
+
+            var orderedItems = items
+                                    .OrderBy(x => x.SectorName)
+                                    .ThenBy(x => x.Type)
+                                    .ThenBy(x => x.Description)
+                                    .Select(GenerateListViewItem);
+
+            SpecialItemListView.BeginUpdate();
+
+            SpecialItemListView.Items.Clear();
+            SpecialItemListView.Items.AddRange([.. orderedItems]);
+
+            SpecialItemListView.EndUpdate();
+        }
+
         DoRefresh();
     }
 
     #endregion
 
     #region Event Handlers
+
+    private void AbandonedShipCheckBox_CheckedChanged(object? sender, EventArgs e)
+    {
+        LoadData();
+    }
+
+    private void BuildStorageAbandonedCheckBox_CheckedChanged(object? sender, EventArgs e)
+    {
+        LoadData();
+    }
+
+    private void BuildStorageTopCheckBox_CheckedChanged(object? sender, EventArgs e)
+    {
+        LoadData();
+    }
+
+    private void BuildStorageTopNumericUpDown_ValueChanged(object? sender, EventArgs e)
+    {
+        LoadData();
+    }
+
+    private void LockboxCheckBox_CheckedChanged(object? sender, EventArgs e)
+    {
+        LoadData();
+    }
 
     private void SpecialItemControl_Load(object? sender, EventArgs e)
     {
@@ -105,20 +164,20 @@ internal partial class SpecialItemControl : UserControl
     #region Properties
 
     /// <summary>
-    /// Gets or sets the items to be displayed in the control.
+    /// Gets or sets the data provider for the control.
     /// </summary>
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    internal IEnumerable<ISpecialItem> Items
+    internal ISpecialItemDataProvider? DataProvider
     {
         get
         {
-            return _items;
+            return _dataProvider;
         }
 
         set
         {
-            _items = value;
-            LoadSpecialItems();
+            _dataProvider = value;
+            LoadData();
         }
     }
 

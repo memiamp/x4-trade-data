@@ -30,8 +30,6 @@ internal abstract class BuildStorageSpecialItemBase(
         return returnValue;
     }
 
-    public override Color Colour => source.Owner.Colour.Colour;
-
     public override string Comments => _comments;
 
     public override SpecialItemType Type => SpecialItemType.BuildStorage;

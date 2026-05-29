@@ -34,6 +34,9 @@ internal class WareModelParser(
             Group = source.Group,
             Id = source.Id,
             Name = name,
+            PriceAverage = source.PriceAverage,
+            PriceMaximum = source.PriceMaximum,
+            PriceMinimum = source.PriceMinimum,
             Transport = source.Transport,
             Type = type,
             Volume = source.Volume

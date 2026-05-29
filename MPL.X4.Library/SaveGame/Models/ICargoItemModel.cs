@@ -14,4 +14,9 @@ public interface ICargoItemModel : IModelWithId
     /// Gets the name of the cargo item.
     /// </summary>
     string Name { get; }
+
+    /// <summary>
+    /// Gets the value of the item (based on average price).
+    /// </summary>
+    int Value { get; }
 }
