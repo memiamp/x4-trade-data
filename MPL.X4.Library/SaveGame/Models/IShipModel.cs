@@ -1,0 +1,52 @@
+﻿namespace MPL.X4.SaveGame.Models;
+
+/// <summary>
+/// An interface that defines a model of a ship.
+/// </summary>
+public interface IShipModel : IHasIsKnown, IHasOwner, IHasTransform, IModelWithId
+{
+    /// <summary>
+    /// Gets an indication of whether the ship can be captured.
+    /// </summary>
+    bool CanBeCaptured => IsAbandoned && !IsWreck;
+
+    /// <summary>
+    /// Gets the ship cargo.
+    /// </summary>
+    ICargoItemModelList Cargo { get; }
+    
+    /// <summary>
+    /// Gets the class of the ship.
+    /// </summary>
+    ShipClass Class { get; }
+
+    /// <summary>
+    /// Gets the code of the ship.
+    /// </summary>
+    string Code { get; }
+
+    /// <summary>
+    /// Gets an indication of whether the ship is abandoned.
+    /// </summary>
+    bool IsAbandoned { get; }
+
+    /// <summary>
+    /// Gets an indication of whether the ship is a wreck.
+    /// </summary>
+    bool IsWreck { get; }
+
+    /// <summary>
+    /// Gets the model of the ship.
+    /// </summary>
+    string Model { get; }
+
+    /// <summary>
+    /// Gets the modifications applied to the ship.
+    /// </summary>
+    IModificationModelList Modifications { get; }
+
+    /// <summary>
+    /// Gets the name of the ship (if any).
+    /// </summary>
+    string? Name { get; }
+}
