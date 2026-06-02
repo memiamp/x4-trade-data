@@ -12,11 +12,13 @@ internal partial class TradePanelControl : UserControl
 {
     #region Declarations
 
-    private const int WareColumnWidth = 100;
+    private readonly int SectorColumnWidth;
+    private readonly int WareColumnWidth;
 
     private decimal _averagePrice = 0m;
     private TradeDisplayMode _displaymode;
     private IEnumerable<ITradeListItem> _items = [];
+    private string? _sectorName;
     private IFactionModel? _sectorOwner;
     private IFactionModel? _stationOwner;
     private string? _wareName;
@@ -31,6 +33,10 @@ internal partial class TradePanelControl : UserControl
     public TradePanelControl()
     {
         InitializeComponent();
+
+        SectorColumnWidth = TradesListView_Sector.Width;
+        WareColumnWidth = TradesListView_Ware.Width;
+
         Initialise();
     }
 
@@ -40,6 +46,7 @@ internal partial class TradePanelControl : UserControl
 
     private void DoRefresh()
     {
+        TradesListView_Sector.Width = _sectorName is null ? SectorColumnWidth : 0;
         TradesListView_Ware.Width = _wareName is null ? WareColumnWidth : 0;
 
         if (_averagePrice > 0)
@@ -96,6 +103,11 @@ internal partial class TradePanelControl : UserControl
     private void LoadTradeOffers()
     {
         var items = _items;
+
+        if (_sectorName is not null)
+        {
+            items = items.Where(x => x.SectorName == _sectorName);
+        }
 
         if (_sectorOwner is not null)
         {
@@ -169,6 +181,24 @@ internal partial class TradePanelControl : UserControl
         set
         {
             _displaymode = value;
+            LoadTradeOffers();
+        }
+    }
+
+    /// <summary>
+    /// Gets or sets the sector name to filter by.
+    /// </summary>
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+    internal string? SectorName
+    {
+        get
+        {
+            return _sectorName;
+        }
+
+        set
+        {
+            _sectorName = value;
             LoadTradeOffers();
         }
     }

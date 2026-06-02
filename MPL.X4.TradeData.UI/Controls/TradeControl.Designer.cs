@@ -33,6 +33,8 @@
             NoItemsLabel = new Label();
             MainLayoutPanel = new TableLayoutPanel();
             TopPanel = new Panel();
+            SectorNameLabel = new Label();
+            SectorNameComboBox = new ComboBox();
             StationOwnerLabel = new Label();
             StationOwnerComboBox = new ComboBox();
             SectorOwnerLabel = new Label();
@@ -61,12 +63,12 @@
             // 
             // NoItemsLabel
             // 
-            NoItemsLabel.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            NoItemsLabel.Dock = DockStyle.Top;
             NoItemsLabel.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
             NoItemsLabel.Location = new Point(0, 0);
             NoItemsLabel.Name = "NoItemsLabel";
             NoItemsLabel.Size = new Size(1223, 30);
-            NoItemsLabel.TabIndex = 13;
+            NoItemsLabel.TabIndex = 2;
             NoItemsLabel.Text = "No trades are currently loaded.";
             NoItemsLabel.TextAlign = ContentAlignment.MiddleCenter;
             // 
@@ -89,6 +91,8 @@
             // TopPanel
             // 
             TopPanel.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            TopPanel.Controls.Add(SectorNameLabel);
+            TopPanel.Controls.Add(SectorNameComboBox);
             TopPanel.Controls.Add(StationOwnerLabel);
             TopPanel.Controls.Add(StationOwnerComboBox);
             TopPanel.Controls.Add(SectorOwnerLabel);
@@ -100,10 +104,28 @@
             TopPanel.Size = new Size(1223, 30);
             TopPanel.TabIndex = 0;
             // 
+            // SectorNameLabel
+            // 
+            SectorNameLabel.AutoSize = true;
+            SectorNameLabel.Location = new Point(758, 3);
+            SectorNameLabel.Name = "SectorNameLabel";
+            SectorNameLabel.Size = new Size(43, 15);
+            SectorNameLabel.TabIndex = 6;
+            SectorNameLabel.Text = "Sector:";
+            // 
+            // SectorNameComboBox
+            // 
+            SectorNameComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
+            SectorNameComboBox.FormattingEnabled = true;
+            SectorNameComboBox.Location = new Point(807, 0);
+            SectorNameComboBox.Name = "SectorNameComboBox";
+            SectorNameComboBox.Size = new Size(200, 23);
+            SectorNameComboBox.TabIndex = 7;
+            // 
             // StationOwnerLabel
             // 
             StationOwnerLabel.AutoSize = true;
-            StationOwnerLabel.Location = new Point(600, 3);
+            StationOwnerLabel.Location = new Point(486, 3);
             StationOwnerLabel.Name = "StationOwnerLabel";
             StationOwnerLabel.Size = new Size(85, 15);
             StationOwnerLabel.TabIndex = 4;
@@ -111,16 +133,17 @@
             // 
             // StationOwnerComboBox
             // 
+            StationOwnerComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
             StationOwnerComboBox.FormattingEnabled = true;
-            StationOwnerComboBox.Location = new Point(691, 0);
+            StationOwnerComboBox.Location = new Point(577, 0);
             StationOwnerComboBox.Name = "StationOwnerComboBox";
-            StationOwnerComboBox.Size = new Size(229, 23);
+            StationOwnerComboBox.Size = new Size(175, 23);
             StationOwnerComboBox.TabIndex = 5;
             // 
             // SectorOwnerLabel
             // 
             SectorOwnerLabel.AutoSize = true;
-            SectorOwnerLabel.Location = new Point(277, 3);
+            SectorOwnerLabel.Location = new Point(223, 3);
             SectorOwnerLabel.Name = "SectorOwnerLabel";
             SectorOwnerLabel.Size = new Size(81, 15);
             SectorOwnerLabel.TabIndex = 2;
@@ -128,18 +151,20 @@
             // 
             // WareComboBox
             // 
+            WareComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
             WareComboBox.FormattingEnabled = true;
             WareComboBox.Location = new Point(42, 0);
             WareComboBox.Name = "WareComboBox";
-            WareComboBox.Size = new Size(229, 23);
+            WareComboBox.Size = new Size(175, 23);
             WareComboBox.TabIndex = 1;
             // 
             // SectorOwnerComboBox
             // 
+            SectorOwnerComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
             SectorOwnerComboBox.FormattingEnabled = true;
-            SectorOwnerComboBox.Location = new Point(359, 0);
+            SectorOwnerComboBox.Location = new Point(305, 0);
             SectorOwnerComboBox.Name = "SectorOwnerComboBox";
-            SectorOwnerComboBox.Size = new Size(229, 23);
+            SectorOwnerComboBox.Size = new Size(175, 23);
             SectorOwnerComboBox.TabIndex = 3;
             // 
             // WareLabel
@@ -155,9 +180,9 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
+            Controls.Add(NoItemsLabel);
             Controls.Add(TopPanel);
             Controls.Add(MainLayoutPanel);
-            Controls.Add(NoItemsLabel);
             Name = "TradeControl";
             Size = new Size(1223, 650);
             MainLayoutPanel.ResumeLayout(false);
@@ -178,5 +203,7 @@
         private ComboBox WareComboBox;
         private ComboBox SectorOwnerComboBox;
         private Label WareLabel;
+        private Label SectorNameLabel;
+        private ComboBox SectorNameComboBox;
     }
 }

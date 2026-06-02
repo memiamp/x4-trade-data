@@ -122,10 +122,11 @@
             // 
             // SectorOwnerComboBox
             // 
+            SectorOwnerComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
             SectorOwnerComboBox.FormattingEnabled = true;
             SectorOwnerComboBox.Location = new Point(87, 3);
             SectorOwnerComboBox.Name = "SectorOwnerComboBox";
-            SectorOwnerComboBox.Size = new Size(241, 23);
+            SectorOwnerComboBox.Size = new Size(175, 23);
             SectorOwnerComboBox.TabIndex = 1;
             // 
             // SectorOwnerLabel
@@ -140,7 +141,7 @@
             // AbandonedShipsCheckBox
             // 
             AbandonedShipsCheckBox.AutoSize = true;
-            AbandonedShipsCheckBox.Location = new Point(355, 5);
+            AbandonedShipsCheckBox.Location = new Point(268, 5);
             AbandonedShipsCheckBox.Name = "AbandonedShipsCheckBox";
             AbandonedShipsCheckBox.Size = new Size(118, 19);
             AbandonedShipsCheckBox.TabIndex = 2;
@@ -150,7 +151,7 @@
             // LockboxesCheckBox
             // 
             LockboxesCheckBox.AutoSize = true;
-            LockboxesCheckBox.Location = new Point(649, 5);
+            LockboxesCheckBox.Location = new Point(562, 5);
             LockboxesCheckBox.Name = "LockboxesCheckBox";
             LockboxesCheckBox.Size = new Size(82, 19);
             LockboxesCheckBox.TabIndex = 5;
@@ -160,7 +161,7 @@
             // DropsCheckBox
             // 
             DropsCheckBox.AutoSize = true;
-            DropsCheckBox.Location = new Point(586, 5);
+            DropsCheckBox.Location = new Point(499, 5);
             DropsCheckBox.Name = "DropsCheckBox";
             DropsCheckBox.Size = new Size(57, 19);
             DropsCheckBox.TabIndex = 4;
@@ -170,7 +171,7 @@
             // BuildStorageCheckBox
             // 
             BuildStorageCheckBox.AutoSize = true;
-            BuildStorageCheckBox.Location = new Point(479, 5);
+            BuildStorageCheckBox.Location = new Point(392, 5);
             BuildStorageCheckBox.Name = "BuildStorageCheckBox";
             BuildStorageCheckBox.Size = new Size(101, 19);
             BuildStorageCheckBox.TabIndex = 3;
@@ -181,8 +182,8 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            Controls.Add(BuildStorageCheckBox);
             Controls.Add(NoItemsLabel);
+            Controls.Add(BuildStorageCheckBox);
             Controls.Add(DropsCheckBox);
             Controls.Add(LockboxesCheckBox);
             Controls.Add(AbandonedShipsCheckBox);

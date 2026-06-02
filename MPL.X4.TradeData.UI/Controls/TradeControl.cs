@@ -12,12 +12,14 @@ internal partial class TradeControl : UserControl
 {
     #region Declarations
 
+    private const string SectorAny = "Any";
     private const string SectorOwnerAny = "Any";
     private const string StationOwnerAny = "Any";
     private const string ValueProperty = "Value";
     private const string WareAny = "Any";
 
     private IEnumerable<ITradeListItem> _items = [];
+    private string? _selectedSector;
     private IFactionModel? _selectedSectorOwner;
     private IFactionModel? _selectedStationOwner;
     private string? _selectedWare;
@@ -41,10 +43,12 @@ internal partial class TradeControl : UserControl
 
     private void DoRefresh()
     {
+        BuyTradePanel.SectorName = _selectedSector;
         BuyTradePanel.SectorOwner = _selectedSectorOwner;
         BuyTradePanel.StationOwner = _selectedStationOwner;
         BuyTradePanel.WareName = _selectedWare == WareAny ? null : _selectedWare;
 
+        SellTradePanel.SectorName = _selectedSector;
         SellTradePanel.SectorOwner = _selectedSectorOwner;
         SellTradePanel.StationOwner = _selectedStationOwner;
         SellTradePanel.WareName = _selectedWare == WareAny ? null : _selectedWare;
@@ -72,6 +76,7 @@ internal partial class TradeControl : UserControl
 
         // Event wireup
         Load += TradeControl_Load;
+        SectorNameComboBox.SelectedIndexChanged += SectorComboBox_SelectedIndexChanged;
         SectorOwnerComboBox.SelectedIndexChanged += SectorOwnerComboBox_SelectedIndexChanged;
         StationOwnerComboBox.SelectedIndexChanged += StationOwnerComboBox_SelectedIndexChanged;
         WareComboBox.SelectedIndexChanged += WareComboBox_SelectedIndexChanged;
@@ -99,6 +104,18 @@ internal partial class TradeControl : UserControl
         target.DataSource = data;
     }
 
+    private void LoadSectors()
+    {
+        var data = _items
+                         .Select(x => x.SectorName)
+                         .Distinct()
+                         .Order()
+                         .Prepend(SectorAny)
+                         .ToList();
+
+        SectorNameComboBox.DataSource = data;
+    }
+
     private void LoadSectorOwners()
         => LoadFactionDataSource(SectorOwnerComboBox, SectorOwnerAny, x => x.SectorFaction);
 
@@ -110,6 +127,7 @@ internal partial class TradeControl : UserControl
         BuyTradePanel.Trades = _items.Where(x => x.Trade.Type == TradeType.Buy);
         SellTradePanel.Trades = _items.Where(x => x.Trade.Type == TradeType.Sell);
 
+        LoadSectors();
         LoadSectorOwners();
         LoadStationOwners();
         LoadWares();
@@ -140,6 +158,21 @@ internal partial class TradeControl : UserControl
     #endregion
 
     #region Event Handlers
+
+    private void SectorComboBox_SelectedIndexChanged(object? sender, EventArgs e)
+    {
+        if (SectorNameComboBox.SelectedValue is string value &&
+            value != SectorAny)
+        {
+            _selectedSector = value;
+        }
+        else
+        {
+            _selectedSector = null;
+        }
+
+        DoRefresh();
+    }
 
     private void SectorOwnerComboBox_SelectedIndexChanged(object? sender, EventArgs e)
     {
