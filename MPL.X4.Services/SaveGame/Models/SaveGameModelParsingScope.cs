@@ -54,6 +54,10 @@ internal class SaveGameModelParsingScope(
 
     ITransform3D ISaveGameModelParsingScope.CurrentOffset { get; set; } = ITransform3D.GetDefault();
 
+    IEnumerable<IShipModel> ISaveGameModelParsingScope.CurrentShips { get; set; } = [];
+
+    IEnumerable<IStationModel> ISaveGameModelParsingScope.CurrentStations { get; set; } = [];
+
     [AllowNull]
     IGameResourceModels ISaveGameModelParsingScope.GameResources { get; set; }
 }

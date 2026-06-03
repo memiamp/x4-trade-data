@@ -5,5 +5,7 @@
 /// </summary>
 internal class SaveGameModels : ISaveGameModels
 {
+    public required IEconomyLogModel EconomyLog { get; init; }
+
     public required IUniverseModel Universe { get; init; }
 }

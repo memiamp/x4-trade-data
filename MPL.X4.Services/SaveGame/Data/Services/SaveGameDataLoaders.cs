@@ -19,32 +19,38 @@ internal class SaveGameDataLoader(
 {
     async Task<ISaveGameData> ISaveGameDataLoader.LoadFrom(string sourcePath)
     {
-        ISaveGameData? returnValue = null;
+        IEconomyLogData? economyLog = null;
+        IUniverseData? universeData = null;
 
         using var reader = xmlReaderWrapperFactory.CreateXmlReader(sourcePath);
 
         while (await reader.ReadAsync())
         {
-            if (reader.CheckNodeMatches(Constants.XmlDataFile.ElementName.Universe, XmlNodeType.Element))
+            if (reader.CheckNodeMatches(Constants.XmlDataFile.ElementName.Universe, XmlNodeType.Element, 1))
             {
-                using var universeSubtree = await reader.ReadSubtree();
+                using var subtree = await reader.ReadSubtree();
 
-                var universe = await dataParser.Parse<IUniverseData>(universeSubtree);
-                returnValue = new SaveGameData
-                {
-                    Universe = universe
-                };
+                universeData = await dataParser.Parse<IUniverseData>(subtree);
+            }
+            else if (reader.CheckNodeMatches(Constants.XmlDataFile.ElementName.EconomyLog, XmlNodeType.Element, 1))
+            {
+                using var subtree = await reader.ReadSubtree();
 
-                break;
+                economyLog = await dataParser.Parse<IEconomyLogData>(subtree);
             }
         }
 
-        if (returnValue is null)
+        if (universeData is null ||
+            economyLog is null)
         {
             logger.LogWarning("Could not load save game from {SourcePath}", sourcePath);
             throw new ArgumentException($"Could not load save game from '{sourcePath}'", nameof(sourcePath));
         }
 
-        return returnValue;
+        return new SaveGameData
+        {
+            EconomyLog = economyLog,
+            Universe = universeData
+        };
     }
 }

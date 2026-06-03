@@ -9,17 +9,29 @@ namespace MPL.X4.SaveGame.Models.Parser;
 /// </summary>
 /// <param name="logger">An <see cref="ILogger{TCategoryName}"/> that is the logger to use.</param>
 /// <param name="modelParser">An <see cref="IModelParser"/> that is the model parser.</param>
+/// <param name="parsingScope">An <see cref="ISaveGameModelParsingScope"/> that is the parsing scope.</param>
 internal class SaveGameModelsParser(
                                     ILogger<SaveGameModelsParser> logger,
-                                    IModelParser modelParser)
+                                    IModelParser modelParser,
+                                    ISaveGameModelParsingScope parsingScope)
     : ModelParserBase<ISaveGameData, ISaveGameModels>(logger)
 {
     private protected override ISaveGameModels OnParse(ISaveGameData source)
     {
         var universe = modelParser.Parse<IUniverseData, IUniverseModel>(source.Universe);
 
+        parsingScope.CurrentShips = universe
+                                            .Sectors
+                                            .SelectMany(x => x.Ships);
+        parsingScope.CurrentStations = universe
+                                               .Sectors
+                                               .SelectMany(x => x.Stations);
+
+        var economyLog = modelParser.Parse<IEconomyLogData, IEconomyLogModel>(source.EconomyLog);
+
         return new SaveGameModels
         {
+            EconomyLog = economyLog,
             Universe = universe
         };
     }

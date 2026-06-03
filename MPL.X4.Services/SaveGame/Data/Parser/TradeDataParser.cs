@@ -20,8 +20,6 @@ internal class TradeDataParser(
         var amountToBuy = 0;
         var amountToSell = 0;
 
-        TradeData? returnValue;
-
         if (!reader.CheckNodeMatches(Constants.XmlDataFile.ElementName.Trade, XmlNodeType.Element) ||
             !reader.TryGetAttribute(Constants.XmlDataFile.AttributeName.Price, out int? price) ||
             !reader.TryGetAttribute(Constants.XmlDataFile.AttributeName.TradeId, out string? id) ||
@@ -47,7 +45,7 @@ internal class TradeDataParser(
             amountToSell = amount.Value;
         }
 
-        returnValue = new TradeData
+        var returnValue = new TradeData
         {
             AmountToBuy = amountToBuy,
             AmountToSell = amountToSell,

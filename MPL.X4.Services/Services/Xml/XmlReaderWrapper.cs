@@ -41,8 +41,8 @@ internal sealed class XmlReaderWrapper(
            xmlReader.Name == name;
 
     bool IXmlReaderWrapper.CheckNodeMatches(string name, XmlNodeType nodeType, int depth)
-        => ((IXmlReaderWrapper)this).CheckNodeMatches(name, nodeType) &&
-           xmlReader.Depth == depth;
+        => xmlReader.Depth == depth &&
+           ((IXmlReaderWrapper)this).CheckNodeMatches(name, nodeType);
 
     string? IXmlReaderWrapper.GetAttribute(string name)
         => xmlReader.GetAttribute(name);

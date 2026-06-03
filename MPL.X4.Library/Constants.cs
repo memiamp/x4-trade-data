@@ -137,6 +137,7 @@ public static class Constants
             public const string Desired = "desired";
             public const string Description = "descr";
             public const string Drag = "drag";
+            public const string EntriesType = "type";
             public const string Exact = "exact";
             public const string FactionId = "id";
             public const string FactoryName = "factoryname";
@@ -147,6 +148,9 @@ public static class Constants
             public const string KnownTo = "knownto";
             public const string Lifetime = "lifetime";
             public const string LockboxId = "id";
+            public const string LogEntriesType = "type";
+            public const string LogTradeVolume = "v";
+            public const string LogType = "type";
             public const string Macro = "macro";
             public const string MappingId = "id";
             public const string Mass = "mass";
@@ -187,8 +191,10 @@ public static class Constants
             public const string StrafeThrust = "strafethrust";
             public const string SurfaceElement = "surfaceelement";      
             public const string TextId = "id";
+            public const string Time = "time";
             public const string Title = "title";
             public const string TradeId = "id";
+            public const string TradelogVolume = "v";
             public const string Transport = "transport";
             public const string TravelAttackTime = "travelattacktime";
             public const string TravelChargeTime = "travelchargetime";
@@ -245,6 +251,16 @@ public static class Constants
                 public const string Player = "player";
             }
 
+            public static class LogEntriesType
+            {
+                public const string Trade = "trade";
+            }
+
+            public static class LogType
+            {
+                public const string Trade = "trade";
+            }
+
             public static class Owner
             {
                 public const string Ownerless = "ownerless";
@@ -285,10 +301,13 @@ public static class Constants
             public const string Connections = "connections";
             public const string Dataset = "dataset";
             public const string Defaults = "defaults";
+            public const string EconomyLog = "economylog";
             public const string Engine = "engine";
+            public const string Entries = "entries";
             public const string Faction = "faction";
             public const string Factions = "factions";
             public const string Identification = "identification";
+            public const string Log = "log";
             public const string Macro = "macro";
             public const string Macros = "macros";
             public const string Mapping = "mapping";

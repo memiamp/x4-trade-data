@@ -43,6 +43,16 @@ internal interface ISaveGameModelParsingScope
     ITransform3D CurrentOffset { get; set; }
 
     /// <summary>
+    /// Gets or sets the current ships.
+    /// </summary>
+    IEnumerable<IShipModel> CurrentShips { get; set; }
+
+    /// <summary>
+    /// Gets or sets the current stations.
+    /// </summary>
+    IEnumerable<IStationModel> CurrentStations { get; set; }
+
+    /// <summary>
     /// Gets or sets the game resources.
     /// </summary>
     IGameResourceModels GameResources { get; set; }

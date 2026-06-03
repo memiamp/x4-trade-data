@@ -90,6 +90,7 @@ public static class Bootstrap
         servicesCollection.AddTransient<IDataParser<ICargoData>, CargoDataParser>();
         servicesCollection.AddTransient<IDataParser<ICollectableAmmoData>, CollectableAmmoDataParser>();
         servicesCollection.AddTransient<IDataParser<ICollectableWareData>, CollectableWareDataParser>();
+        servicesCollection.AddTransient<IDataParser<IEconomyLogData>, EconomyLogDataParser>();
         servicesCollection.AddTransient<IDataParser<IGateData>, GateDataParser>();
         servicesCollection.AddTransient<IDataParser<ILockboxData>, LockboxDataParser>();
         servicesCollection.AddTransient<IDataParser<IEnumerable<IModificationData>>, ModificationParser>();
@@ -98,6 +99,8 @@ public static class Bootstrap
         servicesCollection.AddTransient<IDataParser<IShipData>, ShipDataParser>();
         servicesCollection.AddTransient<IDataParser<IStationData>, StationDataParser>();
         servicesCollection.AddTransient<IDataParser<ITradeData>, TradeDataParser>();
+        servicesCollection.AddTransient<IDataParser<ITradeLogData>, TradeLogDataParser>();
+        servicesCollection.AddTransient<IDataParser<ITradeLogEntryData>, TradeLogEntryDataParser>();
         servicesCollection.AddTransient<IDataParser<IUniverseData>, UniverseDataParser>();
         servicesCollection.AddTransient<IDataParser<IWareItemData>, WareItemDataParser>();
         servicesCollection.AddTransient<IDataParser<IZoneData>, ZoneDataParser>();
@@ -106,6 +109,7 @@ public static class Bootstrap
         servicesCollection.AddTransient<IModelParser<IBuildStorageData, IBuildStorageModel>, BuildStorageModelParser>();
         servicesCollection.AddTransient<IModelParser<ICollectableAmmoData, ICollectableDropModelList>, CollectableDropAmmoModelParser>();
         servicesCollection.AddTransient<IModelParser<ICollectableWareData, ICollectableDropModelList>, CollectableDropWareModelParser>();
+        servicesCollection.AddTransient<IModelParser<IEconomyLogData, IEconomyLogModel>, EconomyLogModelParser>();
         servicesCollection.AddTransient<IModelParser<IEnumerable<IWareItemData>, ICargoItemModelList>, CargoItemModelListParser>();
         servicesCollection.AddTransient<IModelParser<IEnumerable<ISectorData>, ISectorModelList>, SectorModelListParser>();
         servicesCollection.AddTransient<IModelParser<IEnumerable<ITradeData>, ITradeModelList>, TradeModelListParser>();

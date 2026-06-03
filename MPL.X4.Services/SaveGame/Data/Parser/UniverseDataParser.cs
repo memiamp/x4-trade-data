@@ -8,7 +8,7 @@ namespace MPL.X4.SaveGame.Data.Parser;
 /// <summary>
 /// A class that implements a data parser for a <see cref="IUniverseData"/>.
 /// </summary>
-/// <param name="sectorParser">An <see cref="IDataParser{ISector}"/> that is the sector parser to use.</param>
+/// <param name="dataParser">An <see cref="IDataParser"/> that is the data parser to use.</param>
 /// <param name="logger">An <see cref="ILogger{TCategoryName}"/> that is the logger to use.</param>
 internal class UniverseDataParser(
                                   IDataParser dataParser,
