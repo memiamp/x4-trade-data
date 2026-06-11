@@ -18,19 +18,65 @@ internal abstract class ModificationModelParserBase<TData, TModel>(
     where TData : IModificationData
     where TModel : IModificationModel
 {
+    private static string _basicQuality = string.Empty;
+    private static string _enhancedQuality = string.Empty;
+    private static string _exceptionalQuality = string.Empty;
+    private static bool _hasLoadedResource = false;
+
+    private void EnsureResourcesLoaded()
+    {
+        if (!_hasLoadedResource)
+        {
+            if (parsingScope.GameResources.Text.TryGetValue(Constants.TextResource.ShipModifications.BasicQuality, out var resource))
+            {
+                _basicQuality = resource.Text;
+            }
+
+            if (parsingScope.GameResources.Text.TryGetValue(Constants.TextResource.ShipModifications.EnhancedQuality, out resource))
+            {
+                _enhancedQuality = resource.Text;
+            }
+
+            if (parsingScope.GameResources.Text.TryGetValue(Constants.TextResource.ShipModifications.ExceptionalQuality, out resource))
+            {
+                _exceptionalQuality = resource.Text;
+            }
+
+            _hasLoadedResource = true;
+        }
+    }
+
     private protected void ParseNameAndQuality(string ware, out string name, out ModificationQuality quality)
     {
+        quality = ModificationQuality.Unknown;
+
         name = parsingScope.ParseWareName(ware);
-        if (name.Contains("\\\\"))
+
+        if (this is PaintModificationModelParser)
         {
-            Console.WriteLine("YO");
+            quality = ModificationQuality.Paint;
         }
-        quality = name.Count(c => c == Constants.Wares.ModificationQualityIndicator) switch
+        else
         {
-            1 => ModificationQuality.Basic,
-            2 => ModificationQuality.Enhanced,
-            3 => ModificationQuality.Exceptional,
-            _ => ModificationQuality.Basic
-        };
+            EnsureResourcesLoaded();
+
+            if (name.Contains(_basicQuality))
+            {
+                quality = ModificationQuality.Basic;
+            }
+            else if (name.Contains(_enhancedQuality))
+            {
+                quality = ModificationQuality.Enhanced;
+            }
+            else if (name.Contains(_exceptionalQuality))
+            {
+                quality = ModificationQuality.Exceptional;
+            }
+        }
+
+        if (quality == ModificationQuality.Unknown)
+        {
+            Logger.LogWarning("Modification {ModificationName} does not have a parseable quality", name);
+        }
     }
 }

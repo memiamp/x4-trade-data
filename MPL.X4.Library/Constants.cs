@@ -98,14 +98,13 @@ public static class Constants
     {
         public const char SplitChar = ',';
         public static readonly char[] TrimChars = ['{', '}'];
-    }
 
-    /// <summary>
-    /// Constants relating to wares.
-    /// </summary>
-    public static class Wares
-    {
-        public const char ModificationQualityIndicator = '\\';
+        public static class ShipModifications
+        {
+            public static readonly ITextResourceReference BasicQuality = new TextResourceReference(20110, 1001);
+            public static readonly ITextResourceReference EnhancedQuality = new TextResourceReference(20110, 1101);
+            public static readonly ITextResourceReference ExceptionalQuality = new TextResourceReference(20110, 1201);
+        }
     }
 
     /// <summary>

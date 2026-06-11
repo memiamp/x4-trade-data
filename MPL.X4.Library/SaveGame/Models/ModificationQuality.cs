@@ -23,5 +23,10 @@ public enum ModificationQuality
     /// <summary>
     /// The type is an exceptional modification.
     /// </summary>
-    Exceptional
+    Exceptional,
+
+    /// <summary>
+    /// The type is a paint modification.
+    /// </summary>
+    Paint
 }

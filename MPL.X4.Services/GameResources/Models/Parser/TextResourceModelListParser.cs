@@ -43,7 +43,11 @@ internal partial class TextResourceModelListParser(
             return cached;
         }
 
+        // Ensures that escaped parenthesis aren't stripped
+        text = text.Replace("\\(", "|||").Replace("\\)", "|-|");
         var processed = RemoveParenthesesRegex().Replace(text, "");
+        processed = processed.Replace("|||", "(").Replace("|-|", ")");
+
         processed = PlaceholderRegex().Replace(processed, m =>
         {
             var pageId = int.Parse(m.Groups[1].ValueSpan);
