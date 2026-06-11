@@ -3,17 +3,12 @@
 /// <summary>
 /// An interface that defines a model of a sector.
 /// </summary>
-public interface ISectorModel : IHasIsKnown, IHasOwner, IHasTransform, IModelWithId
+public interface ISectorModel : IHasCode, IHasIsKnown, IHasOwner, IHasShips, IHasTransform, IModelWithId
 {
     /// <summary>
     /// Gets the build storages in the sector.
     /// </summary>
     IBuildStorageModelList BuildStorages { get; }
-
-    /// <summary>
-    /// Gets the code of the sector.
-    /// </summary>
-    string Code { get; }
 
     /// <summary>
     /// Gets the collectable drops in the sector.
@@ -34,11 +29,6 @@ public interface ISectorModel : IHasIsKnown, IHasOwner, IHasTransform, IModelWit
     /// Gets the name of the sector.
     /// </summary>
     string Name { get; }
-
-    /// <summary>
-    /// Gets the ships in the sector.
-    /// </summary>
-    IShipModelList Ships { get; }
 
     /// <summary>
     /// Gets the stations in the sector.

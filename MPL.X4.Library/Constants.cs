@@ -101,6 +101,14 @@ public static class Constants
     }
 
     /// <summary>
+    /// Constants relating to wares.
+    /// </summary>
+    public static class Wares
+    {
+        public const char ModificationQualityIndicator = '\\';
+    }
+
+    /// <summary>
     /// Constants relation to X4 XML data files.
     /// </summary>
     public static class XmlDataFile
@@ -132,6 +140,7 @@ public static class Constants
             public const string Cooling = "cooling";
             public const string CountermeasureCapacity = "countermeasurecapacity";
             public const string Damage = "damage";
+            public const string Date = "date";
             public const string Default = "default";
             public const string DeployableCapacity = "deployablecapacity";
             public const string Desired = "desired";
@@ -147,6 +156,7 @@ public static class Constants
             public const string Group = "group";
             public const string KnownTo = "knownto";
             public const string Lifetime = "lifetime";
+            public const string Location = "location";
             public const string LockboxId = "id";
             public const string LogEntriesType = "type";
             public const string LogTradeVolume = "v";
@@ -156,6 +166,8 @@ public static class Constants
             public const string Mass = "mass";
             public const string Maximum = "max";
             public const string MaximumHull = "maxhull";
+            public const string Modified = "modified";
+            public const string Money = "money";
             public const string Minimum = "min";
             public const string Mining = "mining";
             public const string MissileCapacity = "missilecapacity";
@@ -176,6 +188,7 @@ public static class Constants
             public const string RegionDamage = "regiondamage";
             public const string Reference = "ref";
             public const string Reload = "reload";
+            public const string RemovedObjectId = "id";
             public const string Roll = "roll";
             public const string RotationSpeed = "rotationspeed";
             public const string RotationThrust = "rotationthrust";
@@ -184,17 +197,18 @@ public static class Constants
             public const string Seller = "seller";
             public const string ShipId = "id";
             public const string ShortName = "shortname";
+            public const string Space = "space";
             public const string State = "state";
             public const string StationId = "id";
-            public const string Sticktime = "sticktime";      
+            public const string Sticktime = "sticktime";
             public const string StrafeAcceleration = "strafeacc";
             public const string StrafeThrust = "strafethrust";
-            public const string SurfaceElement = "surfaceelement";      
+            public const string SurfaceElement = "surfaceelement";
             public const string TextId = "id";
             public const string Time = "time";
             public const string Title = "title";
             public const string TradeId = "id";
-            public const string TradelogVolume = "v";
+            public const string TradeLogVolume = "v";
             public const string Transport = "transport";
             public const string TravelAttackTime = "travelattacktime";
             public const string TravelChargeTime = "travelchargetime";
@@ -215,15 +229,20 @@ public static class Constants
         {
             public static class Class
             {
+                public static readonly IEnumerable<string> ClassesWithDocks = [BuildModule, DockArea, Pier];
+
                 public const string BuildModule = "buildmodule";
                 public const string BuildProcessor = "buildprocessor";
                 public const string BuildStorage = "buildstorage";
                 public const string CollectableAmmo = "collectableammo";
                 public const string CollectableWares = "collectablewares";
                 public const string DefenceModule = "defencemodule";
+                public const string DockArea = "dockarea";
+                public const string DockingBay = "dockingbay";
                 public const string Gate = "gate";
                 public const string Lock = "lock";
                 public const string Lockbox = "lockbox";
+                public const string Pier = "pier";
                 public const string Production = "production";
                 public const string Sector = "sector";
                 public const string Ship = "ship";
@@ -242,6 +261,7 @@ public static class Constants
                 public const string BuildAnchor = "buildanchor";
                 public const string BuildModule = "con_buildmodule";
                 public const string BuildingModule = "buildingmodule";
+                public const string Dock = "dock";
                 public const string Drops = "drops";
                 public const string Storage = "con_storage";
             }
@@ -306,22 +326,31 @@ public static class Constants
             public const string Entries = "entries";
             public const string Faction = "faction";
             public const string Factions = "factions";
+            public const string Game = "game";
             public const string Identification = "identification";
+            public const string Information = "info";
+            public const string Item = "item";
             public const string Log = "log";
             public const string Macro = "macro";
             public const string Macros = "macros";
             public const string Mapping = "mapping";
             public const string Mappings = "mappings";
             public const string Modification = "modification";
+            public const string Offers = "offers";
             public const string Offset = "offset";
             public const string Page = "page";
             public const string Paint = "paint";
+            public const string Player = "player";
             public const string Position = "position";
             public const string Price = "price";
             public const string Production = "production";
             public const string Quaternion = "quaternion";
             public const string Queue = "queue";
+            public const string Removed = "removed";
+            public const string RemovedObject = "object";
             public const string Rotation = "rotation";
+            public const string Save = "save";
+            public const string ShieldGroup = "group";
             public const string Shields = "shields";
             public const string Ship = "ship";
             public const string TextEntry = "t";
@@ -333,11 +362,58 @@ public static class Constants
 
         public static class XPath
         {
+            public const string RootElement = "/*";
+
             public static class BuildStorage
             {
                 public const string BuildAnchorConnection = $"//component[@class='{AttributeValue.Class.BuildModule}']//component[@class='{AttributeValue.Class.BuildProcessor}']//connection[@connection='{AttributeValue.Connection.BuildAnchor}']";
-                public const string BuildAnchorConnected =  $"{BuildAnchorConnection}/connected";
+                public const string BuildAnchorConnected = $"{BuildAnchorConnection}/connected";
             }
+
+            public static class Cargo
+            {
+                public const string WareElement = $"{RootElement}/{ElementName.Ware}";
+            }
+
+            public static class Docks
+            {
+                private const string DockedShipElement = $"{ElementName.Connections}/{ElementName.Connection}[@{AttributeName.Connection}='{AttributeValue.Connection.Dock}']/{ElementName.Component}[starts-with(@{AttributeName.Class}, '{AttributeValue.Class.Ship}')]";
+                private const string DockingbayElement = $"{ElementName.Connections}/{ElementName.Connection}/{ElementName.Component}[@{AttributeName.Class}='{AttributeValue.Class.DockingBay}']";
+                private const string DockSupportingElement = $"{RootElement}/{ElementName.Connections}/{ElementName.Connection}/{ElementName.Component}[@{AttributeName.Class}='{AttributeValue.Class.BuildModule}' or @{AttributeName.Class}='{AttributeValue.Class.DockArea}' or @{AttributeName.Class}='{AttributeValue.Class.Pier}']";
+                
+                public const string ShipsInDockElement = $"{DockSupportingElement}/{DockingbayElement}/{DockedShipElement}";
+                public const string ShipsInDockingBayElement = $"{RootElement}/{DockingbayElement}/{DockedShipElement}";
+            }
+
+            public static class Ship
+            {
+                public const string CargoElement = $"{RootElement}/{ElementName.Connections}/{ElementName.Connection}/{ElementName.Component}/{ElementName.Cargo}";
+                public const string DockedShipsElement = $"{RootElement}/{ElementName.Connections}/{ElementName.Connection}/{ElementName.Component}/{ElementName.Connections}/{ElementName.Component}/{ElementName.Connections}/{ElementName.Connection}[@{AttributeName.Connection}='{AttributeValue.Connection.Dock}']";
+                public const string EngineModificationElement = $"{RootElement}/{ElementName.Modification}/{ElementName.Engine}";
+                public const string PaintModificationElement = $"{RootElement}/{ElementName.Modification}/{ElementName.Paint}";
+                public const string ShieldModificationElement = $"{RootElement}/{ElementName.Shields}/{ElementName.ShieldGroup}/{ElementName.Modification}";
+                public const string ShipModificationElement = $"{RootElement}/{ElementName.Modification}/{ElementName.Ship}";
+                public const string WeaponModificationElement = $"{RootElement}/{ElementName.Connections}/{ElementName.Connection}/{ElementName.Component}/{ElementName.Modification}";
+            }
+
+            public static class Station
+            {
+                public const string BuildingModuleConnectedElement = $"{BuildingModuleElement}/{ElementName.Connected}";
+                public const string BuildingModuleElement = $"{RootElement}/{ElementName.Connections}/{ElementName.Connection}[@{AttributeName.Connection}='{AttributeValue.Connection.BuildingModule}']";
+                public const string CargoElement = $"{RootElement}/{ElementName.Connections}/{ElementName.Connection}/{ElementName.Component}[@{AttributeName.Class}='{AttributeValue.Class.Storage}']/{ElementName.Cargo}";
+                public const string DefenceModuleElement = $"{RootElement}/{ElementName.Connections}/{ElementName.Connection}/{ElementName.Component}[@{AttributeName.Class}='{AttributeValue.Class.DefenceModule}']";
+                public const string ProductionElement = $"{RootElement}/{ElementName.Connections}/{ElementName.Connection}/{ElementName.Component}[@{AttributeName.Class}='{AttributeValue.Class.Production}']/{ElementName.Production}/{ElementName.Queue}";
+                public const string ProductionItemElement = $"{ProductionElement}/{ElementName.Item}";
+                public const string TradeElement = $"{RootElement}/{ElementName.Trade}/{ElementName.Offers}/{ElementName.Production}/{ElementName.Trade}";
+            }
+
+            public static class Transform
+            {
+                public const string OffsetElement = $"{RootElement}/{ElementName.Offset}";
+                public const string PositionElement = $"{RootElement}/{ElementName.Position}";
+                public const string QuaternionElement = $"{RootElement}/{ElementName.Quaternion}";
+                public const string RotationElement = $"{RootElement}/{ElementName.Rotation}";
             }
         }
+    }
 }

@@ -24,6 +24,8 @@ internal class BuildStorageData : HasTransformBase, IBuildStorageData
 
     public required string Owner { get; init; }
 
+    public required IEnumerable<IShipData> Ships { get; init; }
+
     public string? State { get; init; }
 
     public required IEnumerable<ITradeData> Trades { get; init; }

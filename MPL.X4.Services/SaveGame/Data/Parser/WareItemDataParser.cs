@@ -1,5 +1,4 @@
-﻿using System.Xml;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using MPL.X4.Parser;
 using MPL.X4.Services.Xml;
 
@@ -13,19 +12,18 @@ namespace MPL.X4.SaveGame.Data.Parser;
 internal class WareItemDataParser(
                                   IDataParser dataParser,
                                   ILogger<WareItemDataParser> logger)
-    : DataParserBase<IWareItemData>(dataParser, logger)
+    : DocumentDataParserBase<IWareItemData>(dataParser, logger)
 {
-    private protected override Task<IWareItemData> OnParse(IXmlReaderWrapper reader)
+    private protected override Task<IWareItemData> OnParse(IXDocumentWrapper document)
     {
         IWareItemData returnValue;
-
-        if (reader.CheckNodeMatches(Constants.XmlDataFile.ElementName.Ware, XmlNodeType.Element, 0) &&
-            reader.TryGetAttribute(Constants.XmlDataFile.AttributeName.Ware, out string? ware))
+      
+        if (document.TryGetRootAttribute(Constants.XmlDataFile.AttributeName.Ware, out string? ware))
         {
-            reader.TryGetAttribute(Constants.XmlDataFile.AttributeName.Amount, out int? amount);
-            reader.TryGetAttribute(Constants.XmlDataFile.AttributeName.Buy, out int? buy);
-            reader.TryGetAttribute(Constants.XmlDataFile.AttributeName.Price, out int? price);
-            reader.TryGetAttribute(Constants.XmlDataFile.AttributeName.Sell, out int? sell);
+            document.TryGetRootAttribute(Constants.XmlDataFile.AttributeName.Amount, out int? amount);
+            document.TryGetRootAttribute(Constants.XmlDataFile.AttributeName.Buy, out int? buy);
+            document.TryGetRootAttribute(Constants.XmlDataFile.AttributeName.Price, out int? price);
+            document.TryGetRootAttribute(Constants.XmlDataFile.AttributeName.Sell, out int? sell);
 
             returnValue = new WareItemData
             {
@@ -39,7 +37,7 @@ internal class WareItemDataParser(
         else
         {
             logger.LogWarning("Could not load ware item");
-            throw new ArgumentException("Could not load ware item", nameof(reader));
+            throw new ArgumentException("Could not load ware item", nameof(document));
         }
 
         return Task.FromResult(returnValue);

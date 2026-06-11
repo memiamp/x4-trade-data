@@ -1,8 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
-using MPL.X4.Parser;
 using MPL.X4.Services.Xml;
 
-namespace MPL.X4.GameResources.Data.Parser;
+namespace MPL.X4.Parser;
 
 /// <summary>
 /// A class that implements a data parser for an <see cref="IPosition3D"/>.
@@ -14,12 +13,8 @@ internal class Position3DParser(
                                 ILogger<Position3DParser> logger)
     : DataParserBase<IPosition3D>(dataParser, logger)
 {
-    private protected override Task<IPosition3D> OnParse(IXmlReaderWrapper reader)
+    private static Task<IPosition3D> ReturnResultInternal(double? x, double? y, double? z)
     {
-        reader.TryGetAttribute(Constants.XmlDataFile.AttributeName.X, out double? x);
-        reader.TryGetAttribute(Constants.XmlDataFile.AttributeName.Y, out double? y);
-        reader.TryGetAttribute(Constants.XmlDataFile.AttributeName.Z, out double? z);
-
         var returnValue = new Position3D
         {
             X = x ?? 0,
@@ -28,5 +23,22 @@ internal class Position3DParser(
         };
 
         return Task.FromResult<IPosition3D>(returnValue);
+    }
+
+    private protected override Task<IPosition3D> OnParse(IXDocumentWrapper document)
+    {
+        document.TryGetRootAttribute(Constants.XmlDataFile.AttributeName.X, out double? x);
+        document.TryGetRootAttribute(Constants.XmlDataFile.AttributeName.Y, out double? y);
+        document.TryGetRootAttribute(Constants.XmlDataFile.AttributeName.Z, out double? z);
+
+        return ReturnResultInternal(x, y, z);
+    }
+    private protected override Task<IPosition3D> OnParse(IXmlReaderWrapper reader)
+    {
+        reader.TryGetAttribute(Constants.XmlDataFile.AttributeName.X, out double? x);
+        reader.TryGetAttribute(Constants.XmlDataFile.AttributeName.Y, out double? y);
+        reader.TryGetAttribute(Constants.XmlDataFile.AttributeName.Z, out double? z);
+
+        return ReturnResultInternal(x, y, z);
     }
 }

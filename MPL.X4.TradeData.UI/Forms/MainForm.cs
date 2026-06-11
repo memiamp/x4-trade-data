@@ -126,7 +126,7 @@ internal partial class MainForm : Form
             BeginInvoke(OnUpdateAfterSaveGameLoaded);
             return;
         }
-
+        
         UpdateSectorListControl();
         UpdateSpecialItemsControl();
         UpdateTradeControl();

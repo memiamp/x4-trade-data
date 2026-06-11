@@ -18,6 +18,7 @@ internal class StationModelParser(
 {
     private protected override IStationModel OnParse(IStationData source)
     {
+        var cargo = modelParser.Parse<IEnumerable<IWareItemData>, ICargoItemModelList>(source.Cargo.Items);
         var isWreck = source.State == Constants.XmlDataFile.AttributeValue.State.Wreck;
         var owner = parsingScope.ParseFaction(source.Owner);
         var productions = modelParser.Parse<IEnumerable<string>, IProductionModelList>(source.Productions);
@@ -28,9 +29,12 @@ internal class StationModelParser(
 
         var name = ParseName(source, owner.Name, productions);
 
+        var ships = ParseShips(source.Ships);
+
         return new StationModel
         {
             BuildStorage = buildStorage,
+            Cargo = cargo,
             Code = source.Code,
             IsAbandoned = owner.IsOwnerless,
             IsKnown = source.IsKnown,
@@ -40,6 +44,7 @@ internal class StationModelParser(
             Name = name,
             Owner = owner,
             Productions = productions,
+            Ships = ships,
             Trades = trades,
             Transform = transform,
         };
@@ -113,6 +118,19 @@ internal class StationModelParser(
         else
         {
             returnValue = $"{ownerName} Unknown Station {source.Code}";
+        }
+
+        return returnValue;
+    }
+
+    private IShipModelList ParseShips(IEnumerable<IShipData> source)
+    {
+        var returnValue = new ShipModelList();
+
+        foreach (var item in source)
+        {
+            var model = modelParser.Parse<IShipData, IShipModel>(item);
+            returnValue.Add(model);
         }
 
         return returnValue;

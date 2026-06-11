@@ -1,9 +1,8 @@
 ﻿using System.Xml;
 using Microsoft.Extensions.Logging;
-using MPL.X4.Parser;
 using MPL.X4.Services.Xml;
 
-namespace MPL.X4.GameResources.Data.Parser;
+namespace MPL.X4.Parser;
 
 /// <summary>
 /// A class that implements a data parser for an <see cref="ITransform3D"/>.
@@ -13,8 +12,25 @@ namespace MPL.X4.GameResources.Data.Parser;
 internal class Transform3DParser(
                                  IDataParser dataParser,
                                  ILogger<Transform3DParser> logger)
-    : DataParserBase<ITransform3D>(dataParser, logger)
+    : DocumentDataParserBase<ITransform3D>(dataParser, logger)
 {
+    private protected override async Task<ITransform3D> OnParse(IXDocumentWrapper document)
+    {
+        var position = await ParseElementOptional<IPosition3D>(document, Constants.XmlDataFile.XPath.Transform.PositionElement)
+                       ?? IPosition3D.GetDefault();
+        var rotation = await ParseElementOptional<IRotation3D>(document, Constants.XmlDataFile.XPath.Transform.RotationElement)
+                       ?? IRotation3D.GetDefault();
+        var quaternion = await ParseElementOptional<IQuaternion>(document, Constants.XmlDataFile.XPath.Transform.QuaternionElement)
+                         ?? IQuaternion.GetDefault();
+        
+        return new Transform3D
+        {
+            Position = position,
+            Quaternion = quaternion,
+            Rotation = rotation
+        };
+    }
+
     private protected override async Task<ITransform3D> OnParse(IXmlReaderWrapper reader)
     {
         var position = IPosition3D.GetDefault();

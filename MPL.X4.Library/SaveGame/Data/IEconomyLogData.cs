@@ -6,6 +6,11 @@
 public interface IEconomyLogData
 {
     /// <summary>
+    /// Gets removed objects.
+    /// </summary>
+    IEnumerable<IRemovedObjectData> RemovedObjects { get; }
+
+    /// <summary>
     /// Gets the trade log.
     /// </summary>
     ITradeLogData TradeLog { get; }

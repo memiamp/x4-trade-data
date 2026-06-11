@@ -14,15 +14,21 @@ internal class DataParser(
                           IServiceProvider serviceProvider)
     : IDataParser
 {
-    Task<TData> IDataParser.Parse<TData>(IXmlReaderWrapper reader)
+    private IDataParser<TData> GetParserInternal<TData>()
     {
-        var parser = serviceProvider.GetService<IDataParser<TData>>();
-        if (parser is null)
+        var returnValue = serviceProvider.GetService<IDataParser<TData>>();
+        if (returnValue is null)
         {
             logger.LogWarning("A data parser for {DataType} was not found", typeof(TData));
             throw new InvalidOperationException("A data parser for the specified data type cannot be found");
         }
 
-        return parser.Parse(reader);
+        return returnValue;
     }
+
+    Task<TData> IDataParser.Parse<TData>(IXDocumentWrapper document)
+        => GetParserInternal<TData>().Parse(document);
+
+    Task<TData> IDataParser.Parse<TData>(IXmlReaderWrapper reader)
+        => GetParserInternal<TData>().Parse(reader);
 }

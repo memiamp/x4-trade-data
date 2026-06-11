@@ -3,17 +3,12 @@
 /// <summary>
 /// An interface that defines a model of a station.
 /// </summary>
-public interface IStationModel : IHasIsKnown, IHasOwner, IHasTransform, IModelWithId
+public interface IStationModel : IHasCode, IHasCargo, IHasIsKnown, IHasOwner, IHasShips, IHasTrades, IHasTransform, IIsWreckable, IModelWithId
 {
     /// <summary>
     /// Gets the build storage for this station.
     /// </summary>
     IBuildStorageModel? BuildStorage { get; }
-
-    /// <summary>
-    /// Gets the code of the station.
-    /// </summary>
-    string Code { get; }
 
     /// <summary>
     /// Gets an indication of whether the station is abandoned.
@@ -26,11 +21,6 @@ public interface IStationModel : IHasIsKnown, IHasOwner, IHasTransform, IModelWi
     bool IsUnderConstruction { get; }
 
     /// <summary>
-    /// Gets an indication of whether the station is a wreck.
-    /// </summary>
-    bool IsWreck { get; }
-
-    /// <summary>
     /// Gets the name of the station.
     /// </summary>
     string Name { get; }
@@ -39,9 +29,4 @@ public interface IStationModel : IHasIsKnown, IHasOwner, IHasTransform, IModelWi
     /// Gets the productions at the station.
     /// </summary>
     IProductionModelList Productions { get; }
-
-    /// <summary>
-    /// Gets the trades on offer at the station.
-    /// </summary>
-    ITradeModelList Trades { get; }
 }

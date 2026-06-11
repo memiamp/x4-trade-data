@@ -16,16 +16,50 @@ internal class SaveGameModelsParser(
                                     ISaveGameModelParsingScope parsingScope)
     : ModelParserBase<ISaveGameData, ISaveGameModels>(logger)
 {
+    private static IEnumerable<IShipModel> FlattenShips(IEnumerable<IShipModel> source)
+    {
+        foreach (var ship in source)
+        {
+            yield return ship;
+            foreach (var child in FlattenShips(ship.Ships))
+            {
+                yield return child;
+            }
+        }
+    }
+
+    private static IEnumerable<IShipModel> GetAllShips(IUniverseModel source)
+    {
+        var sectors = source.Sectors;
+
+        var sectorShips = sectors.SelectMany(x => x.Ships);
+
+        var stations = sectors.SelectMany(x => x.Stations);
+        var stationShips = stations.SelectMany(x => x.Ships);
+
+        var buildStorages = stations
+                                    .Where(x => x.BuildStorage is not null)
+                                    .Select(x => x.BuildStorage!);
+        var buildStorageShips = buildStorages.SelectMany(x => x.Ships);
+
+        var ships = sectorShips
+                               .Concat(stationShips)
+                               .Concat(buildStorageShips);
+
+        return FlattenShips(ships);
+    }
+
     private protected override ISaveGameModels OnParse(ISaveGameData source)
     {
         var universe = modelParser.Parse<IUniverseData, IUniverseModel>(source.Universe);
 
-        parsingScope.CurrentShips = universe
-                                            .Sectors
-                                            .SelectMany(x => x.Ships);
-        parsingScope.CurrentStations = universe
-                                               .Sectors
-                                               .SelectMany(x => x.Stations);
+        parsingScope.CurrentBuildStorageModels = universe
+                                                         .Sectors
+                                                         .SelectMany(x => x.BuildStorages);
+        parsingScope.CurrentShipModels = GetAllShips(universe);
+        parsingScope.CurrentStationModels = universe
+                                                    .Sectors
+                                                    .SelectMany(x => x.Stations);
 
         var economyLog = modelParser.Parse<IEconomyLogData, IEconomyLogModel>(source.EconomyLog);
 

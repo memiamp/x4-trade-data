@@ -44,13 +44,19 @@ public static class Bootstrap
         servicesCollection.AddTransient<IDataParser<IColourDataDictionary>, ColourDataDictionaryParser>();
         servicesCollection.AddTransient<IDataParser<IFactionData>, FactionDataParser>();
         servicesCollection.AddTransient<IDataParser<IFactionDataDictionary>, FactionDataDictionaryParser>();
+        servicesCollection.AddTransient<IDataParser<IGameData>, GameDataParser>();
+        servicesCollection.AddTransient<IDataParser<IInformationData>, InformationDataParser>();
         servicesCollection.AddTransient<IDataParser<ILandmarkNameResourceDataDictionary>, LandmarkNameResourceDataDictionaryParser>();
         servicesCollection.AddTransient<IDataParser<IMappingData>, MappingDataParser>();
         servicesCollection.AddTransient<IDataParser<IMappingDataDictionary>, MappingDataDictionaryParser>();
         servicesCollection.AddTransient<IDataParser<IOffsetDataDictionary>, OffsetDataDictionaryParser>();
+        servicesCollection.AddTransient<IDataParser<IPlayerData>, PlayerDataParser>();
         servicesCollection.AddTransient<IDataParser<IPosition3D>, Position3DParser>();
         servicesCollection.AddTransient<IDataParser<IQuaternion>, QuaternionParser>();
+        servicesCollection.AddTransient<IDataParser<IRemovedObjectData>, RemovedObjectDataParser>();
         servicesCollection.AddTransient<IDataParser<IRotation3D>, Rotation3DParser>();
+        servicesCollection.AddTransient<IDataParser<ISaveData>, SaveDataParser>();
+        servicesCollection.AddTransient<IDataParser<ISaveGameData>, SaveGameDataParser>();
         servicesCollection.AddTransient<IDataParser<ISectorNameResourceDataDictionary>, SectorNameResourceDataDictionaryParser>();
         servicesCollection.AddTransient<IDataParser<IShipModelResourceDataDictionary>, ShipModelResourceDataDictionaryParser>();
         servicesCollection.AddTransient<IDataParser<ITextResourceItem>, TextResourceItemParser>();
@@ -91,18 +97,22 @@ public static class Bootstrap
         servicesCollection.AddTransient<IDataParser<ICollectableAmmoData>, CollectableAmmoDataParser>();
         servicesCollection.AddTransient<IDataParser<ICollectableWareData>, CollectableWareDataParser>();
         servicesCollection.AddTransient<IDataParser<IEconomyLogData>, EconomyLogDataParser>();
+        servicesCollection.AddTransient<IDataParser<IEngineModificationData>, EngineModificationDataParser>();
         servicesCollection.AddTransient<IDataParser<IGateData>, GateDataParser>();
         servicesCollection.AddTransient<IDataParser<ILockboxData>, LockboxDataParser>();
-        servicesCollection.AddTransient<IDataParser<IEnumerable<IModificationData>>, ModificationParser>();
         servicesCollection.AddTransient<IDataParser<IEnumerable<IWareItemData>>, WareItemsDataParser>();
+        servicesCollection.AddTransient<IDataParser<IPaintModificationData>, PaintModificationDataParser>();
         servicesCollection.AddTransient<IDataParser<ISectorData>, SectorDataParser>();
+        servicesCollection.AddTransient<IDataParser<IShieldModificationData>, ShieldModificationDataParser>();
         servicesCollection.AddTransient<IDataParser<IShipData>, ShipDataParser>();
+        servicesCollection.AddTransient<IDataParser<IShipModificationData>, ShipModificationDataParser>();
         servicesCollection.AddTransient<IDataParser<IStationData>, StationDataParser>();
         servicesCollection.AddTransient<IDataParser<ITradeData>, TradeDataParser>();
         servicesCollection.AddTransient<IDataParser<ITradeLogData>, TradeLogDataParser>();
         servicesCollection.AddTransient<IDataParser<ITradeLogEntryData>, TradeLogEntryDataParser>();
         servicesCollection.AddTransient<IDataParser<IUniverseData>, UniverseDataParser>();
         servicesCollection.AddTransient<IDataParser<IWareItemData>, WareItemDataParser>();
+        servicesCollection.AddTransient<IDataParser<IWeaponModificationData>, WeaponModificationDataParser>();
         servicesCollection.AddTransient<IDataParser<IZoneData>, ZoneDataParser>();
 
         // Model parsers
@@ -110,20 +120,23 @@ public static class Bootstrap
         servicesCollection.AddTransient<IModelParser<ICollectableAmmoData, ICollectableDropModelList>, CollectableDropAmmoModelParser>();
         servicesCollection.AddTransient<IModelParser<ICollectableWareData, ICollectableDropModelList>, CollectableDropWareModelParser>();
         servicesCollection.AddTransient<IModelParser<IEconomyLogData, IEconomyLogModel>, EconomyLogModelParser>();
+        servicesCollection.AddTransient<IModelParser<IEngineModificationData, IEngineModificationModel>, EngineModificationModelParser>();
         servicesCollection.AddTransient<IModelParser<IEnumerable<IWareItemData>, ICargoItemModelList>, CargoItemModelListParser>();
         servicesCollection.AddTransient<IModelParser<IEnumerable<ISectorData>, ISectorModelList>, SectorModelListParser>();
         servicesCollection.AddTransient<IModelParser<IEnumerable<ITradeData>, ITradeModelList>, TradeModelListParser>();
         servicesCollection.AddTransient<IModelParser<IEnumerable<string>, IProductionModelList>, ProductionModelListParser>();
         servicesCollection.AddTransient<IModelParser<IGateData, IGateModel>, GateModelParser>();
         servicesCollection.AddTransient<IModelParser<ILockboxData, ILockboxModel>, LockboxModelParser>();
-        servicesCollection.AddTransient<IModelParser<IModificationData, IModificationModel>, ModificationModelParser>();
-        servicesCollection.AddTransient<IModelParser<IEnumerable<IModificationData>, IModificationModelList>, ModificationModelListParser>();
+        servicesCollection.AddTransient<IModelParser<IPaintModificationData, IPaintModificationModel>, PaintModificationModelParser>();
         servicesCollection.AddTransient<IModelParser<ISaveGameData, ISaveGameModels>, SaveGameModelsParser>();
         servicesCollection.AddTransient<IModelParser<ISectorData, ISectorModel>, SectorModelParser>();
+        servicesCollection.AddTransient<IModelParser<IShieldModificationData, IShieldModificationModel>, ShieldModificationModelParser>();
         servicesCollection.AddTransient<IModelParser<IShipData, IShipModel>, ShipModelParser>();
+        servicesCollection.AddTransient<IModelParser<IShipModificationData, IShipModificationModel>, ShipModificationModelParser>();
         servicesCollection.AddTransient<IModelParser<IStationData, IStationModel>, StationModelParser>();
         servicesCollection.AddTransient<IModelParser<IUniverseData, IUniverseModel>, UniverseModelParser>();
         servicesCollection.AddTransient<IModelParser<IWareItemData, ICargoItemModel>, CargoItemModelParser>();
+        servicesCollection.AddTransient<IModelParser<IWeaponModificationData, IWeaponModificationModel>, WeaponModificationModelParser>();
     }
 
     /// <summary>

@@ -7,5 +7,7 @@ internal class SaveGameData : ISaveGameData
 {
     public required IEconomyLogData EconomyLog { get; init; }
 
+    public required IInformationData Information { get; init; }
+
     public required IUniverseData Universe { get; init; }
 }

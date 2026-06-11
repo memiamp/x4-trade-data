@@ -20,6 +20,7 @@ internal class BuildStorageModelParser(
     {
         var cargo = modelParser.Parse<IEnumerable<IWareItemData>, ICargoItemModelList>(source.Cargo.Items);
         var owner = parsingScope.ParseFaction(source.Owner);
+        var ships = ParseShips(source.Ships);
         var trades = modelParser.Parse<IEnumerable<ITradeData>, ITradeModelList>(source.Trades);
         var transform = source.Transform.Add(parsingScope.CurrentOffset);
 
@@ -31,8 +32,22 @@ internal class BuildStorageModelParser(
             Id = source.Id,
             IsWreck = source.State == Constants.XmlDataFile.AttributeValue.State.Wreck,
             Owner = owner,
+            Ships = ships,
             Trades = trades,
             Transform = transform,
         };
+    }
+
+    private IShipModelList ParseShips(IEnumerable<IShipData> source)
+    {
+        var returnValue = new ShipModelList();
+
+        foreach (var item in source)
+        {
+            var model = modelParser.Parse<IShipData, IShipModel>(item);
+            returnValue.Add(model);
+        }
+
+        return returnValue;
     }
 }

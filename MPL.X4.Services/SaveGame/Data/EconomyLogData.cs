@@ -1,6 +1,4 @@
-﻿using System.Collections;
-
-namespace MPL.X4.SaveGame.Data;
+﻿namespace MPL.X4.SaveGame.Data;
 
 /// <summary>
 /// A class that implements a data model of an economy log.
@@ -9,6 +7,8 @@ internal class EconomyLogData : IEconomyLogData
 {
     public override string ToString()
         => $"Trade Log: {TradeLog.Count()}";
+
+    public required IEnumerable<IRemovedObjectData> RemovedObjects { get; init; }
 
     public required ITradeLogData TradeLog { get; init; }
 }

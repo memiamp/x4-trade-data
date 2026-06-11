@@ -38,19 +38,24 @@ internal interface ISaveGameModelParsingScope
     IEnumerable<IBuildStorageData> CurrentBuildStorages { get; set; }
 
     /// <summary>
+    /// Gets or sets the current build storage models.
+    /// </summary>
+    IEnumerable<IBuildStorageModel> CurrentBuildStorageModels { get; set; }
+
+    /// <summary>
     /// Gets or sets the current offset.
     /// </summary>
     ITransform3D CurrentOffset { get; set; }
 
     /// <summary>
-    /// Gets or sets the current ships.
+    /// Gets or sets the current ship models.
     /// </summary>
-    IEnumerable<IShipModel> CurrentShips { get; set; }
+    IEnumerable<IShipModel> CurrentShipModels { get; set; }
 
     /// <summary>
-    /// Gets or sets the current stations.
+    /// Gets or sets the current station models.
     /// </summary>
-    IEnumerable<IStationModel> CurrentStations { get; set; }
+    IEnumerable<IStationModel> CurrentStationModels { get; set; }
 
     /// <summary>
     /// Gets or sets the game resources.

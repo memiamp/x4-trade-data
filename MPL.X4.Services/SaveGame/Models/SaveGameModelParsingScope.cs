@@ -52,11 +52,13 @@ internal class SaveGameModelParsingScope(
 
     IEnumerable<IBuildStorageData> ISaveGameModelParsingScope.CurrentBuildStorages { get; set; } = [];
 
+    IEnumerable<IBuildStorageModel> ISaveGameModelParsingScope.CurrentBuildStorageModels { get; set; } = [];
+
     ITransform3D ISaveGameModelParsingScope.CurrentOffset { get; set; } = ITransform3D.GetDefault();
 
-    IEnumerable<IShipModel> ISaveGameModelParsingScope.CurrentShips { get; set; } = [];
+    IEnumerable<IShipModel> ISaveGameModelParsingScope.CurrentShipModels { get; set; } = [];
 
-    IEnumerable<IStationModel> ISaveGameModelParsingScope.CurrentStations { get; set; } = [];
+    IEnumerable<IStationModel> ISaveGameModelParsingScope.CurrentStationModels { get; set; } = [];
 
     [AllowNull]
     IGameResourceModels ISaveGameModelParsingScope.GameResources { get; set; }

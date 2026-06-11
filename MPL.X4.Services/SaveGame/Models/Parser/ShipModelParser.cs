@@ -29,26 +29,87 @@ internal class ShipModelParser(
     {
         var cargo = modelParser.Parse<IEnumerable<IWareItemData>, ICargoItemModelList>(source.Cargo.Items);
         var model = ParseModel(source.Macro);
-        var modifications = modelParser.Parse<IEnumerable<IModificationData>, IModificationModelList>(source.Modifications);
         var owner = parsingScope.ParseFaction(source.Owner);
         var shipClass = ParseShipClass(source.Class);
+        var ships = ParseShips(source.Ships);
         var transform = source.Transform.Add(parsingScope.CurrentOffset);
+
+        ParseModifications(
+                           source,
+                           out var engineModification,
+                           out var paintModification,
+                           out var shieldModification,
+                           out var shipModification,
+                           out var weaponModifications);
 
         return new ShipModel
         {
             Cargo = cargo,
             Class = shipClass,
             Code = source.Code,
+            EngineModification = engineModification,
             IsAbandoned = owner.IsOwnerless,
             IsKnown = source.IsKnown,
             Id = source.Id,
             IsWreck = source.State == Constants.XmlDataFile.AttributeValue.State.Wreck,
             Model = model,
-            Modifications = modifications,
             Name = source.Name,
             Owner = owner,
+            PaintModification = paintModification,
+            ShieldModification = shieldModification,
+            ShipModification = shipModification,
+            Ships = ships,
             Transform = transform,
+            WeaponModifications = weaponModifications
         };
+    }
+
+    private void ParseModifications(
+                                    IShipData source,
+                                    out IEngineModificationModel? engineModification,
+                                    out IPaintModificationModel? paintModification,
+                                    out IShieldModificationModel? shieldModification,
+                                    out IShipModificationModel? shipModification,
+                                    out IEnumerable<IWeaponModificationModel> weaponModifications)
+    {
+        engineModification = null;
+        paintModification = null;
+        shieldModification = null;
+        shipModification = null;
+        weaponModifications = [];
+
+        if (source.EngineModification is not null)
+        {
+            engineModification = modelParser.Parse<IEngineModificationData, IEngineModificationModel>(source.EngineModification);
+        }
+
+        if (source.PaintModification is not null)
+        {
+            paintModification = modelParser.Parse<IPaintModificationData, IPaintModificationModel>(source.PaintModification);
+        }
+
+        if (source.ShieldModification is not null)
+        {
+            shieldModification = modelParser.Parse<IShieldModificationData, IShieldModificationModel>(source.ShieldModification);
+        }
+
+        if (source.ShipModification is not null)
+        {
+            shipModification = modelParser.Parse<IShipModificationData, IShipModificationModel>(source.ShipModification);
+        }
+
+        if (source.WeaponModifications.Any())
+        {
+            var weapons = new List<IWeaponModificationModel>();
+
+            foreach (var item in source.WeaponModifications)
+            {
+                var model = modelParser.Parse<IWeaponModificationData, IWeaponModificationModel>(item);
+                weapons.Add(model);
+            }
+
+            weaponModifications = weapons;
+        }
     }
 
     private string ParseModel(string macro)
@@ -69,6 +130,19 @@ internal class ShipModelParser(
             Logger.LogWarning("Unable to map ship class {ShipClass}", shipClass);
 
             returnValue = ShipClass.Unknown;
+        }
+
+        return returnValue;
+    }
+
+    private IShipModelList ParseShips(IEnumerable<IShipData> source)
+    {
+        var returnValue = new ShipModelList();
+
+        foreach (var item in source)
+        {
+            var model = modelParser.Parse<IShipData, IShipModel>(item);
+            returnValue.Add(model);
         }
 
         return returnValue;

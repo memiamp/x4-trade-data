@@ -6,12 +6,17 @@
 public interface ITradeLogTradeModel : ITradeModel
 {
     /// <summary>
-    /// Gets the station the trade was bought from.
+    /// Gets the code of the target the trade was made with.
     /// </summary>
-    IStationModel? BoughtFrom { get; }
+    string TargetCode { get; }
 
     /// <summary>
-    /// Gets the station the trade was sold to.
+    /// Gets the name of the target the trade was made with.
     /// </summary>
-    IStationModel? SoldTo { get; }
+    string TargetName { get; }
+
+    /// <summary>
+    /// Gets the target type the trade was made with.
+    /// </summary>
+    TradeTargetType TargetType { get; }
 }

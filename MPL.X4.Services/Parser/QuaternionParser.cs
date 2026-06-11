@@ -1,8 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
-using MPL.X4.Parser;
 using MPL.X4.Services.Xml;
 
-namespace MPL.X4.GameResources.Data.Parser;
+namespace MPL.X4.Parser;
 
 /// <summary>
 /// A class that implements a data parser for an <see cref="IQuaternion"/>.
@@ -14,13 +13,8 @@ internal class QuaternionParser(
                                 ILogger<QuaternionParser> logger)
     : DataParserBase<IQuaternion>(dataParser, logger)
 {
-    private protected override Task<IQuaternion> OnParse(IXmlReaderWrapper reader)
+    private static Task<IQuaternion> ReturnResultInternal(double? w, double? x, double? y, double? z)
     {
-        reader.TryGetAttribute(Constants.XmlDataFile.AttributeName.QW, out double? w);
-        reader.TryGetAttribute(Constants.XmlDataFile.AttributeName.QX, out double? x);
-        reader.TryGetAttribute(Constants.XmlDataFile.AttributeName.QY, out double? y);
-        reader.TryGetAttribute(Constants.XmlDataFile.AttributeName.QZ, out double? z);
-
         var returnValue = new QuaternionRecord
         {
             W = w ?? 0,
@@ -30,5 +24,25 @@ internal class QuaternionParser(
         };
 
         return Task.FromResult<IQuaternion>(returnValue);
+    }
+
+    private protected override Task<IQuaternion> OnParse(IXDocumentWrapper document)
+    {
+        document.TryGetRootAttribute(Constants.XmlDataFile.AttributeName.QW, out double? w);
+        document.TryGetRootAttribute(Constants.XmlDataFile.AttributeName.QX, out double? x);
+        document.TryGetRootAttribute(Constants.XmlDataFile.AttributeName.QY, out double? y);
+        document.TryGetRootAttribute(Constants.XmlDataFile.AttributeName.QZ, out double? z);
+
+        return ReturnResultInternal(w, x, y, z);
+    }
+
+    private protected override Task<IQuaternion> OnParse(IXmlReaderWrapper reader)
+    {
+        reader.TryGetAttribute(Constants.XmlDataFile.AttributeName.QW, out double? w);
+        reader.TryGetAttribute(Constants.XmlDataFile.AttributeName.QX, out double? x);
+        reader.TryGetAttribute(Constants.XmlDataFile.AttributeName.QY, out double? y);
+        reader.TryGetAttribute(Constants.XmlDataFile.AttributeName.QZ, out double? z);
+
+        return ReturnResultInternal(w, x, y, z);
     }
 }

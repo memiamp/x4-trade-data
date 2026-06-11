@@ -17,6 +17,7 @@ internal class EconomyLogDataParser(
 {
     private protected override async Task<IEconomyLogData> OnParse(IXmlReaderWrapper reader)
     {
+        IEnumerable<IRemovedObjectData>? removedObjects = null;
         ITradeLogData? tradeLog = null;
 
         while (await reader.ReadAsync())
@@ -27,7 +28,17 @@ internal class EconomyLogDataParser(
                 using var subtree = await reader.ReadSubtree();
 
                 tradeLog = await DataParser.Parse<ITradeLogData>(subtree);
+            }
+            else if (reader.CheckNodeMatches(Constants.XmlDataFile.ElementName.Removed, XmlNodeType.Element, 1))
+            {
+                using var subtree = await reader.ReadSubtree();
 
+                removedObjects = await ParseRemovedObjects(subtree);
+            }
+
+            if (removedObjects is not null &&
+                tradeLog is not null)
+            {
                 break;
             }
         }
@@ -40,7 +51,27 @@ internal class EconomyLogDataParser(
 
         return new EconomyLogData
         {
+            RemovedObjects = removedObjects ?? [],
             TradeLog = tradeLog
         };
+    }
+
+    private async Task<IEnumerable<IRemovedObjectData>> ParseRemovedObjects(IXmlReaderWrapper reader)
+    {
+        List<IRemovedObjectData> returnValue = [];
+
+        while (await reader.ReadAsync())
+        {
+            if (reader.CheckNodeMatches(Constants.XmlDataFile.ElementName.RemovedObject, XmlNodeType.Element, 1))
+            {
+                using var subtree = await reader.ReadSubtree();
+
+                var data = await DataParser.Parse<IRemovedObjectData>(subtree);
+
+                returnValue.Add(data);
+            }
+        }
+
+        return returnValue;
     }
 }

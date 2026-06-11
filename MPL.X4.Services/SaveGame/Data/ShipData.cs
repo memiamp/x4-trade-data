@@ -14,17 +14,27 @@ internal class ShipData : HasTransformBase, IShipData
 
     public required string Code { get; init; }
 
+    public required IEngineModificationData? EngineModification { get; init; }
+
     public required string Id { get; init; }
 
     public required bool IsKnown { get; init; }
 
     public required string Macro { get; init; }
 
-    public required IEnumerable<IModificationData> Modifications { get; init; }
-
     public required string? Name { get; init; }
 
     public required string Owner { get; init; }
 
-    public string? State { get; init; }
+    public required IPaintModificationData? PaintModification { get; init; }
+
+    public required IShieldModificationData? ShieldModification { get; init; }
+
+    public required IShipModificationData? ShipModification { get; init; }
+
+    public required IEnumerable<IShipData> Ships { get; init; }
+
+    public required string? State { get; init; }
+
+    public required IEnumerable<IWeaponModificationData> WeaponModifications { get; init; }
 }

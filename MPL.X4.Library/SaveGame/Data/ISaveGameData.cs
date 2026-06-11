@@ -11,6 +11,11 @@ public interface ISaveGameData
     IEconomyLogData EconomyLog { get; }
 
     /// <summary>
+    /// Gets the information from the save game.
+    /// </summary>
+    IInformationData Information { get; }
+
+    /// <summary>
     /// Gets the universe from the save game.
     /// </summary>
     IUniverseData Universe { get; }

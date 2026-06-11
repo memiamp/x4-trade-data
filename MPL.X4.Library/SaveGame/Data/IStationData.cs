@@ -21,6 +21,11 @@ public interface IStationData : IHasIsKnown, IHasState, IHasTransform
     string? BuildingModuleId { get; }
 
     /// <summary>
+    /// Gets the station cargo.
+    /// </summary>
+    ICargoData Cargo { get; }
+
+    /// <summary>
     /// Gets the code of the station.
     /// </summary>
     string Code { get; }
@@ -64,6 +69,11 @@ public interface IStationData : IHasIsKnown, IHasState, IHasTransform
     /// Gets the productions at the station.
     /// </summary>
     IEnumerable<string> Productions { get; }
+
+    /// <summary>
+    /// Gets the ships docked at the station.
+    /// </summary>
+    IEnumerable<IShipData> Ships { get; }
 
     /// <summary>
     /// Gets the trades on offer at the station.

@@ -1,5 +1,4 @@
-﻿using System.Xml;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using MPL.X4.Parser;
 using MPL.X4.Services.Xml;
 
@@ -19,38 +18,18 @@ internal class SaveGameDataLoader(
 {
     async Task<ISaveGameData> ISaveGameDataLoader.LoadFrom(string sourcePath)
     {
-        IEconomyLogData? economyLog = null;
-        IUniverseData? universeData = null;
-
-        using var reader = xmlReaderWrapperFactory.CreateXmlReader(sourcePath);
-
-        while (await reader.ReadAsync())
+        try
         {
-            if (reader.CheckNodeMatches(Constants.XmlDataFile.ElementName.Universe, XmlNodeType.Element, 1))
-            {
-                using var subtree = await reader.ReadSubtree();
+            using var reader = xmlReaderWrapperFactory.CreateXmlReader(sourcePath);
 
-                universeData = await dataParser.Parse<IUniverseData>(subtree);
-            }
-            else if (reader.CheckNodeMatches(Constants.XmlDataFile.ElementName.EconomyLog, XmlNodeType.Element, 1))
-            {
-                using var subtree = await reader.ReadSubtree();
+            var returnValue = await dataParser.Parse<ISaveGameData>(reader);
 
-                economyLog = await dataParser.Parse<IEconomyLogData>(subtree);
-            }
+            return returnValue;
         }
-
-        if (universeData is null ||
-            economyLog is null)
+        catch (Exception ex)
         {
-            logger.LogWarning("Could not load save game from {SourcePath}", sourcePath);
-            throw new ArgumentException($"Could not load save game from '{sourcePath}'", nameof(sourcePath));
+            logger.LogError(ex, "Could not load save game from {SourcePath}", sourcePath);
+            throw new ArgumentException($"Could not load save game from '{sourcePath}'", nameof(sourcePath), ex);
         }
-
-        return new SaveGameData
-        {
-            EconomyLog = economyLog,
-            Universe = universeData
-        };
     }
 }

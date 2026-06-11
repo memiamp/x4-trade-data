@@ -17,6 +17,15 @@ internal abstract class DataParserBase<TData>(
     /// <summary>
     /// Gets an indication of whether the item being loaded is known to the player.
     /// </summary>
+    /// <param name="document">An <see cref="IXDocumentWrapper"/> that is the source document.</param>
+    /// <returns>A <see cref="bool"/> indicating the result.</returns>
+    private protected static bool GetIsKnownToPlayer(IXDocumentWrapper document)
+        => document.TryGetRootAttribute(Constants.XmlDataFile.AttributeName.KnownTo, out string? value) &&
+           value == Constants.XmlDataFile.AttributeValue.KnownTo.Player;
+
+    /// <summary>
+    /// Gets an indication of whether the item being loaded is known to the player.
+    /// </summary>
     /// <param name="reader">An <see cref="IXmlReaderWrapper"/> that is the source reader.</param>
     /// <returns>A <see cref="bool"/> indicating the result.</returns>
     private protected static bool GetIsKnownToPlayer(IXmlReaderWrapper reader)
@@ -25,11 +34,26 @@ internal abstract class DataParserBase<TData>(
                                   x => x == Constants.XmlDataFile.AttributeValue.KnownTo.Player);
 
     /// <summary>
-    /// Invoked to parse data from the specified <paramref name="reader"/>, using the specified <paramref name="positionOffset"/> to adjust any position data as needed.
+    /// Invoked to parse data from the specified <paramref name="document"/>.
+    /// </summary>
+    /// <param name="document">An <see cref="IXmlReaderWrapper"/> that is the data reader.</param>
+    /// <returns>A <see cref="Task{TResult}"/> representing the asynchronous operation. A <typeparamref name="TData"/> that is the result.</returns>
+    private protected virtual Task<TData> OnParse(IXDocumentWrapper document)
+    {
+        logger.LogWarning("Call to parser to process document but document parsing has not been implemented");
+        throw new NotImplementedException("This parser does not have a document parsing implementation");
+    }
+
+    /// <summary>
+    /// Invoked to parse data from the specified <paramref name="reader"/>.
     /// </summary>
     /// <param name="reader">An <see cref="IXmlReaderWrapper"/> that is the data reader.</param>
     /// <returns>A <see cref="Task{TResult}"/> representing the asynchronous operation. A <typeparamref name="TData"/> that is the result.</returns>
-    private protected abstract Task<TData> OnParse(IXmlReaderWrapper reader);
+    private protected virtual Task<TData> OnParse(IXmlReaderWrapper reader)
+    {
+        logger.LogWarning("Call to parser to process reader but reader parsing has not been implemented");
+        throw new NotImplementedException("This parser does not have a reader parsing implementation");
+    }
 
     /// <summary>
     /// Gets the data parser.
@@ -41,6 +65,9 @@ internal abstract class DataParserBase<TData>(
     /// </summary>
     private protected ILogger Logger => logger;
 
+    Task<TData> IDataParser<TData>.Parse(IXDocumentWrapper document)
+       => OnParse(document);
+
     Task<TData> IDataParser<TData>.Parse(IXmlReaderWrapper reader)
-        => OnParse(reader);
+       => OnParse(reader);
 }

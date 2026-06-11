@@ -1,20 +1,8 @@
-﻿using System.Xml;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using MPL.X4.Parser;
 using MPL.X4.Services.Xml;
 
 namespace MPL.X4.SaveGame.Data.Parser;
-
-using BuildProcessorElements = (
-                                string? BuildAnchorId,
-                                string? BuildAnchorConnectionId);
-
-using BuildStorageElements = (
-                              string? BuildAnchorId,
-                              string? BuildAnchorConnectionId,
-                              ICargoData CargoData,
-                              IEnumerable<ITradeData> Trades,
-                              ITransform3D Transform);
 
 /// <summary>
 /// A class that implements a data parser for a <see cref="IBuildStorageData"/>.
@@ -24,23 +12,27 @@ using BuildStorageElements = (
 internal class BuildStorageDataParser(
                                       IDataParser dataParser,
                                       ILogger<BuildStorageDataParser> logger)
-    : DataParserBase<IBuildStorageData>(dataParser, logger)
+    : DocumentDataParserBase<IBuildStorageData>(dataParser, logger)
 {
-    private protected override async Task<IBuildStorageData> OnParse(IXmlReaderWrapper reader)
+    private protected override async Task<IBuildStorageData> OnParse(IXDocumentWrapper document)
     {
-        if (!reader.TryGetAttribute(Constants.XmlDataFile.AttributeName.Code, out string? code) ||
-            !reader.TryGetAttribute(Constants.XmlDataFile.AttributeName.Macro, out string? macro) ||
-            !reader.TryGetAttribute(Constants.XmlDataFile.AttributeName.Owner, out string? owner) ||
-            !reader.TryGetAttribute(Constants.XmlDataFile.AttributeName.BuildStorageId, out string? id))
+        if (!document.TryGetRootAttribute(Constants.XmlDataFile.AttributeName.Code, out string? code) ||
+            !document.TryGetRootAttribute(Constants.XmlDataFile.AttributeName.Macro, out string? macro) ||
+            !document.TryGetRootAttribute(Constants.XmlDataFile.AttributeName.Owner, out string? owner) ||
+            !document.TryGetRootAttribute(Constants.XmlDataFile.AttributeName.BuildStorageId, out string? id))
         {
-            logger.LogWarning("Could not load build storage");
-            throw new ArgumentException("Could not load build storage", nameof(reader));
+            logger.LogWarning("Could not parse build storage");
+            throw new ArgumentException("Could not parse build storage", nameof(document));
         }
 
-        var isKnown = GetIsKnownToPlayer(reader);
-        reader.TryGetAttribute(Constants.XmlDataFile.AttributeName.State, out string? state);
+        var isKnown = GetIsKnownToPlayer(document);
+        document.TryGetRootAttribute(Constants.XmlDataFile.AttributeName.State, out string? state);
 
-        var (buildAnchorId, buildAnchorConnectionId, cargo, trades, transform) = await ParseElements(reader);
+        var (buildAnchorId, buildAnchorConnectionId) = ParseBuildingModule(document);
+        var cargo = await ParseCargo(document);
+        var ships = await ParseShips(document);
+        var trades = await ParseTrades(document);
+        var transform = await ParseTransform(document);
 
         return new BuildStorageData
         {
@@ -52,162 +44,89 @@ internal class BuildStorageDataParser(
             IsKnown = isKnown,
             Macro = macro,
             Owner = owner,
+            Ships = ships,
             State = state,
             Trades = trades,
             Transform = transform
         };
     }
 
-    private async Task<IEnumerable<IWareItemData>> ParseCargo(IXmlReaderWrapper reader)
+    private static (string?, string?) ParseBuildingModule(IXDocumentWrapper document)
     {
-        List<IWareItemData> returnValue = [];
-
-        while (await reader.ReadAsync())
-        {
-            if (reader.CheckNodeMatches(Constants.XmlDataFile.ElementName.Cargo, XmlNodeType.Element, 1))
-            {
-                using var subtree = await reader.ReadSubtree();
-
-                var data = await DataParser.Parse<ICargoData>(subtree);
-
-                returnValue.AddRange(data.Items);
-            }
-        }
-
-        return returnValue;
-    }
-
-    private static BuildProcessorElements ParseComponentBuildStorage(IXDocumentWrapper xdocument)
-    {
-        xdocument.TryGetAttribute(Constants.XmlDataFile.XPath.BuildStorage.BuildAnchorConnection, Constants.XmlDataFile.AttributeName.BuildAnchorId, out var buildAnchorId);
-        xdocument.TryGetAttribute(Constants.XmlDataFile.XPath.BuildStorage.BuildAnchorConnected, Constants.XmlDataFile.AttributeName.Connection, out var buildAnchorConnectionId);
+        document.TryGetAttribute(Constants.XmlDataFile.XPath.BuildStorage.BuildAnchorConnection, Constants.XmlDataFile.AttributeName.BuildAnchorId, out string? buildAnchorId);
+        document.TryGetAttribute(Constants.XmlDataFile.XPath.BuildStorage.BuildAnchorConnected, Constants.XmlDataFile.AttributeName.Connection, out string? buildAnchorConnectionId);
 
         return (buildAnchorId, buildAnchorConnectionId);
     }
 
-    private async Task<IEnumerable<IWareItemData>> ParseComponentStorage(IXmlReaderWrapper reader)
+    private async Task<ICargoData> ParseCargo(IXDocumentWrapper document)
     {
-        List<IWareItemData> returnValue = [];
+        var cargoItems = new List<IWareItemData>();
 
-        while (await reader.ReadAsync())
+        foreach (var item in document.SelectElementsAsDocument(Constants.XmlDataFile.XPath.Station.CargoElement))
         {
-            if (reader.CheckNodeMatches(Constants.XmlDataFile.ElementName.Component, XmlNodeType.Element, 1) &&
-                reader.TryGetAttribute(Constants.XmlDataFile.AttributeName.Class, x => x == Constants.XmlDataFile.AttributeValue.Class.Storage))
-            {
-                using var subtree = await reader.ReadSubtree();
+            var data = await DataParser.Parse<ICargoData>(item);
+            cargoItems.AddRange(data.Items);
+        }
 
-                var data = await ParseCargo(subtree);
+        // Merge duplicated ware items
+        var returnValue = cargoItems
+                                    .GroupBy(x => x.Ware)
+                                    .Select(x => new { x.Key, Amount = x.Sum(y => y.Amount) })
+                                    .Select(x => new WareItemData
+                                    {
+                                        Amount = x.Amount,
+                                        Buy = 0,
+                                        Price = 0,
+                                        Sell = 0,
+                                        Ware = x.Key
+                                    })
+                                    .ToList();
+        
+        return new CargoData
+        {
+            Items = returnValue
+        };
+    }
 
-                returnValue.AddRange(data);
-            }
+    private async Task<IEnumerable<IShipData>> ParseShips(IXDocumentWrapper document)
+    {
+        List<IShipData> returnValue = [];
+
+        // Get ships inside docking components
+        foreach (var item in document.SelectElementsAsDocument(Constants.XmlDataFile.XPath.Docks.ShipsInDockElement))
+        {
+            var data = await DataParser.Parse<IShipData>(item);
+            returnValue.Add(data);
+        }
+
+        // Get ships inside direct docking bays
+        foreach (var item in document.SelectElementsAsDocument(Constants.XmlDataFile.XPath.Docks.ShipsInDockingBayElement))
+        {
+            var data = await DataParser.Parse<IShipData>(item);
+            returnValue.Add(data);
         }
 
         return returnValue;
     }
 
-    private async Task<(BuildProcessorElements, IEnumerable<IWareItemData>)> ParseConnections(IXmlReaderWrapper reader)
-    {
-        string? buildAnchorConnectionId = null;
-        string? buildAnchorId = null;
-        List<IWareItemData> returnValue = [];
-
-        while (await reader.ReadAsync())
-        {
-            if (reader.CheckNodeMatches(Constants.XmlDataFile.ElementName.Connection, XmlNodeType.Element, 1))
-            {
-                if (reader.TryGetAttribute(Constants.XmlDataFile.AttributeName.Connection, x => x.Contains(Constants.XmlDataFile.AttributeValue.Connection.BuildModule)))
-                {
-                    var document = await reader.ReadSubtreeToXDocument();
-
-                    (buildAnchorId, buildAnchorConnectionId) = ParseComponentBuildStorage(document);
-                }
-                else if (reader.TryGetAttribute(Constants.XmlDataFile.AttributeName.Connection, x => x.Contains(Constants.XmlDataFile.AttributeValue.Connection.Storage)))
-                {
-                    using var subtree = await reader.ReadSubtree();
-
-                    var data = await ParseComponentStorage(subtree);
-
-                    returnValue.AddRange(data);
-                }
-            }
-        }
-
-        return ((buildAnchorId, buildAnchorConnectionId), returnValue);
-    }
-
-    private async Task<BuildStorageElements> ParseElements(IXmlReaderWrapper reader)
-    {
-        string? buildAnchorConnectionId = null;
-        string? buildAnchorId = null;
-        var cargoItems = new List<IWareItemData>();
-        List<ITradeData> trades = [];
-        ITransform3D transform = ITransform3D.GetDefault();
-
-        while (await reader.ReadAsync())
-        {
-            if (reader.CheckNodeMatches(Constants.XmlDataFile.ElementName.Offset, XmlNodeType.Element, 1))
-            {
-                using var subtree = await reader.ReadSubtree();
-
-                transform = await DataParser.Parse<ITransform3D>(subtree);
-            }
-            else if (reader.CheckNodeMatches(Constants.XmlDataFile.ElementName.Connections, XmlNodeType.Element, 1))
-            {
-                using var subtree = await reader.ReadSubtree();
-
-                var (buildingData, data) = await ParseConnections(subtree);
-
-                cargoItems.AddRange(data);
-
-                buildAnchorConnectionId = buildingData.BuildAnchorConnectionId;
-                buildAnchorId = buildingData.BuildAnchorId;
-            }
-            else if (reader.CheckNodeMatches(Constants.XmlDataFile.ElementName.Trade, XmlNodeType.Element, 1))
-            {
-                using var subtree = await reader.ReadSubtree();
-
-                var data = await ParseTrades(subtree);
-
-                trades.AddRange(data);
-            }
-        }
-
-        return (buildAnchorId, buildAnchorConnectionId, new CargoData { Items = cargoItems }, trades, transform);
-    }
-
-    private async Task<IEnumerable<ITradeData>> ParseTrade(IXmlReaderWrapper reader)
+    private async Task<IEnumerable<ITradeData>> ParseTrades(IXDocumentWrapper document)
     {
         List<ITradeData> returnValue = [];
 
-        while (await reader.ReadAsync())
+        foreach (var item in document.SelectElementsAsDocument(Constants.XmlDataFile.XPath.Station.TradeElement))
         {
-            if (reader.CheckNodeMatches(Constants.XmlDataFile.ElementName.Trade, XmlNodeType.Element))
-            {
-                var data = await DataParser.Parse<ITradeData>(reader);
-
-                returnValue.Add(data);
-            }
+            var data = await DataParser.Parse<ITradeData>(item);
+            returnValue.Add(data);
         }
 
         return returnValue;
     }
 
-    private async Task<IEnumerable<ITradeData>> ParseTrades(IXmlReaderWrapper reader)
+    private async Task<ITransform3D> ParseTransform(IXDocumentWrapper document)
     {
-        IEnumerable<ITradeData> returnValue = [];
+        var returnValue = await ParseElementOptional<ITransform3D>(document, Constants.XmlDataFile.XPath.Transform.OffsetElement);
 
-        while (await reader.ReadAsync())
-        {
-            if (reader.CheckNodeMatches(Constants.XmlDataFile.ElementName.Production, XmlNodeType.Element, 2))
-            {
-                using var subtree = await reader.ReadSubtree();
-
-                returnValue = await ParseTrade(subtree);
-
-                break;
-            }
-        }
-
-        return returnValue;
+        return returnValue ?? ITransform3D.GetDefault();
     }
 }

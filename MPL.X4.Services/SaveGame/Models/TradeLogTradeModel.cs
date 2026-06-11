@@ -8,7 +8,9 @@ internal class TradeLogTradeModel : TradeModel, ITradeLogTradeModel
     public override string ToString()
         => $"{Name} {Amount} {Type} {Price} - {Id}";
 
-    public required IStationModel? BoughtFrom { get; init; }
+    public required string TargetCode { get; init; }
 
-    public required IStationModel? SoldTo { get; init; }
+    public required string TargetName { get; init; }
+
+    public required TradeTargetType TargetType { get; init; }
 }

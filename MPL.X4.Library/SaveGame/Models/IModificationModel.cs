@@ -6,14 +6,14 @@
 public interface IModificationModel : IModelWithId
 {
     /// <summary>
-    /// Gets the name of the cargo item.
+    /// Gets the name of the modification.
     /// </summary>
     string Name { get; }
 
     /// <summary>
-    /// Gets a summary of the modification
+    /// Gets the quality of the modification.
     /// </summary>
-    string Summary { get; }
+    ModificationQuality Quality { get; }
 
     /// <summary>
     /// Gets the type of the modification.

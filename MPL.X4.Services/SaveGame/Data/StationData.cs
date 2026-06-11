@@ -14,6 +14,8 @@ internal class StationData : HasTransformBase, IStationData
 
     public required string? BuildingModuleId { get; init; }
 
+    public required ICargoData Cargo { get; init; }
+    
     public required string Code { get; init; }
 
     public required int DefenceModuleCount { get; init; }
@@ -33,6 +35,8 @@ internal class StationData : HasTransformBase, IStationData
     public required string Owner { get; init; }
 
     public required IEnumerable<string> Productions { get; init; }
+
+    public required IEnumerable<IShipData> Ships { get; init; }
 
     public string? State { get; init; }
 

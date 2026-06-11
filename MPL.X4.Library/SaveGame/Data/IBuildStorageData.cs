@@ -16,7 +16,7 @@ public interface IBuildStorageData : IHasIsKnown, IHasState, IHasTransform
     string? BuildAnchorId { get; }
 
     /// <summary>
-    /// Gets the build station cargo.
+    /// Gets the build storage cargo.
     /// </summary>
     ICargoData Cargo { get; }
 
@@ -39,6 +39,11 @@ public interface IBuildStorageData : IHasIsKnown, IHasState, IHasTransform
     /// Gets the owner of the build storage.
     /// </summary>
     string Owner { get; }
+
+    /// <summary>
+    /// Gets the ships docked at the build storage.
+    /// </summary>
+    IEnumerable<IShipData> Ships { get; }
 
     /// <summary>
     /// Gets the trades on offer at the build storage.

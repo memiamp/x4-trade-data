@@ -1,19 +1,23 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Xml;
+using Microsoft.Extensions.Logging;
 
 namespace MPL.X4.Services.Xml;
 
 /// <summary>
 /// A class that implements a wrapper around a <see cref="XmlReader"/>.
 /// </summary>
-/// <param name="xmlReader">An <see cref="XmlReader"/> that is the Xml Reader being wrapped.</param>
+/// <param name="logger">An <see cref="ILogger{TCategoryName}"/> that is the logger to use.</param>
 /// <param name="xdocumentWrapperFactory">An <see cref="IXDocumentWrapperFactory"/> that is the XDocument wrapper factory to use.</param>
+/// <param name="xmlReader">An <see cref="XmlReader"/> that is the Xml Reader being wrapped.</param>
 /// <param name="xmlReaderFactory">An <see cref="IXmlReaderWrapperFactory"/> that is the XmlReader wrapper factory to use.</param>
 internal sealed class XmlReaderWrapper(
-                                       XmlReader xmlReader,
+                                       ILogger<XDocumentWrapper> logger,
                                        IXDocumentWrapperFactory xdocumentWrapperFactory,
+                                       XmlReader xmlReader,
                                        IXmlReaderWrapperFactory xmlReaderFactory)
-    : IXmlReaderWrapper
+    : ParserWrapperBase(logger),
+      IXmlReaderWrapper
 {
     private bool _disposedValue;
 
@@ -28,6 +32,22 @@ internal sealed class XmlReaderWrapper(
 
             _disposedValue = true;
         }
+    }
+
+    private bool TryGetAttributeInternal<T>(string name, TryParseDelegate<T> parser, [NotNullWhen(true)] out T? value)
+        where T : struct
+    {
+        value = null;
+
+        var attributeValue = xmlReader.GetAttribute(name);
+
+        if (parser(attributeValue, out T parsed))
+        {
+            value = parsed;
+            return true;
+        }
+
+        return false;
     }
 
     public void Dispose()
@@ -75,8 +95,11 @@ internal sealed class XmlReaderWrapper(
         // The caller is expected to dispose this once consumed
         var subtree = xmlReader.ReadSubtree();
         var reader = xmlReaderFactory.CreateXmlReader(subtree);
-        return xdocumentWrapperFactory.CreateInstance(reader);
+        return reader.ToXDocument();
     }
+
+    Task<IXDocumentWrapper> IXmlReaderWrapper.ToXDocument()
+        => xdocumentWrapperFactory.CreateInstance(this);
 
     bool IXmlReaderWrapper.TryGetAttribute(string name, Func<string, bool> predicate, [NotNullWhen(true)] out string? value)
     {
@@ -95,31 +118,17 @@ internal sealed class XmlReaderWrapper(
     bool IXmlReaderWrapper.TryGetAttribute(string name, Func<string, bool> predicate)
         => ((IXmlReaderWrapper)this).TryGetAttribute(name, predicate, out _);
 
+    bool IXmlReaderWrapper.TryGetAttribute(string name, [NotNullWhen(true)] out decimal? value)
+        => TryGetAttributeInternal(name, decimal.TryParse, out value);
+
     bool IXmlReaderWrapper.TryGetAttribute(string name, [NotNullWhen(true)] out double? value)
-    {
-        value = null;
-
-        var attributeValue = xmlReader.GetAttribute(name);
-        if (double.TryParse(attributeValue, out var outValue))
-        {
-            value = outValue;
-        }
-
-        return value is not null;
-    }
+        => TryGetAttributeInternal(name, double.TryParse, out value);
 
     bool IXmlReaderWrapper.TryGetAttribute(string name, [NotNullWhen(true)] out int? value)
-    {
-        value = null;
+        => TryGetAttributeInternal(name, int.TryParse, out value);
 
-        var attributeValue = xmlReader.GetAttribute(name);
-        if (int.TryParse(attributeValue, out var outValue))
-        {
-            value = outValue;
-        }
-
-        return value is not null;
-    }
+    bool IXmlReaderWrapper.TryGetAttribute(string name, [NotNullWhen(true)] out long? value)
+        => TryGetAttributeInternal(name, long.TryParse, out value);
 
     bool IXmlReaderWrapper.TryGetAttribute(string name, [NotNullWhen(true)] out string? value)
     {

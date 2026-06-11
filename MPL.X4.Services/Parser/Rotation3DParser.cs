@@ -1,8 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
-using MPL.X4.Parser;
 using MPL.X4.Services.Xml;
 
-namespace MPL.X4.GameResources.Data.Parser;
+namespace MPL.X4.Parser;
 
 /// <summary>
 /// A class that implements a data parser for an <see cref="IRotation3D"/>.
@@ -14,12 +13,8 @@ internal class Rotation3DParser(
                                 ILogger<Rotation3DParser> logger)
     : DataParserBase<IRotation3D>(dataParser, logger)
 {
-    private protected override Task<IRotation3D> OnParse(IXmlReaderWrapper reader)
+    private static Task<IRotation3D> ReturnResultInternal(double? pitch, double? roll, double? yaw)
     {
-        reader.TryGetAttribute(Constants.XmlDataFile.AttributeName.Pitch, out double? pitch);
-        reader.TryGetAttribute(Constants.XmlDataFile.AttributeName.Roll, out double? roll);
-        reader.TryGetAttribute(Constants.XmlDataFile.AttributeName.Yaw, out double? yaw);
-
         var returnValue = new Rotation3D
         {
             Pitch = pitch ?? 0,
@@ -28,5 +23,23 @@ internal class Rotation3DParser(
         };
 
         return Task.FromResult<IRotation3D>(returnValue);
+    }
+
+    private protected override Task<IRotation3D> OnParse(IXDocumentWrapper document)
+    {
+        document.TryGetRootAttribute(Constants.XmlDataFile.AttributeName.Pitch, out double? pitch);
+        document.TryGetRootAttribute(Constants.XmlDataFile.AttributeName.Roll, out double? roll);
+        document.TryGetRootAttribute(Constants.XmlDataFile.AttributeName.Yaw, out double? yaw);
+
+        return ReturnResultInternal(pitch, roll, yaw);
+    }
+
+    private protected override Task<IRotation3D> OnParse(IXmlReaderWrapper reader)
+    {
+        reader.TryGetAttribute(Constants.XmlDataFile.AttributeName.Pitch, out double? pitch);
+        reader.TryGetAttribute(Constants.XmlDataFile.AttributeName.Roll, out double? roll);
+        reader.TryGetAttribute(Constants.XmlDataFile.AttributeName.Yaw, out double? yaw);
+
+        return ReturnResultInternal(pitch, roll, yaw);
     }
 }

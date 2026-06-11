@@ -19,6 +19,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Controls\TradeLogViewerControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Update="MapIcons.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>

@@ -8,6 +8,14 @@ namespace MPL.X4.Parser;
 public interface IDataParser
 {
     /// <summary>
+    /// Parses data from the specified <paramref name="document"/> to a <typeparamref name="TData"/>.
+    /// </summary>
+    /// <typeparam name="TData">The type of the data to be parsed.</typeparam>
+    /// <param name="document">An <see cref="IXDocumentWrapper"/> that is the document.</param>
+    /// <returns>A <see cref="Task{TResult}"/> representing the asynchronous operation. A <typeparamref name="TData"/> that is the result.</returns>
+    Task<TData> Parse<TData>(IXDocumentWrapper document);
+
+    /// <summary>
     /// Parses data from the specified <paramref name="reader"/> to a <typeparamref name="TData"/>.
     /// </summary>
     /// <typeparam name="TData">The type of the data to be parsed.</typeparam>

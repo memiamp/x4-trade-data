@@ -1,5 +1,4 @@
-﻿using System.Xml;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using MPL.X4.Parser;
 using MPL.X4.Services.Xml;
 
@@ -21,7 +20,7 @@ internal class TradeLogEntryDataParser(
             !reader.TryGetAttribute(Constants.XmlDataFile.AttributeName.Price, out int? price) ||
             !reader.TryGetAttribute(Constants.XmlDataFile.AttributeName.Seller, out string? seller) ||
             !reader.TryGetAttribute(Constants.XmlDataFile.AttributeName.Time, out double? time) ||
-            !reader.TryGetAttribute(Constants.XmlDataFile.AttributeName.TradelogVolume, out int? volume) ||
+            !reader.TryGetAttribute(Constants.XmlDataFile.AttributeName.TradeLogVolume, out int? volume) ||
             !reader.TryGetAttribute(Constants.XmlDataFile.AttributeName.Ware, out string? ware))
         {
             logger.LogWarning("Could not load trade log entry");

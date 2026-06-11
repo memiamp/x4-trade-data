@@ -28,6 +28,10 @@ internal class AbandonedShipSpecialItem(
 
     private static string GetComments(IShipModel source)
     {
+        var basicModifications = 0;
+        var enhancedModifications = 0;
+        var exceptionModifications = 0;
+        var modificationText = string.Empty;
         var returnValue = string.Empty;
 
         var cargoItems = source
@@ -39,25 +43,59 @@ internal class AbandonedShipSpecialItem(
             returnValue = string.Join(", ", cargoItems);
         }
 
-        var modifications = source
-                                  .Modifications
-                                  .Select(x => $"{x.Type} ({x.Name})");
-        if (modifications.Any())
+        GetModificationQuality(source.EngineModification, ref basicModifications, ref enhancedModifications, ref exceptionModifications);
+        GetModificationQuality(source.PaintModification, ref basicModifications, ref enhancedModifications, ref exceptionModifications);
+        GetModificationQuality(source.ShieldModification, ref basicModifications, ref enhancedModifications, ref exceptionModifications);
+        GetModificationQuality(source.ShipModification, ref basicModifications, ref enhancedModifications, ref exceptionModifications);
+        GetModificationQuality(source.WeaponModifications, ref basicModifications, ref enhancedModifications, ref exceptionModifications);
+
+        if (exceptionModifications > 0)
         {
-            var modificationsText = string.Join(", ", modifications);
+            modificationText += $"{exceptionModifications} Exceptional Mod, ";
+        }
+        if (enhancedModifications > 0)
+        {
+            modificationText += $"{enhancedModifications} Enhanced Mod, ";
+        }
+        if (basicModifications > 0)
+        {
+            modificationText += $"{basicModifications} Basic Mod";
+        }
+
+        if (modificationText.Length > 0)
+        {
+            modificationText = modificationText.Trim(' ', ',');
+
             if (returnValue.Length > 0)
             {
-                returnValue += $", {modificationsText}";
+                returnValue += $", {modificationText}";
             }
             else
             {
-                returnValue = modificationsText;
+                returnValue = modificationText;
             }
         }
 
         return returnValue;
     }
 
+    private static void GetModificationQuality(IModificationModel? source, ref int basic, ref int enhanced, ref int exceptional)
+    {
+        if (source?.Quality == ModificationQuality.Basic)
+            basic++;
+        else if (source?.Quality == ModificationQuality.Enhanced)
+            enhanced++;
+        else if (source?.Quality == ModificationQuality.Exceptional)
+            exceptional++;
+    }
+
+    private static void GetModificationQuality(IEnumerable<IModificationModel> source, ref int basic, ref int enhanced, ref int exceptional)
+    {
+        foreach (var item in source)
+        {
+            GetModificationQuality(item, ref basic, ref enhanced, ref exceptional);
+        }
+    }
     private static SpecialItemType GetType(IShipModel source)
         => source.Class switch
         {
