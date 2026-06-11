@@ -27,7 +27,7 @@ internal class GameDataParser(
         var returnValue = new GameData
         {
             Modified = modified ?? 0,
-            Time = (decimal)time
+            Time = time.Value
         };
 
         return Task.FromResult<IGameData>(returnValue);

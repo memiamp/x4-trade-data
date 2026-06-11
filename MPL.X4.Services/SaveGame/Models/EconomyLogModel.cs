@@ -8,5 +8,5 @@ internal class EconomyLogModel : IEconomyLogModel
     public override string ToString()
         => $"Trades: {TradeLog.Count}";
 
-    public required ITradeLogShipModelList TradeLog { get; init; }
+    public required ITradeLogEntryModelList TradeLog { get; init; }
 }

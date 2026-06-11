@@ -52,7 +52,7 @@ internal class SaveGameModelsParser(
     private protected override ISaveGameModels OnParse(ISaveGameData source)
     {
         var universe = modelParser.Parse<IUniverseData, IUniverseModel>(source.Universe);
-
+        
         parsingScope.CurrentBuildStorageModels = universe
                                                          .Sectors
                                                          .SelectMany(x => x.BuildStorages);
@@ -60,6 +60,7 @@ internal class SaveGameModelsParser(
         parsingScope.CurrentStationModels = universe
                                                     .Sectors
                                                     .SelectMany(x => x.Stations);
+        parsingScope.GameTime = source.Information.Game.Time;
 
         var economyLog = modelParser.Parse<IEconomyLogData, IEconomyLogModel>(source.EconomyLog);
 

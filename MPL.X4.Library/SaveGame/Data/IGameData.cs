@@ -13,5 +13,5 @@ public interface IGameData
     /// <summary>
     /// Gets the game time.
     /// </summary>
-    decimal Time { get; }
+    double Time { get; }
 }

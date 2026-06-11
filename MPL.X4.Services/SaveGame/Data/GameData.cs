@@ -10,5 +10,5 @@ internal class GameData : IGameData
 
     public required int? Modified { get; init; }
 
-    public required decimal Time { get; init; }
+    public required double Time { get; init; }
 }

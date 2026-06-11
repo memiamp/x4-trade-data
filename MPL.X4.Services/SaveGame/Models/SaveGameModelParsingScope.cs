@@ -62,4 +62,6 @@ internal class SaveGameModelParsingScope(
 
     [AllowNull]
     IGameResourceModels ISaveGameModelParsingScope.GameResources { get; set; }
+
+    double ISaveGameModelParsingScope.GameTime { get; set; }
 }

@@ -8,5 +8,5 @@ public interface IEconomyLogModel
     /// <summary>
     /// Gets the trade log.
     /// </summary>
-    ITradeLogShipModelList TradeLog { get; }
+    ITradeLogEntryModelList TradeLog { get; }
 }

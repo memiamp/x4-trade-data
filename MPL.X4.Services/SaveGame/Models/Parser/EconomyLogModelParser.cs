@@ -9,128 +9,173 @@ namespace MPL.X4.SaveGame.Models.Parser;
 /// A class that implements a parser to a <see cref="IEconomyLogModel"/> from an <see cref="IEconomyLogData"/>.
 /// </summary>
 /// <param name="logger">An <see cref="ILogger{TCategoryName}"/> that is the logger to use.</param>
-/// <param name="modelParser">An <see cref="IModelParser"/> that is the model parser.</param>
 /// <param name="parsingScope">An <see cref="ISaveGameModelParsingScope"/> that is the parsing scope.</param>
 internal class EconomyLogModelParser(
                                      ILogger<EconomyLogModelParser> logger,
                                      ISaveGameModelParsingScope parsingScope)
     : ModelParserBase<IEconomyLogData, IEconomyLogModel>(logger)
 {
+    private readonly Lock _parseLock = new();
+    private IEnumerable<IRemovedObjectData> _removedObjects = [];
+    private Dictionary<string, ITradePartnerModel> _tradePartnerCache = [];
+
     private protected override IEconomyLogModel OnParse(IEconomyLogData source)
     {
-        var tradeLog = ParseTradeLog(source.TradeLog);
-
-        return new EconomyLogModel
+        lock (_parseLock)
         {
-            TradeLog = tradeLog
-        };
-    }
+            _removedObjects = source.RemovedObjects;
+            _tradePartnerCache = [];
 
-    private ITradeLogShipModel ParseShip(IShipModel source, ITradeLogShipModelList ships)
-    {
-        var returnValue = ships.FirstOrDefault(x => x.Id == source.Id);
-        if (returnValue is null)
-        {
-            returnValue = new TradeLogShipModel
+            var tradeLog = ParseTradeLog(source.TradeLog);
+
+            return new EconomyLogModel
             {
-                Code = source.Code,
-                Id = source.Id,
-                Name = source.Name ?? source.Model,
-                Trades = new TradeLogTradeModelList()
+                TradeLog = tradeLog
             };
-
-            ships.Add(returnValue);
         }
-
-        return returnValue;
     }
 
-    private ITradeLogShipModelList ParseTradeLog(ITradeLogData source)
+    private TradeLogEntryModelList ParseTradeLog(ITradeLogData source)
     {
-        var returnValue = new TradeLogShipModelList();
-        var unknownIds = new List<string>();
+        var returnValue = new TradeLogEntryModelList();
 
         foreach (var item in source)
         {
-            if (TryParseSourceShipAndStation(item, unknownIds, out var sourceShip, out var station, out var tradeType))
+            if (TryParseTradeLogEntry(item, out var entry))
             {
-                var ship = ParseShip(sourceShip, returnValue);
-
-                var trade = ParseTradeLogTrade(item, station, tradeType);
-
-                ship.Trades.Add(trade);
+                returnValue.Add(entry);
             }
         }
 
         return returnValue;
     }
 
-    private ITradeLogTradeModel ParseTradeLogTrade(ITradeLogEntryData source, IStationModel station, TradeType tradeType)
+    private bool TryFindTradePartner(string id, [NotNullWhen(true)] out ITradePartnerModel? partner)
     {
-        var wareName = parsingScope.ParseWareName(source.Ware);
-
-        return new TradeLogTradeModel
+        if (!_tradePartnerCache.TryGetValue(id, out partner))
         {
-            Amount = source.Volume,
-            BoughtFrom = tradeType == TradeType.Buy ? station : null,
-            Id = "",
-            Name = wareName,
-            Price = source.Price,
-            SoldTo = tradeType == TradeType.Sell ? station : null,
-            Type = tradeType
-        };
-    }
-
-    private bool TryParseSourceShipAndStation(
-                                              ITradeLogEntryData source,
-                                              IList<string> unknownIds,
-                                              [NotNullWhen(true)] out IShipModel? ship,
-                                              [NotNullWhen(true)] out IStationModel? station,
-                                              out TradeType tradeType)
-    {
-        ship = null;
-        station = null;
-        tradeType = TradeType.Unknown;
-
-        if (unknownIds.Contains(source.BuyerId) ||
-            unknownIds.Contains(source.SellerId))
-        {
-            return false;
+            if (!TryFindTradePartnerRemoved(id, out partner) &&
+                !TryFindTradePartnerShip(id, out partner) &&
+                !TryFindTradePartnerStation(id, out partner) &&
+                !TryFindTradePartnerBuildStorage(id, out partner))
+            {
+                Logger.LogWarning("Unable to located trade partner for {TradePartnerId}", id);
+            }
+            else
+            {
+                _tradePartnerCache.Add(id, partner);
+            }
         }
 
-        ship = parsingScope.CurrentShips.FirstOrDefault(x => x.Id == source.BuyerId);
-        if (ship is null)
+        return partner is not null;
+    }
+
+    private bool TryFindTradePartnerBuildStorage(string id, [NotNullWhen(true)] out ITradePartnerModel? partner)
+    {
+        partner = null;
+
+        var buildStorageModel = parsingScope.CurrentBuildStorageModels.FirstOrDefault(x => x.Id == id);
+        if (buildStorageModel is not null)
         {
-            ship = parsingScope.CurrentShips.FirstOrDefault(x => x.Id == source.SellerId);
-            station = parsingScope.CurrentStations.FirstOrDefault(x => x.Id == source.BuyerId);
-
-            if (ship is null)
-            {
-                Logger.LogWarning("Could not process log trade entry with identifier {Id}", source.SellerId);
-                unknownIds.Add(source.SellerId);
-            }
-            if (station is null)
-            {
-                Logger.LogWarning("Could not process log trade entry with identifier {Id}", source.BuyerId);
-                unknownIds.Add(source.BuyerId);
-            }
-
-            tradeType = TradeType.Sell;
+            partner = new TradePartnerBuildStorageModel(buildStorageModel);
         }
         else
         {
-            station = parsingScope.CurrentStations.FirstOrDefault(x => x.Id == source.SellerId);
-
-            if (station is null)
+            var stationModel = parsingScope.CurrentStationModels.FirstOrDefault(x => x.BuildStorage?.Id == id);
+            if (stationModel is not null)
             {
-                Logger.LogWarning("Could not process log trade entry with identifier {Id}", source.SellerId);
-                unknownIds.Add(source.BuyerId);
+                partner = new TradePartnerStationBuildStorageModel(stationModel);
             }
-
-            tradeType = TradeType.Buy;
         }
 
-        return ship is not null &&
-               station is not null;
+        return partner is not null;
+    }
+
+    private bool TryFindTradePartnerRemoved(string id, [NotNullWhen(true)] out ITradePartnerModel? partner)
+    {
+        partner = null;
+
+        var removedObject = _removedObjects.FirstOrDefault(x => x.Id == id);
+        if (removedObject is not null)
+        {
+            partner = new TradePartnerRemovedModel(removedObject);
+        }
+
+        return partner is not null;
+    }
+
+    private bool TryFindTradePartners(ITradeLogEntryData source, [NotNullWhen(true)] out ITradePartnerModel? buyer, [NotNullWhen(true)] out ITradePartnerModel? seller)
+    {
+        var hasBuyer = TryFindTradePartner(source.BuyerId, out buyer);
+        var hasSeller = TryFindTradePartner(source.SellerId, out seller);
+
+        if (!hasBuyer && !hasSeller)
+        {
+            Logger.LogWarning("Unable to locate buyer with {BuyerId} and seller with {SellerId} for trade log entry at {TimeIndex}", source.BuyerId, source.SellerId, source.Time);
+        }
+        else if (!hasBuyer)
+        {
+            Logger.LogWarning("Unable to locate buyer with {BuyerId} for trade log entry at {TimeIndex}", source.BuyerId, source.Time);
+        }
+        else if (!hasSeller)
+        {
+            Logger.LogWarning("Unable to locate seller with {SellerId} for trade log entry at {TimeIndex}", source.SellerId, source.Time);
+        }
+
+        return buyer is not null &&
+               seller is not null;
+    }
+
+    private bool TryFindTradePartnerShip(string id, [NotNullWhen(true)] out ITradePartnerModel? partner)
+    {
+        partner = null;
+
+        var ship = parsingScope.CurrentShipModels.FirstOrDefault(x => x.Id == id);
+        if (ship is not null)
+        {
+            partner = new TradePartnerShipModel(ship);
+        }
+
+        return partner is not null;
+    }
+
+    private bool TryFindTradePartnerStation(string id, [NotNullWhen(true)] out ITradePartnerModel? partner)
+    {
+        partner = null;
+
+        var stationModel = parsingScope.CurrentStationModels.FirstOrDefault(x => x.Id == id);
+        if (stationModel is not null)
+        {
+            partner = new TradePartnerStationModel(stationModel);
+        }
+
+        return partner is not null;
+    }
+
+    private bool TryParseTradeLogEntry(ITradeLogEntryData source, [NotNullWhen(true)] out ITradeLogEntryModel? entry)
+    {
+        entry = null;
+
+        if (TryFindTradePartners(source, out var buyer, out var seller))
+        {
+            var wareName = parsingScope.ParseWareName(source.Ware);
+
+            var tradeAge = parsingScope.GameTime - source.Time;
+
+            entry = new TradeLogEntryModel
+            {
+                Amount = source.Volume,
+                Buyer = buyer,
+                Id = source.Time.ToString(),
+                Name = wareName,
+                Price = source.Price,
+                Seller = seller,
+                Time = source.Time,
+                TradeAge = TimeSpan.FromSeconds(tradeAge),
+                Type = TradeType.Unknown
+            };
+        }
+
+        return entry is not null;
     }
 }

@@ -8,5 +8,5 @@ public interface ILogEntryData
     /// <summary>
     /// Gets the log entry time.
     /// </summary>
-    decimal Time { get; }
+    double Time { get; }
 }

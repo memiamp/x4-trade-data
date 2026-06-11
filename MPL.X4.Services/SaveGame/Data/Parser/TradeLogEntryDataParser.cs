@@ -31,7 +31,7 @@ internal class TradeLogEntryDataParser(
         {
             BuyerId = buyer,
             SellerId = seller,
-            Time = (decimal)time.Value,
+            Time = time.Value,
             Price = price.Value,
             Volume = volume.Value,
             Ware = ware

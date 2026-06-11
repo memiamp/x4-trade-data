@@ -8,5 +8,5 @@ internal class LogEntryData : ILogEntryData
     public override string ToString()
         => $"Time {Time}";
 
-    public required decimal Time { get; init; }
+    public required double Time { get; init; }
 }

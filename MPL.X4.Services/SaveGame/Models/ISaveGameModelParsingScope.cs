@@ -61,4 +61,9 @@ internal interface ISaveGameModelParsingScope
     /// Gets or sets the game resources.
     /// </summary>
     IGameResourceModels GameResources { get; set; }
+
+    /// <summary>
+    /// Gets the current game time.
+    /// </summary>
+    double GameTime { get; set; }
 }
