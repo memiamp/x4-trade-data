@@ -98,7 +98,8 @@ internal class EconomyLogModelParser(
         var removedObject = _removedObjects.FirstOrDefault(x => x.Id == id);
         if (removedObject is not null)
         {
-            partner = new TradePartnerRemovedModel(removedObject);
+            var owner = parsingScope.ParseFaction(removedObject.Owner);
+            partner = new TradePartnerRemovedModel(owner, removedObject);
         }
 
         return partner is not null;

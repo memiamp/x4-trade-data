@@ -1,4 +1,5 @@
-﻿using MPL.X4.SaveGame.Data;
+﻿using MPL.X4.GameResources.Models;
+using MPL.X4.SaveGame.Data;
 
 namespace MPL.X4.SaveGame.Models;
 
@@ -12,7 +13,7 @@ internal abstract class TradePartnerModelBase<TModel>(
                                                       TModel tradePartner,
                                                       TradePartnerType type)
     : ITradePartnerModel
-    where TModel : IHasCode, IModelWithId
+    where TModel : IHasCode, IHasOwner, IModelWithId
 {
     public override string ToString()
         => $"{Name} ({Code}) - {Type}";
@@ -29,6 +30,8 @@ internal abstract class TradePartnerModelBase<TModel>(
     public bool IsRemoved => false;
 
     public abstract string Name { get; }
+
+    public IFactionModel Owner => tradePartner.Owner;
 
     public TradePartnerType Type => type;
 }
