@@ -96,6 +96,7 @@ internal class AbandonedShipSpecialItem(
             GetModificationQuality(item, ref basic, ref enhanced, ref exceptional);
         }
     }
+
     private static SpecialItemType GetType(IShipModel source)
         => source.Class switch
         {

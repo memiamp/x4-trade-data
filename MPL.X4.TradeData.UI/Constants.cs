@@ -50,6 +50,18 @@ internal static class Constants
     }
 
     /// <summary>
+    /// A class containing ship class constants.
+    /// </summary>
+    internal static class ShipClass
+    {
+        internal static string ExtraLarge = "Extra large";
+        internal static string ExtraSmall = "Extra small";
+        internal static string Large = "Large";
+        internal static string Medium = "Medium";
+        internal static string Small = "Small";
+    }
+
+    /// <summary>
     /// A class containing special item type constants.
     /// </summary>
     internal static class SpecialItemTypes

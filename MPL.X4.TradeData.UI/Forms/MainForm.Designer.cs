@@ -18,10 +18,12 @@
             LayoutControl = new TabControl();
             TradesTab = new TabPage();
             TradeControl = new MPL.X4.TradeData.UI.Controls.TradeControl();
-            SpecialItemsTab = new TabPage();
-            SpecialItemControl = new MPL.X4.TradeData.UI.Controls.SpecialItemControl();
             SectorListTab = new TabPage();
             SectorListControl = new MPL.X4.TradeData.UI.Controls.SectorListControl();
+            ShipTab = new TabPage();
+            ShipControl = new MPL.X4.TradeData.UI.Controls.ShipBrowserControl();
+            SpecialItemsTab = new TabPage();
+            SpecialItemControl = new MPL.X4.TradeData.UI.Controls.SpecialItemControl();
             menuStrip1 = new MenuStrip();
             FileMenu = new ToolStripMenuItem();
             FileMenu_Exit = new ToolStripMenuItem();
@@ -29,16 +31,18 @@
             ToolMenu_Options = new ToolStripMenuItem();
             LayoutControl.SuspendLayout();
             TradesTab.SuspendLayout();
-            SpecialItemsTab.SuspendLayout();
             SectorListTab.SuspendLayout();
+            ShipTab.SuspendLayout();
+            SpecialItemsTab.SuspendLayout();
             menuStrip1.SuspendLayout();
             SuspendLayout();
             // 
             // LayoutControl
             // 
             LayoutControl.Controls.Add(TradesTab);
-            LayoutControl.Controls.Add(SpecialItemsTab);
             LayoutControl.Controls.Add(SectorListTab);
+            LayoutControl.Controls.Add(ShipTab);
+            LayoutControl.Controls.Add(SpecialItemsTab);
             LayoutControl.Dock = DockStyle.Fill;
             LayoutControl.Location = new Point(0, 24);
             LayoutControl.Name = "LayoutControl";
@@ -65,25 +69,6 @@
             TradeControl.Size = new Size(1066, 503);
             TradeControl.TabIndex = 0;
             // 
-            // SpecialItemsTab
-            // 
-            SpecialItemsTab.Controls.Add(SpecialItemControl);
-            SpecialItemsTab.Location = new Point(4, 24);
-            SpecialItemsTab.Name = "SpecialItemsTab";
-            SpecialItemsTab.Padding = new Padding(3);
-            SpecialItemsTab.Size = new Size(1072, 509);
-            SpecialItemsTab.TabIndex = 1;
-            SpecialItemsTab.Text = "Special Items";
-            SpecialItemsTab.UseVisualStyleBackColor = true;
-            // 
-            // SpecialItemControl
-            // 
-            SpecialItemControl.Dock = DockStyle.Fill;
-            SpecialItemControl.Location = new Point(3, 3);
-            SpecialItemControl.Name = "SpecialItemControl";
-            SpecialItemControl.Size = new Size(1066, 503);
-            SpecialItemControl.TabIndex = 0;
-            // 
             // SectorListTab
             // 
             SectorListTab.Controls.Add(SectorListControl);
@@ -102,6 +87,44 @@
             SectorListControl.Name = "SectorListControl";
             SectorListControl.Size = new Size(1066, 503);
             SectorListControl.TabIndex = 0;
+            // 
+            // ShipTab
+            // 
+            ShipTab.Controls.Add(ShipControl);
+            ShipTab.Location = new Point(4, 24);
+            ShipTab.Name = "ShipTab";
+            ShipTab.Padding = new Padding(3);
+            ShipTab.Size = new Size(1072, 509);
+            ShipTab.TabIndex = 3;
+            ShipTab.Text = "Ships";
+            ShipTab.UseVisualStyleBackColor = true;
+            // 
+            // ShipControl
+            // 
+            ShipControl.Dock = DockStyle.Fill;
+            ShipControl.Location = new Point(3, 3);
+            ShipControl.Name = "ShipControl";
+            ShipControl.Size = new Size(1066, 503);
+            ShipControl.TabIndex = 0;
+            // 
+            // SpecialItemsTab
+            // 
+            SpecialItemsTab.Controls.Add(SpecialItemControl);
+            SpecialItemsTab.Location = new Point(4, 24);
+            SpecialItemsTab.Name = "SpecialItemsTab";
+            SpecialItemsTab.Padding = new Padding(3);
+            SpecialItemsTab.Size = new Size(1072, 509);
+            SpecialItemsTab.TabIndex = 1;
+            SpecialItemsTab.Text = "Special Items";
+            SpecialItemsTab.UseVisualStyleBackColor = true;
+            // 
+            // SpecialItemControl
+            // 
+            SpecialItemControl.Dock = DockStyle.Fill;
+            SpecialItemControl.Location = new Point(3, 3);
+            SpecialItemControl.Name = "SpecialItemControl";
+            SpecialItemControl.Size = new Size(1066, 503);
+            SpecialItemControl.TabIndex = 0;
             // 
             // menuStrip1
             // 
@@ -122,7 +145,7 @@
             // FileMenu_Exit
             // 
             FileMenu_Exit.Name = "FileMenu_Exit";
-            FileMenu_Exit.Size = new Size(180, 22);
+            FileMenu_Exit.Size = new Size(93, 22);
             FileMenu_Exit.Text = "E&xit";
             // 
             // ToolMenu
@@ -152,8 +175,9 @@
             Text = "MPL X4 Trade Data";
             LayoutControl.ResumeLayout(false);
             TradesTab.ResumeLayout(false);
-            SpecialItemsTab.ResumeLayout(false);
             SectorListTab.ResumeLayout(false);
+            ShipTab.ResumeLayout(false);
+            SpecialItemsTab.ResumeLayout(false);
             menuStrip1.ResumeLayout(false);
             menuStrip1.PerformLayout();
             ResumeLayout(false);
@@ -174,5 +198,7 @@
         private Controls.TradeControl TradeControl;
         private ToolStripMenuItem ToolMenu;
         private ToolStripMenuItem ToolMenu_Options;
+        private TabPage ShipTab;
+        private Controls.ShipBrowserControl ShipControl;
     }
 }

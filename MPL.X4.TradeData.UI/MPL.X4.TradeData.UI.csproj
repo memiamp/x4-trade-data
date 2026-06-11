@@ -19,6 +19,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Controls\ShipBrowserControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Update="Controls\TradeLogViewerControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
