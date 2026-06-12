@@ -30,6 +30,7 @@ internal class SectorModelParser(
         var owner = parsingScope.ParseFaction(source.Owner);
         var transform = ParseTransform(source);
 
+        ParseHighways(source, ships);
         ParseZones(source, buildStorages, collectableDrops, gates, lockboxes, ships, stations);
 
         return new SectorModel
@@ -47,6 +48,25 @@ internal class SectorModelParser(
             Stations = stations,
             Transform = transform
         };
+    }
+
+    private void ParseHighway(IHighwayData source, IShipModelList ships)
+    {
+        parsingScope.CurrentOffset = ITransform3D.GetDefault();
+
+        foreach (var item in source.Ships)
+        {
+            var model = modelParser.Parse<IShipData, IShipModel>(item);
+            ships.Add(model);
+        }
+    }
+
+    private void ParseHighways(ISectorData source, IShipModelList ships)
+    {
+        foreach (var item in source.Highways)
+        {
+            ParseHighway(item, ships);
+        }
     }
 
     private string ParseName(ISectorData source)

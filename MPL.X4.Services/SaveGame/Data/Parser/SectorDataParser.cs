@@ -17,6 +17,7 @@ internal class SectorDataParser(
 {
     private protected override async Task<ISectorData> OnParse(IXmlReaderWrapper reader)
     {
+        List<IHighwayData> highways = [];
         List<IZoneData> zones = [];
 
         if (!reader.TryGetAttribute(Constants.XmlDataFile.AttributeName.Code, out string? code) ||
@@ -32,20 +33,31 @@ internal class SectorDataParser(
 
         while (await reader.ReadAsync())
         {
-            if (reader.CheckNodeMatches(Constants.XmlDataFile.ElementName.Component, XmlNodeType.Element, 3) &&
-                reader.TryGetAttribute(Constants.XmlDataFile.AttributeName.Class, x => x == Constants.XmlDataFile.AttributeValue.Class.Zone))
+            if (reader.CheckNodeMatches(Constants.XmlDataFile.ElementName.Component, XmlNodeType.Element))
             {
-                using var subtree = await reader.ReadSubtree();
+                if (reader.TryGetAttribute(Constants.XmlDataFile.AttributeName.Class, x => x == Constants.XmlDataFile.AttributeValue.Class.Zone))
+                {
+                    using var subtree = await reader.ReadSubtree();
 
-                var zone = await DataParser.Parse<IZoneData>(subtree);
+                    var data = await DataParser.Parse<IZoneData>(subtree);
 
-                zones.Add(zone);
+                    zones.Add(data);
+                }
+                else if (reader.TryGetAttribute(Constants.XmlDataFile.AttributeName.Class, x => x == Constants.XmlDataFile.AttributeValue.Class.Highway))
+                {
+                    using var subtree = await reader.ReadSubtree();
+
+                    var data = await DataParser.Parse<IHighwayData>(subtree);
+
+                    highways.Add(data);
+                }
             }
         }
 
         return new SectorData
         {
             Code = code,
+            Highways = highways,
             Id = id,
             IsKnown = isKnown,
             Macro = macro,

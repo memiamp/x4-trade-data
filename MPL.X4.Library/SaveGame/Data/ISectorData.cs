@@ -11,6 +11,11 @@ public interface ISectorData
     string Code { get; }
 
     /// <summary>
+    /// Gets the highways in the sector.
+    /// </summary>
+    IEnumerable<IHighwayData> Highways { get; }
+
+    /// <summary>
     /// Gets the identifier of the sector.
     /// </summary>
     string Id { get; }

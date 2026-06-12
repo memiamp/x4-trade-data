@@ -46,6 +46,7 @@ public static class Bootstrap
         servicesCollection.AddTransient<IDataParser<IFactionDataDictionary>, FactionDataDictionaryParser>();
         servicesCollection.AddTransient<IDataParser<IGameData>, GameDataParser>();
         servicesCollection.AddTransient<IDataParser<IInformationData>, InformationDataParser>();
+        servicesCollection.AddTransient<IDataParser<IHighwayData>, HighwayDataParser>();
         servicesCollection.AddTransient<IDataParser<ILandmarkNameResourceDataDictionary>, LandmarkNameResourceDataDictionaryParser>();
         servicesCollection.AddTransient<IDataParser<IMappingData>, MappingDataParser>();
         servicesCollection.AddTransient<IDataParser<IMappingDataDictionary>, MappingDataDictionaryParser>();

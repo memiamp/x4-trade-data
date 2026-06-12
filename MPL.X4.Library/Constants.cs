@@ -153,6 +153,7 @@ public static class Constants
             public const string GateId = "id";
             public const string Generated = "generated";
             public const string Group = "group";
+            public const string HighwayId = "id";
             public const string KnownTo = "knownto";
             public const string Lifetime = "lifetime";
             public const string Location = "location";
@@ -239,6 +240,7 @@ public static class Constants
                 public const string DockArea = "dockarea";
                 public const string DockingBay = "dockingbay";
                 public const string Gate = "gate";
+                public const string Highway = "highway";
                 public const string Lock = "lock";
                 public const string Lockbox = "lockbox";
                 public const string Pier = "pier";
