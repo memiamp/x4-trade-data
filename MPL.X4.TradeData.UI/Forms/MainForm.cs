@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Logging;
 using MPL.X4.SaveGame.Models;
+using MPL.X4.SaveGame.Models.Services;
 using MPL.X4.TradeData.UI.Controls;
 using MPL.X4.TradeData.UI.Models.Trade;
 using MPL.X4.TradeData.UI.Services;
@@ -157,9 +158,7 @@ internal partial class MainForm : Form
 
     private void UpdateShipControl()
     {
-        ShipControl.Items = _saveGame?.Universe.Sectors.Any() == true
-            ? GetAllShips(_saveGame.Universe)
-            : [];
+        ShipControl.Items = _saveGame?.Universe.GetAllShips() ?? [];
     }
 
     private void UpdateSpecialItemsControl()
@@ -185,39 +184,6 @@ internal partial class MainForm : Form
         {
             TradeControl.Items = [];
         }
-    }
-
-    private static IEnumerable<IShipModel> FlattenShips(IEnumerable<IShipModel> source)
-    {
-        foreach (var ship in source)
-        {
-            yield return ship;
-            foreach (var child in FlattenShips(ship.Ships))
-            {
-                yield return child;
-            }
-        }
-    }
-
-    private static IEnumerable<IShipModel> GetAllShips(IUniverseModel source)
-    {
-        var sectors = source.Sectors;
-
-        var sectorShips = sectors.SelectMany(x => x.Ships);
-
-        var stations = sectors.SelectMany(x => x.Stations);
-        var stationShips = stations.SelectMany(x => x.Ships);
-
-        var buildStorages = stations
-                                    .Where(x => x.BuildStorage is not null)
-                                    .Select(x => x.BuildStorage!);
-        var buildStorageShips = buildStorages.SelectMany(x => x.Ships);
-
-        var ships = sectorShips
-                               .Concat(stationShips)
-                               .Concat(buildStorageShips);
-
-        return FlattenShips(ships);
     }
 
     #endregion

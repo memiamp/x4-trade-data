@@ -1,4 +1,5 @@
-﻿namespace MPL.X4.SaveGame.Models;
+﻿
+namespace MPL.X4.SaveGame.Models;
 
 /// <summary>
 /// An interface that defines a model of a universe.
