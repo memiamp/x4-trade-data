@@ -25,8 +25,8 @@ internal class WareDataParser(
     {
         if (!reader.TryGetAttribute(Constants.XmlDataFile.AttributeName.WareId, out string? id))
         {
-            logger.LogWarning("Could not load ware");
-            throw new ArgumentException("Could not load ware", nameof(reader));
+            logger.LogWarning("Could not parse ware");
+            throw new ArgumentException("Could not parse ware", nameof(reader));
         }
 
         reader.TryGetAttribute(Constants.XmlDataFile.AttributeName.Group, out string? group);

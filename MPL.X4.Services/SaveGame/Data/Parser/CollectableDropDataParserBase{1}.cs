@@ -57,8 +57,8 @@ internal abstract class CollectableDropDataParser<TDataModel, TDrop, TDropParser
         }
         else
         {
-            logger.LogWarning("Could not load collectable drop");
-            throw new ArgumentException("Could not load collectable drop", nameof(reader));
+            logger.LogWarning("Could not parse collectable drop");
+            throw new ArgumentException("Could not parse collectable drop", nameof(reader));
         }
 
         return returnValue;

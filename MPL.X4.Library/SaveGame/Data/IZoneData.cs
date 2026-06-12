@@ -36,7 +36,7 @@ public interface IZoneData : IHasTransform
     string Id { get; }
 
     /// <summary>
-    /// Gets an indication of whether the station is known to the player.
+    /// Gets an indication of whether the zone is known to the player.
     /// </summary>
     bool IsKnown { get; }
 

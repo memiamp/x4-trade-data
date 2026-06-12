@@ -31,8 +31,8 @@ internal class MappingDataParser(
         }
         else
         {
-            logger.LogWarning("Could not load mapping");
-            throw new ArgumentException("Could not load mapping", nameof(reader));
+            logger.LogWarning("Could not parse mapping");
+            throw new ArgumentException("Could not parse mapping", nameof(reader));
         }
 
         return Task.FromResult<IMappingData>(returnValue);

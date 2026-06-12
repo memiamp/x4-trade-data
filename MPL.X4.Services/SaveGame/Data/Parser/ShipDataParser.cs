@@ -22,8 +22,8 @@ internal class ShipDataParser(
             !document.TryGetRootAttribute(Constants.XmlDataFile.AttributeName.Macro, out string? macro) ||
             !document.TryGetRootAttribute(Constants.XmlDataFile.AttributeName.ShipId, out string? id))
         {
-            logger.LogWarning("Could not load ship");
-            throw new ArgumentException("Could not load ship", nameof(document));
+            logger.LogWarning("Could not parse ship");
+            throw new ArgumentException("Could not parse ship", nameof(document));
         }
 
         var isKnown = GetIsKnownToPlayer(document);

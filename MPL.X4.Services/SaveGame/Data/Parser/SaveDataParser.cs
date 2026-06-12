@@ -19,8 +19,8 @@ internal class SaveDataParser(
         if (!reader.TryGetAttribute(Constants.XmlDataFile.AttributeName.Date, out double? date) ||
             !reader.TryGetAttribute(Constants.XmlDataFile.AttributeName.Name, out string? name))
         {
-            logger.LogWarning("Could not load save");
-            throw new ArgumentException("Could not load save", nameof(reader));
+            logger.LogWarning("Could not parse save");
+            throw new ArgumentException("Could not parse save", nameof(reader));
         }
 
         var returnValue = new SaveData

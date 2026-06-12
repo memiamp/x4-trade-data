@@ -30,8 +30,8 @@ internal class ZoneDataParser(
         if (!reader.TryGetAttribute(Constants.XmlDataFile.AttributeName.Code, out string? code) ||
             !reader.TryGetAttribute(Constants.XmlDataFile.AttributeName.ZoneId, out string? id))
         {
-            logger.LogWarning("Could not load zone");
-            throw new ArgumentException("Could not load zone", nameof(reader));
+            logger.LogWarning("Could not parse zone");
+            throw new ArgumentException("Could not parse zone", nameof(reader));
         }
 
         var isKnown = GetIsKnownToPlayer(reader);

@@ -25,8 +25,8 @@ internal class SectorDataParser(
             !reader.TryGetAttribute(Constants.XmlDataFile.AttributeName.Owner, out string? owner) ||
             !reader.TryGetAttribute(Constants.XmlDataFile.AttributeName.SectorId, out string? id))
         {
-            Logger.LogWarning("Could not load sector");
-            throw new ArgumentException("Could not load sector", nameof(reader));
+            Logger.LogWarning("Could not parse sector");
+            throw new ArgumentException("Could not parse sector", nameof(reader));
         }
 
         var isKnown = GetIsKnownToPlayer(reader);

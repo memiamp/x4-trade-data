@@ -26,8 +26,8 @@ internal class LockboxDataParser(
             !reader.TryGetAttribute(Constants.XmlDataFile.AttributeName.LockboxId, out string? id) ||
             !reader.TryGetAttribute(Constants.XmlDataFile.AttributeName.Macro, out string? macro))
         {
-            Logger.LogWarning("Could not load lockbox");
-            throw new ArgumentException("Could not load lockbox", nameof(reader));
+            Logger.LogWarning("Could not parse lockbox");
+            throw new ArgumentException("Could not parse lockbox", nameof(reader));
         }
 
         var isKnown = GetIsKnownToPlayer(reader);

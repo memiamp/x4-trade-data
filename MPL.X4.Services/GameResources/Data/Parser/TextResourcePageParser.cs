@@ -34,8 +34,8 @@ internal class TextResourcePageParser(
         }
         else
         {
-            logger.LogWarning("Could not load text resource page");
-            throw new ArgumentException("Could not load text resource page", nameof(reader));
+            logger.LogWarning("Could not parse text resource page");
+            throw new ArgumentException("Could not parse text resource page", nameof(reader));
         }
 
         while (await reader.ReadAsync())

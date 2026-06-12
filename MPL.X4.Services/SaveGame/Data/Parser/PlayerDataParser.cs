@@ -21,8 +21,8 @@ internal class PlayerDataParser(
             !reader.TryGetAttribute(Constants.XmlDataFile.AttributeName.Name, out string? name) ||
             !TextResourceReference.TryParse(locationText, out var location))
         {
-            logger.LogWarning("Could not load player");
-            throw new ArgumentException("Could not load player", nameof(reader));
+            logger.LogWarning("Could not parse player");
+            throw new ArgumentException("Could not parse player", nameof(reader));
         }
 
         var returnValue = new PlayerData

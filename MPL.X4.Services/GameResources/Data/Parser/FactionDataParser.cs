@@ -19,8 +19,8 @@ internal class FactionDataParser(
     {
         if (!reader.TryGetAttribute(Constants.XmlDataFile.AttributeName.FactionId, out string? id))
         {
-            logger.LogWarning("Could not load faction");
-            throw new ArgumentException("Could not load faction", nameof(reader));
+            logger.LogWarning("Could not parse faction");
+            throw new ArgumentException("Could not parse faction", nameof(reader));
         }
 
         var acronymResource = reader.ParseTextResourceReference(Constants.XmlDataFile.AttributeName.ShortName);

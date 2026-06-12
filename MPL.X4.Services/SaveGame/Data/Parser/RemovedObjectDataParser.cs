@@ -22,8 +22,8 @@ internal class RemovedObjectDataParser(
             !reader.TryGetAttribute(Constants.XmlDataFile.AttributeName.Owner, out string? owner) ||
             !reader.TryGetAttribute(Constants.XmlDataFile.AttributeName.Space, out string? space))
         {
-            logger.LogWarning("Could not load removed object");
-            throw new ArgumentException("Could not load removed object", nameof(reader));
+            logger.LogWarning("Could not parse removed object");
+            throw new ArgumentException("Could not parse removed object", nameof(reader));
         }
 
         var returnValue = new RemovedObjectData

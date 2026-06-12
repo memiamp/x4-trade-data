@@ -34,8 +34,8 @@ internal class AmmunitionItemDataParser(
         }
         else
         {
-            logger.LogWarning("Could not load ammunition item");
-            throw new ArgumentException("Could not load ammunition item", nameof(reader));
+            logger.LogWarning("Could not parse ammunition item");
+            throw new ArgumentException("Could not parse ammunition item", nameof(reader));
         }
 
         return Task.FromResult(returnValue);

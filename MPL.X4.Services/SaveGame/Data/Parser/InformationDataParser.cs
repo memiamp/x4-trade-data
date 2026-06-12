@@ -47,8 +47,8 @@ internal class InformationDataParser(
             player is null ||
             save is null)
         {
-            logger.LogWarning("Could not load save game information");
-            throw new ArgumentException("Could not load save game information", nameof(reader));
+            logger.LogWarning("Could not parse save game information");
+            throw new ArgumentException("Could not parse save game information", nameof(reader));
         }
 
         return new InformationData

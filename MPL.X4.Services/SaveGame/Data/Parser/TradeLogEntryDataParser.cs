@@ -23,8 +23,8 @@ internal class TradeLogEntryDataParser(
             !reader.TryGetAttribute(Constants.XmlDataFile.AttributeName.TradeLogVolume, out int? volume) ||
             !reader.TryGetAttribute(Constants.XmlDataFile.AttributeName.Ware, out string? ware))
         {
-            logger.LogWarning("Could not load trade log entry");
-            throw new ArgumentException("Could not load trade log entry", nameof(reader));
+            logger.LogWarning("Could not parse trade log entry");
+            throw new ArgumentException("Could not parse trade log entry", nameof(reader));
         }
 
         var returnValue = new TradeLogEntryData

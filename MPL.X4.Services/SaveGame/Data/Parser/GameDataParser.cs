@@ -18,8 +18,8 @@ internal class GameDataParser(
     {
         if (!reader.TryGetAttribute(Constants.XmlDataFile.AttributeName.Time, out double? time))
         {
-            logger.LogWarning("Could not load game");
-            throw new ArgumentException("Could not load game", nameof(reader));
+            logger.LogWarning("Could not parse game");
+            throw new ArgumentException("Could not parse game", nameof(reader));
         }
 
         reader.TryGetAttribute(Constants.XmlDataFile.AttributeName.Modified, out int? modified);

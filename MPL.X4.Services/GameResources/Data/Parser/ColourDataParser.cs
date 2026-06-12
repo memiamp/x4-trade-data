@@ -40,8 +40,8 @@ internal class ColourDataParser(
         }
         else
         {
-            logger.LogWarning("Could not load colour");
-            throw new ArgumentException("Could not load colour", nameof(reader));
+            logger.LogWarning("Could not parse colour");
+            throw new ArgumentException("Could not parse colour", nameof(reader));
         }
 
         return Task.FromResult<IColourData>(returnValue);

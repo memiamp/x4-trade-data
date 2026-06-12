@@ -34,8 +34,8 @@ internal class TextResourceItemParser(
         }
         else
         {
-            logger.LogWarning("Could not load text resource item");
-            throw new ArgumentException("Could not load text resource item", nameof(reader));
+            logger.LogWarning("Could not parse text resource item");
+            throw new ArgumentException("Could not parse text resource item", nameof(reader));
         }
 
         return returnValue;

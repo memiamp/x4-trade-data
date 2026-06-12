@@ -45,8 +45,8 @@ internal class EconomyLogDataParser(
 
         if (tradeLog is null)
         {
-            logger.LogWarning("Could not load trade logs");
-            throw new ArgumentException("Could not load trade logs", nameof(reader));
+            logger.LogWarning("Could not parse trade logs");
+            throw new ArgumentException("Could not parse trade logs", nameof(reader));
         }
 
         return new EconomyLogData

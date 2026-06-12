@@ -21,8 +21,8 @@ internal class GateDataParser(
             !reader.TryGetAttribute(Constants.XmlDataFile.AttributeName.GateId, out string? id) ||
             !reader.TryGetAttribute(Constants.XmlDataFile.AttributeName.Macro, out string? macro))
         {
-            Logger.LogWarning("Could not load gate");
-            throw new ArgumentException("Could not load gate", nameof(reader));
+            Logger.LogWarning("Could not parse gate");
+            throw new ArgumentException("Could not parse gate", nameof(reader));
         }
 
         var isKnown = GetIsKnownToPlayer(reader);

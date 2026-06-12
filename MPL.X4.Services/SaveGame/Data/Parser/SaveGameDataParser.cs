@@ -55,8 +55,8 @@ internal class SaveGameDataParser(
             information is null ||
             universe is null)
         {
-            logger.LogWarning("Could not load save game. Has Economy Log: {HasEconomyLog}, Has Information: {HasInformation}, Has Universe: {HasUniverse}", economyLog is not null, information is not null, universe is not null);
-            throw new ArgumentException("Could not load save game", nameof(reader));
+            logger.LogWarning("Could not parse save game. Has Economy Log: {HasEconomyLog}, Has Information: {HasInformation}, Has Universe: {HasUniverse}", economyLog is not null, information is not null, universe is not null);
+            throw new ArgumentException("Could not parse save game", nameof(reader));
         }
 
         return new SaveGameData

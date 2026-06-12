@@ -36,8 +36,8 @@ internal class WareItemDataParser(
         }
         else
         {
-            logger.LogWarning("Could not load ware item");
-            throw new ArgumentException("Could not load ware item", nameof(document));
+            logger.LogWarning("Could not parse ware item");
+            throw new ArgumentException("Could not parse ware item", nameof(document));
         }
 
         return Task.FromResult(returnValue);
