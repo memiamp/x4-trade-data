@@ -17,7 +17,6 @@ internal class TradeLogEntryDataParser(
     private protected override Task<ITradeLogEntryData> OnParse(IXmlReaderWrapper reader)
     {
         if (!reader.TryGetAttribute(Constants.XmlDataFile.AttributeName.Buyer, out string? buyer) ||
-            !reader.TryGetAttribute(Constants.XmlDataFile.AttributeName.Price, out int? price) ||
             !reader.TryGetAttribute(Constants.XmlDataFile.AttributeName.Seller, out string? seller) ||
             !reader.TryGetAttribute(Constants.XmlDataFile.AttributeName.Time, out double? time) ||
             !reader.TryGetAttribute(Constants.XmlDataFile.AttributeName.TradeLogVolume, out int? volume) ||
@@ -27,12 +26,14 @@ internal class TradeLogEntryDataParser(
             throw new ArgumentException("Could not parse trade log entry", nameof(reader));
         }
 
+        reader.TryGetAttribute(Constants.XmlDataFile.AttributeName.Price, out int? price);
+
         var returnValue = new TradeLogEntryData
         {
             BuyerId = buyer,
             SellerId = seller,
             Time = time.Value,
-            Price = price.Value,
+            Price = price ?? 0,
             Volume = volume.Value,
             Ware = ware
         };
