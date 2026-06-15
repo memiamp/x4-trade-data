@@ -34,8 +34,6 @@ public static class SectorModelExtensions
         var sectorBuildStorageShips = source
                                             .BuildStorages
                                             .SelectMany(x => x.Ships);
-        if (sectorBuildStorageShips.Any())
-            Console.WriteLine("YOP");
 
         var ships = sectorShips
                                .Concat(stationShips)

@@ -56,6 +56,22 @@ internal abstract class DataParserBase<TData>(
     }
 
     /// <summary>
+    /// Parses a subtree of <typeparamref name="T"/> from the specified <paramref name="reader"/> to the <paramref name="target"/>.
+    /// </summary>
+    /// <typeparam name="T">The type of the data to be parsed.</typeparam>
+    /// <param name="reader">An <see cref="IXmlReaderWrapper"/> that is the data reader.</param>
+    /// <param name="target">A <see cref="List{T}"/> that is the parsing target.</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    private protected async Task ParseSubtree<T>(IXmlReaderWrapper reader, List<T> target)
+    {
+        using var subtree = await reader.ReadSubtree();
+
+        var data = await DataParser.Parse<T>(subtree);
+
+        target.Add(data);
+    }
+
+    /// <summary>
     /// Gets the data parser.
     /// </summary>
     private protected IDataParser DataParser => dataParser;

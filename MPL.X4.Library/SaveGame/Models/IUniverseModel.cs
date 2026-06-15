@@ -1,11 +1,15 @@
-﻿
-namespace MPL.X4.SaveGame.Models;
+﻿namespace MPL.X4.SaveGame.Models;
 
 /// <summary>
 /// An interface that defines a model of a universe.
 /// </summary>
 public interface IUniverseModel
 {
+    /// <summary>
+    /// Gets the ships on inter-sector highways.
+    /// </summary>
+    IShipModelList HighwayShips { get; }
+
     /// <summary>
     /// Gets the sectors belonging to the universe.
     /// </summary>

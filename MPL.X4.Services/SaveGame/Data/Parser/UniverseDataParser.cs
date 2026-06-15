@@ -17,24 +17,30 @@ internal class UniverseDataParser(
 {
     private protected override async Task<IUniverseData> OnParse(IXmlReaderWrapper reader)
     {
-        var sectors = new List<ISectorData>();
+        IGalaxyData? galaxy = null;
 
         while (await reader.ReadAsync())
         {
-            if (reader.CheckNodeMatches(Constants.XmlDataFile.ElementName.Component, XmlNodeType.Element, 7) &&
-                reader.TryGetAttribute(Constants.XmlDataFile.AttributeName.Class, x => x == Constants.XmlDataFile.AttributeValue.Class.Sector))
+            if (reader.CheckNodeMatches(Constants.XmlDataFile.ElementName.Component, XmlNodeType.Element, 1) &&
+                reader.TryGetAttribute(Constants.XmlDataFile.AttributeName.Class, x => x == Constants.XmlDataFile.AttributeValue.Class.Galaxy))
             {
                 using var subtree = await reader.ReadSubtree();
 
-                var data = await DataParser.Parse<ISectorData>(subtree);
+                galaxy = await DataParser.Parse<IGalaxyData>(subtree);
 
-                sectors.Add(data);
+                break;
             }
+        }
+
+        if (galaxy is null)
+        {
+            logger.LogWarning("Could not parse universe");
+            throw new ArgumentException("Could not parse universe", nameof(reader));
         }
 
         return new UniverseData
         {
-            Sectors = sectors
+            Galaxy = galaxy
         };
     }
 }

@@ -5,8 +5,5 @@
 /// </summary>
 internal class UniverseData : IUniverseData
 {
-    public override string ToString()
-        => $"Sectors {Sectors.Count()}";
-
-    public required IEnumerable<ISectorData> Sectors { get; init; }
+    public required IGalaxyData Galaxy { get; init; }
 }

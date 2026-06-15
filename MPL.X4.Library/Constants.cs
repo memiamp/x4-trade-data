@@ -128,6 +128,7 @@ public static class Constants
             public const string Capacity = "capacity";
             public const string ChargeTime = "chargetime";
             public const string Class = "class";
+            public const string ClusterId = "id";
             public const string Code = "code";
             public const string ColourAlpha = "a";
             public const string ColourBlue = "b";
@@ -150,6 +151,7 @@ public static class Constants
             public const string FactionId = "id";
             public const string FactoryName = "factoryname";
             public const string ForwardThrust = "forwardthrust";
+            public const string GalaxyId = "id";
             public const string GateId = "id";
             public const string Generated = "generated";
             public const string Group = "group";
@@ -234,11 +236,13 @@ public static class Constants
                 public const string BuildModule = "buildmodule";
                 public const string BuildProcessor = "buildprocessor";
                 public const string BuildStorage = "buildstorage";
+                public const string Cluster = "cluster";
                 public const string CollectableAmmo = "collectableammo";
                 public const string CollectableWares = "collectablewares";
                 public const string DefenceModule = "defencemodule";
                 public const string DockArea = "dockarea";
                 public const string DockingBay = "dockingbay";
+                public const string Galaxy = "galaxy";
                 public const string Gate = "gate";
                 public const string Highway = "highway";
                 public const string Lock = "lock";

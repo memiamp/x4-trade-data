@@ -8,5 +8,7 @@ internal class UniverseModel : IUniverseModel
     public override string ToString()
         => $"Sectors {Sectors.Count}";
 
+    public required IShipModelList HighwayShips { get; init; }
+
     public required ISectorModelList Sectors { get; init; }
 }

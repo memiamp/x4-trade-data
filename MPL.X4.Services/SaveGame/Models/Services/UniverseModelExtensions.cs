@@ -11,5 +11,11 @@ public static class UniverseModelExtensions
     /// <param name="source">An <see cref="IUniverseModel"/> that is the universe.</param>
     /// <returns>An <see cref="IEnumerable{T}"/> of <see cref="IShipModel"/> that is the result.</returns>
     public static IEnumerable<IShipModel> GetAllShips(this IUniverseModel source)
-        => source.Sectors.SelectMany(x => x.GetAllShips());
+        => source
+                 .HighwayShips
+                 .Flatten()
+                 .Concat(
+                         source
+                               .Sectors
+                               .SelectMany(x => x.GetAllShips()));
 }

@@ -6,7 +6,7 @@
 public interface IUniverseData
 {
     /// <summary>
-    /// Gets the sectors belonging to the universe.
+    /// Gets the galaxy belonging to the universe.
     /// </summary>
-    IEnumerable<ISectorData> Sectors { get; }
+    IGalaxyData Galaxy { get; }
 }

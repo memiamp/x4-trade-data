@@ -1,6 +1,4 @@
-﻿using MPL.X4.GameResources.Models;
-
-namespace MPL.X4.SaveGame.Models;
+﻿namespace MPL.X4.SaveGame.Models;
 
 /// <summary>
 /// An interface that defines a model of a trade partner.
