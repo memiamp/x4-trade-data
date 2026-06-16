@@ -6,17 +6,17 @@ namespace MPL.X4.TradeData.UI.Services.Logging;
 /// A class that implements a simple logger to the console.
 /// </summary>
 /// <param name="categoryName">A <see cref="string"/> containing the category of the logger entries.</param>
-/// <param name="minLevel">A <see cref="LogLevel"/> indicating the minimum level the logger should output.</param>
+/// <param name="loggingQueue">An <see cref="ILoggingQueue"/> that is the logging queue to use.</param>
 internal class SimpleConsoleLogger(
                                    string categoryName,
-                                   LogLevel minLevel = LogLevel.Debug)
+                                   ILoggingQueue loggingQueue)
     : ILogger
 {
     IDisposable? ILogger.BeginScope<TState>(TState state)
         => null; // Scopes not supported here
 
     bool ILogger.IsEnabled(LogLevel logLevel)
-        => logLevel >= minLevel;
+        => true;
 
     void ILogger.Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception? exception, Func<TState, Exception?, string> formatter)
     {
@@ -31,6 +31,6 @@ internal class SimpleConsoleLogger(
         if (exception != null)
             logLine += $"\nException: {exception}";
 
-        Console.WriteLine(logLine);
+        loggingQueue.Enqueue(logLine);
     }
 }

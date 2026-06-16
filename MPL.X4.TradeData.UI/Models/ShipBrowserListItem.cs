@@ -1,5 +1,4 @@
 ﻿using MPL.X4.SaveGame.Models;
-using static MPL.X4.Constants.XmlDataFile.XPath;
 
 namespace MPL.X4.TradeData.UI.Models;
 

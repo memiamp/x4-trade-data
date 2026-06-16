@@ -5,9 +5,9 @@ namespace MPL.X4.TradeData.UI.Services.Logging;
 /// <summary>
 /// A class that implements a logger provider for a <see cref="SimpleConsoleLogger"/>.
 /// </summary>
-/// <param name="minLevel">A <see cref="LogLevel"/> indicating the minimum level the logger should output.</param>
+/// <param name="loggingQueue">An <see cref="ILoggingQueue"/> that is the logging queue to use.</param>
 internal class SimpleConsoleLoggerProvider(
-                                           LogLevel minLevel = LogLevel.Debug)
+                                           ILoggingQueue loggingQueue)
     : ILoggerProvider
 {
     public void Dispose()
@@ -16,5 +16,5 @@ internal class SimpleConsoleLoggerProvider(
     }
 
     ILogger ILoggerProvider.CreateLogger(string categoryName)
-        => new SimpleConsoleLogger(categoryName, minLevel);
+        => new SimpleConsoleLogger(categoryName, loggingQueue);
 }

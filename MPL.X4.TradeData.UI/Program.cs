@@ -24,6 +24,7 @@ internal static class Program
         services.AddSingleton<IFileConfiguration>(new FileConfiguration());
 
         // Services
+        services.AddSingleton<ILoggingQueue>(new LoggingQueue());
         Imports.XmlPatch.Bootstrap.AddServices(services);
         Bootstrap.AddServices(services);
 

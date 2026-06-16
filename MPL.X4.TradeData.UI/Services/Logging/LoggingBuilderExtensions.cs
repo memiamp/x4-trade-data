@@ -12,11 +12,10 @@ internal static class LoggingBuilderExtensions
     /// Adds a simple console logger to the specified <paramref name="builder"/>.
     /// </summary>
     /// <param name="builder">An <see cref="ILoggingBuilder"/> to add the logger to.</param>
-    /// <param name="minLevel">A <see cref="LogLevel"/> indicating the minimum log level for the logger.</param>
     /// <returns>The passed-in <see cref="ILoggingBuilder"/> that can be used to chain calls.</returns>
-    internal static ILoggingBuilder AddSimpleConsoleLogger(this ILoggingBuilder builder, LogLevel minLevel = LogLevel.Debug)
+    internal static ILoggingBuilder AddSimpleConsoleLogger(this ILoggingBuilder builder)
     {
-        builder.Services.AddSingleton<ILoggerProvider>(new SimpleConsoleLoggerProvider(minLevel));
+        builder.Services.AddSingleton<ILoggerProvider, SimpleConsoleLoggerProvider>();
 
         return builder;
     }
