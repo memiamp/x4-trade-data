@@ -20,6 +20,8 @@ internal class EconomyLogDataParser(
         IEnumerable<IRemovedObjectData>? removedObjects = null;
         ITradeLogData? tradeLog = null;
 
+        logger.LogInformation("Parsing economy log");
+     
         while (await reader.ReadAsync())
         {
             if (reader.CheckNodeMatches(Constants.XmlDataFile.ElementName.Entries, XmlNodeType.Element, 1) &&

@@ -18,6 +18,8 @@ internal class SaveGameModelLoader(
 {
     ISaveGameModels ISaveGameModelLoader.LoadModels(ISaveGameData data, IGameResourceModels gameResources)
     {
+        logger.LogInformation("Parsing save game models");
+
         using var scopedServiceProvider = serviceProvider.CreateScope();
         var modelParser = serviceProvider.GetRequiredService<IModelParser>();
 

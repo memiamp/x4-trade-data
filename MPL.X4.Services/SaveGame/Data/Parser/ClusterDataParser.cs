@@ -28,6 +28,8 @@ internal class ClusterDataParser(
             throw new ArgumentException("Could not parse cluster", nameof(reader));
         }
 
+        Logger.LogInformation("Parsing cluster {Macro} ({Code})", macro, code);
+
         var isKnown = GetIsKnownToPlayer(reader);
 
         while (await reader.ReadAsync())

@@ -31,21 +31,23 @@
             ShipListView = new ListView();
             ShipListView_Class = new ColumnHeader();
             ShipListView_Model = new ColumnHeader();
+            ShipListView_Owner = new ColumnHeader();
             ShipListView_Sector = new ColumnHeader();
             ShipListView_Cargo = new ColumnHeader();
             ShipListView_Modifications = new ColumnHeader();
-            ShipListView_Position = new ColumnHeader();
+            ShipListView_X = new ColumnHeader();
             NoItemsLabel = new Label();
             AbandonedCheckBox = new CheckBox();
             CargoCheckBox = new CheckBox();
             ModificationCheckBox = new CheckBox();
-            ShipListView_Owner = new ColumnHeader();
+            ShipListView_Y = new ColumnHeader();
+            ShipListView_Z = new ColumnHeader();
             SuspendLayout();
             // 
             // ShipListView
             // 
             ShipListView.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            ShipListView.Columns.AddRange(new ColumnHeader[] { ShipListView_Class, ShipListView_Model, ShipListView_Owner, ShipListView_Sector, ShipListView_Cargo, ShipListView_Modifications, ShipListView_Position });
+            ShipListView.Columns.AddRange(new ColumnHeader[] { ShipListView_Class, ShipListView_Model, ShipListView_Owner, ShipListView_Sector, ShipListView_Cargo, ShipListView_Modifications, ShipListView_X, ShipListView_Y, ShipListView_Z });
             ShipListView.FullRowSelect = true;
             ShipListView.Location = new Point(0, 31);
             ShipListView.Name = "ShipListView";
@@ -57,15 +59,20 @@
             // ShipListView_Class
             // 
             ShipListView_Class.Text = "Class";
+            ShipListView_Class.Width = 70;
             // 
             // ShipListView_Model
             // 
-            ShipListView_Model.Text = "Model";
+            ShipListView_Model.Text = "Name\\Model";
             ShipListView_Model.Width = 220;
+            // 
+            // ShipListView_Owner
+            // 
+            ShipListView_Owner.Text = "Owner";
             // 
             // ShipListView_Sector
             // 
-            ShipListView_Sector.Text = "Sector";
+            ShipListView_Sector.Text = "Location";
             ShipListView_Sector.Width = 150;
             // 
             // ShipListView_Cargo
@@ -78,11 +85,11 @@
             ShipListView_Modifications.Text = "Modifications";
             ShipListView_Modifications.Width = 150;
             // 
-            // ShipListView_Position
+            // ShipListView_X
             // 
-            ShipListView_Position.Text = "Position";
-            ShipListView_Position.TextAlign = HorizontalAlignment.Right;
-            ShipListView_Position.Width = 120;
+            ShipListView_X.Text = "X";
+            ShipListView_X.TextAlign = HorizontalAlignment.Right;
+            ShipListView_X.Width = 100;
             // 
             // NoItemsLabel
             // 
@@ -125,10 +132,17 @@
             ModificationCheckBox.Text = "Modifications";
             ModificationCheckBox.UseVisualStyleBackColor = true;
             // 
-            // ShipListView_Owner
+            // ShipListView_Y
             // 
-            ShipListView_Owner.Text = "Owner";
-            ShipListView_Owner.Width = 170;
+            ShipListView_Y.Text = "Y";
+            ShipListView_Y.TextAlign = HorizontalAlignment.Right;
+            ShipListView_Y.Width = 100;
+            // 
+            // ShipListView_Z
+            // 
+            ShipListView_Z.Text = "Z";
+            ShipListView_Z.TextAlign = HorizontalAlignment.Right;
+            ShipListView_Z.Width = 100;
             // 
             // ShipBrowserControl
             // 
@@ -150,7 +164,7 @@
         private ColumnHeader ShipListView_Class;
         private ColumnHeader ShipListView_Model;
         private ColumnHeader ShipListView_Sector;
-        private ColumnHeader ShipListView_Position;
+        private ColumnHeader ShipListView_X;
         private ColumnHeader ShipListView_Cargo;
         private ColumnHeader ShipListView_Modifications;
         private Label NoItemsLabel;
@@ -158,5 +172,7 @@
         private CheckBox CargoCheckBox;
         private CheckBox ModificationCheckBox;
         private ColumnHeader ShipListView_Owner;
+        private ColumnHeader ShipListView_Y;
+        private ColumnHeader ShipListView_Z;
     }
 }

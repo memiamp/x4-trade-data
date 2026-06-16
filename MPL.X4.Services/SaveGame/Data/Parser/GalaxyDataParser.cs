@@ -27,6 +27,8 @@ internal class GalaxyDataParser(
             throw new ArgumentException("Could not parse galaxy", nameof(reader));
         }
 
+        Logger.LogInformation("Parsing galaxy {Macro} ({Code})", macro, code);
+
         while (await reader.ReadAsync())
         {
             if (reader.CheckNodeMatches(Constants.XmlDataFile.ElementName.Component, XmlNodeType.Element, 3) &&

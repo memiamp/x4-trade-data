@@ -34,11 +34,12 @@ public static class Bootstrap
         servicesCollection.AddTransient<IGameResourceDataLoader, GameResourceDataLoader>();
         servicesCollection.AddTransient<IGameResourceDataParser, GameResourceDataParser>();
         servicesCollection.AddTransient<IGameResourceDataProvider, GameResourceDataProvider>();
-
+        
         // Model services
         servicesCollection.AddTransient<IGameResourceModelLoader, GameResourceModelLoader>();
         servicesCollection.AddScoped<IGameResourceModelParsingScope, GameResourceModelParsingScope>();
-
+        servicesCollection.AddSingleton<ITextResourceParser, TextResourceParser>();
+        
         // Data model parsers
         servicesCollection.AddTransient<IDataParser<IColourData>, ColourDataParser>();
         servicesCollection.AddTransient<IDataParser<IColourDataDictionary>, ColourDataDictionaryParser>();

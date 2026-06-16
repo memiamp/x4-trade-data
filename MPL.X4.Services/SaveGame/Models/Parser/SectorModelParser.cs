@@ -19,6 +19,10 @@ internal class SectorModelParser(
 {
     private protected override ISectorModel OnParse(ISectorData source)
     {
+        var name = ParseName(source);
+        
+        Logger.LogInformation("Parsing sector model {Name} ({Code})", name, source.Code);
+
         var buildStorages = new BuildStorageModelList();
         var collectableDrops = new CollectableDropModelList();
         var gates = new GateModelList();
@@ -26,7 +30,6 @@ internal class SectorModelParser(
         var ships = new ShipModelList();
         var stations = new StationModelList();
 
-        var name = ParseName(source);
         var owner = parsingScope.ParseFaction(source.Owner);
         var transform = ParseTransform(source);
 

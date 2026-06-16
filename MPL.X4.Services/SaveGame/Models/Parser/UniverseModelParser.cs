@@ -18,6 +18,8 @@ internal class UniverseModelParser(
 {
     private protected override IUniverseModel OnParse(IUniverseData source)
     {
+        logger.LogInformation("Parsing universe model");
+
         var highwayShips = ParseHighways(source.Galaxy.Clusters.SelectMany(x => x.Highways));
         var sectors = modelParser.Parse<IEnumerable<ISectorData>, ISectorModelList>(source.Galaxy.Clusters.SelectMany(x => x.Sectors));
 

@@ -29,6 +29,8 @@ internal class SectorDataParser(
             throw new ArgumentException("Could not parse sector", nameof(reader));
         }
 
+        Logger.LogInformation("Parsing sector {Macro} ({Code})", macro, code);
+
         var isKnown = GetIsKnownToPlayer(reader);
 
         while (await reader.ReadAsync())

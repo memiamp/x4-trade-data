@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using MPL.X4.GameResources.Models.Services;
 using MPL.X4.Parser;
 using MPL.X4.SaveGame.Data;
 
@@ -10,10 +11,12 @@ namespace MPL.X4.SaveGame.Models.Parser;
 /// <param name="logger">An <see cref="ILogger{TCategoryName}"/> that is the logger to use.</param>
 /// <param name="modelParser">An <see cref="IModelParser"/> that is the model parser to use.</param>
 /// <param name="parsingScope">An <see cref="ISaveGameModelParsingScope"/> that is the parsing scope.</param>
+/// <param name="textResourceParser">An <see cref="ITextResourceParser"/> that is the text resource parser.</param>
 internal class ShipModelParser(
                                ILogger<ShipModelParser> logger,
                                IModelParser modelParser,
-                               ISaveGameModelParsingScope parsingScope)
+                               ISaveGameModelParsingScope parsingScope,
+                               ITextResourceParser textResourceParser)
     : ModelParserBase<IShipData, IShipModel>(logger)
 {
     private static readonly Dictionary<string, ShipClass> _typeMap = new()
@@ -29,6 +32,7 @@ internal class ShipModelParser(
     {
         var cargo = modelParser.Parse<IEnumerable<IWareItemData>, ICargoItemModelList>(source.Cargo.Items);
         var model = ParseModel(source.Macro);
+        var name = ParseName(source.Name);
         var owner = parsingScope.ParseFaction(source.Owner);
         var shipClass = ParseShipClass(source.Class);
         var ships = ParseShips(source.Ships);
@@ -53,7 +57,7 @@ internal class ShipModelParser(
             Id = source.Id,
             IsWreck = source.State == Constants.XmlDataFile.AttributeValue.State.Wreck,
             Model = model,
-            Name = source.Name,
+            Name = name,
             Owner = owner,
             PaintModification = paintModification,
             ShieldModification = shieldModification,
@@ -122,6 +126,9 @@ internal class ShipModelParser(
 
         return returnValue;
     }
+
+    private string? ParseName(string? source)
+        => textResourceParser.ParseText(source, parsingScope.GameResources.Text);
 
     private ShipClass ParseShipClass(string shipClass)
     {

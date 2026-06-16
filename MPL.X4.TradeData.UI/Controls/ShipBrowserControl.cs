@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel;
-using MPL.X4.SaveGame.Models;
+using MPL.X4.TradeData.UI.Models;
 
 namespace MPL.X4.TradeData.UI.Controls;
 
@@ -10,7 +10,9 @@ internal partial class ShipBrowserControl : UserControl
 {
     #region Declarations
 
-    private IEnumerable<IShipModel> _items = [];
+    private readonly ListViewColumnSorter _columnSorter = new();
+
+    private IEnumerable<ShipBrowserListItem> _items = [];
 
     #endregion
 
@@ -40,107 +42,25 @@ internal partial class ShipBrowserControl : UserControl
         ShipListView.Visible = hasItems;
     }
 
-    private static ListViewItem GenerateListViewItem(IShipModel source)
+    private static ListViewItem GenerateListViewItem(ShipBrowserListItem source)
     {
-        var returnValue = new ListViewItem(GetShipClass(source));
-        returnValue.SubItems.Add(source.Model);
-        returnValue.SubItems.Add(source.Owner.Acronym);
-        returnValue.SubItems.Add("Unknown");
-        //returnValue.SubItems.Add(source.SectorName);
-        returnValue.SubItems.Add(GetCargo(source));
-        returnValue.SubItems.Add(GetModifications(source));
-        returnValue.SubItems.Add(GetPosition(source.Transform));
+        var returnValue = new ListViewItem(source.Class);
+        returnValue.SubItems.Add($"{source.Name} ({source.Ship.Code})");
+        returnValue.SubItems.Add(source.OwnerAcronym);
+        returnValue.SubItems.Add(source.Location);
+        returnValue.SubItems.Add(source.Cargo);
+        returnValue.SubItems.Add(source.Modifications);
+        returnValue.SubItems.Add(source.X);
+        returnValue.SubItems.Add(source.Y);
+        returnValue.SubItems.Add(source.Z);
 
         return returnValue;
     }
 
-    private static string GetCargo(IShipModel source)
-    {
-        var cargoItems = source
-                               .Cargo
-                               .Where(x => x.Amount > 0);
-        if (cargoItems.Any())
-        {
-            var count = cargoItems.Count();
-            var totalAmount = cargoItems.Sum(x => x.Amount);
-
-            return $"{totalAmount:#,##0} ({count} ware(s))";
-        }
-
-        return string.Empty;
-    }
-
-    private static void GetModificationQuality(IModificationModel? source, ref int basic, ref int enhanced, ref int exceptional)
-    {
-        if (source?.Quality == ModificationQuality.Basic)
-            basic++;
-        else if (source?.Quality == ModificationQuality.Enhanced)
-            enhanced++;
-        else if (source?.Quality == ModificationQuality.Exceptional)
-            exceptional++;
-    }
-
-    private static void GetModificationQuality(IEnumerable<IModificationModel> source, ref int basic, ref int enhanced, ref int exceptional)
-    {
-        foreach (var item in source)
-        {
-            GetModificationQuality(item, ref basic, ref enhanced, ref exceptional);
-        }
-    }
-
-    private static string GetModifications(IShipModel source)
-    {
-        var basicModifications = 0;
-        var enhancedModifications = 0;
-        var exceptionModifications = 0;
-        var returnValue = string.Empty;
-
-        GetModificationQuality(source.EngineModification, ref basicModifications, ref enhancedModifications, ref exceptionModifications);
-        GetModificationQuality(source.PaintModification, ref basicModifications, ref enhancedModifications, ref exceptionModifications);
-        GetModificationQuality(source.ShieldModification, ref basicModifications, ref enhancedModifications, ref exceptionModifications);
-        GetModificationQuality(source.ShipModification, ref basicModifications, ref enhancedModifications, ref exceptionModifications);
-        GetModificationQuality(source.WeaponModifications, ref basicModifications, ref enhancedModifications, ref exceptionModifications);
-
-        if (exceptionModifications > 0)
-        {
-            returnValue += $"{exceptionModifications} Exceptional, ";
-        }
-        if (enhancedModifications > 0)
-        {
-            returnValue += $"{enhancedModifications} Enhanced, ";
-        }
-        if (basicModifications > 0)
-        {
-            returnValue += $"{basicModifications} Basic";
-        }
-
-        return returnValue.Trim(' ', ',');
-    }
-
-    private static string GetPosition(ITransform3D source)
-        => $"{source.Position.X:0},{source.Position.Y:0},{source.Position.Z:0}";
-
-    private static string GetShipClass(IShipModel source)
-        => source.Class switch
-        {
-            ShipClass.ExtraLarge => Constants.ShipClass.ExtraLarge,
-            ShipClass.ExtraSmall => Constants.ShipClass.ExtraSmall,
-            ShipClass.Large => Constants.ShipClass.Large,
-            ShipClass.Medium => Constants.ShipClass.Medium,
-            ShipClass.Small => Constants.ShipClass.Small,
-            _ => "Unknown"
-        };
-
-    private static bool HasModifications(IShipModel source, bool includePaint = false)
-        => source.EngineModification is not null ||
-           source.ShieldModification is not null ||
-           source.ShipModification is not null ||
-           source.WeaponModifications.Any() ||
-           includePaint &&
-           source.PaintModification is not null;
-
     private void Initialise()
     {
+        ShipListView.ListViewItemSorter = _columnSorter;
+
         AbandonedCheckBox.Checked = true;
         CargoCheckBox.Checked = false;
         ModificationCheckBox.Checked = false;
@@ -150,6 +70,7 @@ internal partial class ShipBrowserControl : UserControl
         AbandonedCheckBox.CheckedChanged += AbandonedCheckBox_CheckedChanged;
         CargoCheckBox.CheckedChanged += CargoCheckBox_CheckedChanged;
         ModificationCheckBox.CheckedChanged += ModificationCheckBox_CheckedChanged;
+        ShipListView.ColumnClick += ShipListView_ColumnClick;
 
         DoRefresh();
     }
@@ -169,19 +90,18 @@ internal partial class ShipBrowserControl : UserControl
 
             if (CargoCheckBox.Checked)
             {
-                sourceItems = sourceItems.Where(x => x.Cargo.Any());
+                sourceItems = sourceItems.Where(x => x.HasCargo);
             }
 
             if (ModificationCheckBox.Checked)
             {
-                sourceItems = sourceItems.Where(x => HasModifications(x));
+                sourceItems = sourceItems.Where(x => x.HasModifications);
             }
 
             items = sourceItems
-                               .OrderBy(x => x.Name ?? x.Model)
-                               .ThenBy(x => x.Owner.Acronym)
+                               .OrderBy(x => x.Name)
+                               .ThenBy(x => x.OwnerAcronym)
                                .Select(GenerateListViewItem);
-        
         }
 
         ShipListView.BeginUpdate();
@@ -213,6 +133,23 @@ internal partial class ShipBrowserControl : UserControl
         LoadData();
     }
 
+    private void ShipListView_ColumnClick(object? sender, ColumnClickEventArgs e)
+    {
+        if (e.Column == _columnSorter.SortColumn)
+        {
+            _columnSorter.SortOrder = _columnSorter.SortOrder == SortOrder.Ascending
+                ? SortOrder.Descending
+                : SortOrder.Ascending;
+        }
+        else
+        {
+            _columnSorter.SortColumn = e.Column;
+            _columnSorter.SortOrder = SortOrder.Ascending;
+        }
+
+        ShipListView.Sort();
+    }
+
     private void SpecialItemControl_Load(object? sender, EventArgs e)
     {
         DoRefresh();
@@ -226,7 +163,7 @@ internal partial class ShipBrowserControl : UserControl
     /// Gets or sets the items for the control.
     /// </summary>
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    internal IEnumerable<IShipModel> Items
+    internal IEnumerable<ShipBrowserListItem> Items
     {
         get
         {

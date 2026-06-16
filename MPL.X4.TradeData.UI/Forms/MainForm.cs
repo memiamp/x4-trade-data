@@ -2,6 +2,7 @@ using Microsoft.Extensions.Logging;
 using MPL.X4.SaveGame.Models;
 using MPL.X4.SaveGame.Models.Services;
 using MPL.X4.TradeData.UI.Controls;
+using MPL.X4.TradeData.UI.Models;
 using MPL.X4.TradeData.UI.Models.Trade;
 using MPL.X4.TradeData.UI.Services;
 
@@ -158,7 +159,23 @@ internal partial class MainForm : Form
 
     private void UpdateShipControl()
     {
-        ShipControl.Items = _saveGame?.Universe.GetAllShips() ?? [];
+        if (_saveGame is not null)
+        {
+            var ships = _saveGame
+                                 .Universe
+                                 .Sectors
+                                 .SelectMany(
+                                             x => x.GetAllShips(),
+                                             (s, x) => new ShipBrowserListItem(s.Name, x));
+
+            var highwayShips = _saveGame
+                                        .Universe
+                                        .HighwayShips
+                                        .Flatten()
+                                        .Select(x => new ShipBrowserListItem("Superhighway", x));
+
+            ShipControl.Items = ships.Concat(highwayShips);
+        }
     }
 
     private void UpdateSpecialItemsControl()

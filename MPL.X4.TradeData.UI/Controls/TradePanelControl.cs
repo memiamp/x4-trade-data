@@ -139,9 +139,15 @@ internal partial class TradePanelControl : UserControl
             _averagePrice = 0;
         }
 
-            items = _displaymode == TradeDisplayMode.Buy
-                ? items.OrderBy(x => x.Trade.Name).ThenByDescending(x => x.Trade.Price)
-                : items.OrderBy(x => x.Trade.Name).ThenBy(x => x.Trade.Price);
+        // Don't display everything when no filter selected
+        if (items.Count() == _items.Count())
+        {
+            items = [];
+        }
+
+        items = _displaymode == TradeDisplayMode.Buy
+            ? items.OrderBy(x => x.Trade.Name).ThenByDescending(x => x.Trade.Price)
+            : items.OrderBy(x => x.Trade.Name).ThenBy(x => x.Trade.Price);
 
         TradesListView.BeginUpdate();
 

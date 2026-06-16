@@ -19,6 +19,8 @@ internal class UniverseDataParser(
     {
         IGalaxyData? galaxy = null;
 
+        Logger.LogInformation("Parsing universe");
+
         while (await reader.ReadAsync())
         {
             if (reader.CheckNodeMatches(Constants.XmlDataFile.ElementName.Component, XmlNodeType.Element, 1) &&

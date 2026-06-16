@@ -21,6 +21,8 @@ internal class EconomyLogModelParser(
 
     private protected override IEconomyLogModel OnParse(IEconomyLogData source)
     {
+        logger.LogInformation("Parsing economy log model");
+
         lock (_parseLock)
         {
             _removedObjects = source.RemovedObjects;
