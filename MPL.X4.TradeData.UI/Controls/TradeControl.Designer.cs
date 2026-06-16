@@ -107,7 +107,7 @@
             // SectorNameLabel
             // 
             SectorNameLabel.AutoSize = true;
-            SectorNameLabel.Location = new Point(758, 3);
+            SectorNameLabel.Location = new Point(763, 6);
             SectorNameLabel.Name = "SectorNameLabel";
             SectorNameLabel.Size = new Size(43, 15);
             SectorNameLabel.TabIndex = 6;
@@ -117,7 +117,7 @@
             // 
             SectorNameComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
             SectorNameComboBox.FormattingEnabled = true;
-            SectorNameComboBox.Location = new Point(807, 0);
+            SectorNameComboBox.Location = new Point(812, 3);
             SectorNameComboBox.Name = "SectorNameComboBox";
             SectorNameComboBox.Size = new Size(200, 23);
             SectorNameComboBox.TabIndex = 7;
@@ -125,7 +125,7 @@
             // StationOwnerLabel
             // 
             StationOwnerLabel.AutoSize = true;
-            StationOwnerLabel.Location = new Point(486, 3);
+            StationOwnerLabel.Location = new Point(491, 6);
             StationOwnerLabel.Name = "StationOwnerLabel";
             StationOwnerLabel.Size = new Size(85, 15);
             StationOwnerLabel.TabIndex = 4;
@@ -135,7 +135,7 @@
             // 
             StationOwnerComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
             StationOwnerComboBox.FormattingEnabled = true;
-            StationOwnerComboBox.Location = new Point(577, 0);
+            StationOwnerComboBox.Location = new Point(582, 3);
             StationOwnerComboBox.Name = "StationOwnerComboBox";
             StationOwnerComboBox.Size = new Size(175, 23);
             StationOwnerComboBox.TabIndex = 5;
@@ -143,7 +143,7 @@
             // SectorOwnerLabel
             // 
             SectorOwnerLabel.AutoSize = true;
-            SectorOwnerLabel.Location = new Point(223, 3);
+            SectorOwnerLabel.Location = new Point(223, 6);
             SectorOwnerLabel.Name = "SectorOwnerLabel";
             SectorOwnerLabel.Size = new Size(81, 15);
             SectorOwnerLabel.TabIndex = 2;
@@ -153,7 +153,7 @@
             // 
             WareComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
             WareComboBox.FormattingEnabled = true;
-            WareComboBox.Location = new Point(42, 0);
+            WareComboBox.Location = new Point(42, 3);
             WareComboBox.Name = "WareComboBox";
             WareComboBox.Size = new Size(175, 23);
             WareComboBox.TabIndex = 1;
@@ -162,7 +162,7 @@
             // 
             SectorOwnerComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
             SectorOwnerComboBox.FormattingEnabled = true;
-            SectorOwnerComboBox.Location = new Point(305, 0);
+            SectorOwnerComboBox.Location = new Point(310, 3);
             SectorOwnerComboBox.Name = "SectorOwnerComboBox";
             SectorOwnerComboBox.Size = new Size(175, 23);
             SectorOwnerComboBox.TabIndex = 3;
@@ -170,7 +170,7 @@
             // WareLabel
             // 
             WareLabel.AutoSize = true;
-            WareLabel.Location = new Point(-1, 3);
+            WareLabel.Location = new Point(-1, 6);
             WareLabel.Name = "WareLabel";
             WareLabel.Size = new Size(37, 15);
             WareLabel.TabIndex = 0;
@@ -180,9 +180,9 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            Controls.Add(NoItemsLabel);
             Controls.Add(TopPanel);
             Controls.Add(MainLayoutPanel);
+            Controls.Add(NoItemsLabel);
             Name = "TradeControl";
             Size = new Size(1223, 650);
             MainLayoutPanel.ResumeLayout(false);

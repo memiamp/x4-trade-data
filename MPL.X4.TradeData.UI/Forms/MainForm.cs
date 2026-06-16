@@ -166,7 +166,7 @@ internal partial class MainForm : Form
                                  .Sectors
                                  .SelectMany(
                                              x => x.GetAllShips(),
-                                             (s, x) => new ShipBrowserListItem(s.Name, x));
+                                             (s, x) => new ShipBrowserListItem(s, x));
 
             var highwayShips = _saveGame
                                         .Universe

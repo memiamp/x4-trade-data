@@ -109,7 +109,7 @@
             // BuildStorageAbandonedCheckBox
             // 
             BuildStorageAbandonedCheckBox.AutoSize = true;
-            BuildStorageAbandonedCheckBox.Location = new Point(3, 3);
+            BuildStorageAbandonedCheckBox.Location = new Point(3, 5);
             BuildStorageAbandonedCheckBox.Name = "BuildStorageAbandonedCheckBox";
             BuildStorageAbandonedCheckBox.Size = new Size(161, 19);
             BuildStorageAbandonedCheckBox.TabIndex = 0;
@@ -119,7 +119,7 @@
             // AbandonedShipCheckBox
             // 
             AbandonedShipCheckBox.AutoSize = true;
-            AbandonedShipCheckBox.Location = new Point(170, 3);
+            AbandonedShipCheckBox.Location = new Point(170, 5);
             AbandonedShipCheckBox.Name = "AbandonedShipCheckBox";
             AbandonedShipCheckBox.Size = new Size(114, 19);
             AbandonedShipCheckBox.TabIndex = 1;
@@ -129,7 +129,7 @@
             // LockboxCheckBox
             // 
             LockboxCheckBox.AutoSize = true;
-            LockboxCheckBox.Location = new Point(290, 3);
+            LockboxCheckBox.Location = new Point(290, 5);
             LockboxCheckBox.Name = "LockboxCheckBox";
             LockboxCheckBox.Size = new Size(71, 19);
             LockboxCheckBox.TabIndex = 2;
@@ -139,7 +139,7 @@
             // BuildStorageTopCheckBox
             // 
             BuildStorageTopCheckBox.AutoSize = true;
-            BuildStorageTopCheckBox.Location = new Point(367, 3);
+            BuildStorageTopCheckBox.Location = new Point(367, 5);
             BuildStorageTopCheckBox.Name = "BuildStorageTopCheckBox";
             BuildStorageTopCheckBox.Size = new Size(118, 19);
             BuildStorageTopCheckBox.TabIndex = 3;
@@ -148,7 +148,7 @@
             // 
             // BuildStorageTopNumericUpDown
             // 
-            BuildStorageTopNumericUpDown.Location = new Point(491, 2);
+            BuildStorageTopNumericUpDown.Location = new Point(491, 3);
             BuildStorageTopNumericUpDown.Maximum = new decimal(new int[] { 20, 0, 0, 0 });
             BuildStorageTopNumericUpDown.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
             BuildStorageTopNumericUpDown.Name = "BuildStorageTopNumericUpDown";
@@ -160,13 +160,13 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            Controls.Add(NoItemsLabel);
             Controls.Add(BuildStorageTopNumericUpDown);
             Controls.Add(BuildStorageTopCheckBox);
             Controls.Add(LockboxCheckBox);
             Controls.Add(AbandonedShipCheckBox);
             Controls.Add(BuildStorageAbandonedCheckBox);
             Controls.Add(SpecialItemListView);
+            Controls.Add(NoItemsLabel);
             Name = "SpecialItemControl";
             Size = new Size(997, 396);
             ((System.ComponentModel.ISupportInitialize)BuildStorageTopNumericUpDown).EndInit();

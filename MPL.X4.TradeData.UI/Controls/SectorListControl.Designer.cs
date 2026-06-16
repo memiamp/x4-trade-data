@@ -182,7 +182,6 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            Controls.Add(NoItemsLabel);
             Controls.Add(BuildStorageCheckBox);
             Controls.Add(DropsCheckBox);
             Controls.Add(LockboxesCheckBox);
@@ -191,6 +190,7 @@
             Controls.Add(SectorOwnerComboBox);
             Controls.Add(ViewSectorButton);
             Controls.Add(SectorListView);
+            Controls.Add(NoItemsLabel);
             Name = "SectorListControl";
             Size = new Size(985, 535);
             ResumeLayout(false);

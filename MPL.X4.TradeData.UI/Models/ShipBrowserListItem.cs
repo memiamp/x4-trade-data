@@ -10,6 +10,21 @@ internal class ShipBrowserListItem
     /// <summary>
     /// Creates an instance of the <see cref="ShipBrowserListItem"/> class with the specified parameters.
     /// </summary>
+    /// <param name="sector">An <see cref="ISectorModel"/> that is the ship sector.</param>
+    /// <param name="ship">An <see cref="IShipModel"/> that is the ship.</param>
+    internal ShipBrowserListItem(
+                                 ISectorModel sector,
+                                 IShipModel ship)
+        : this(
+               string.IsNullOrWhiteSpace(sector.Name) ? "Unknown Sector" : sector.Name,
+               ship)
+    {
+        Sector = sector;
+    }
+
+    /// <summary>
+    /// Creates an instance of the <see cref="ShipBrowserListItem"/> class with the specified parameters.
+    /// </summary>
     /// <param name="location">A <see cref="string"/> containing the ship location.</param>
     /// <param name="ship">An <see cref="IShipModel"/> that is the ship.</param>
     internal ShipBrowserListItem(
@@ -25,6 +40,7 @@ internal class ShipBrowserListItem
         HasModifications = GetHasModifications(ship);
         Modifications = GetModifications(ship);
         Name = ship.Name ?? ship.Model;
+        OwnerAcronym = string.IsNullOrWhiteSpace(Ship.Owner.Acronym) ? Ship.Owner.Name : Ship.Owner.Acronym;
         X = $"{ship.Transform.Position.X:0}";
         Y = $"{ship.Transform.Position.Y:0}";
         Z = $"{ship.Transform.Position.Z:0}";
@@ -40,7 +56,15 @@ internal class ShipBrowserListItem
             var count = cargoItems.Count();
             var totalAmount = cargoItems.Sum(x => x.Amount);
 
-            return $"{totalAmount:#,##0} ({count} ware(s))";
+            if (count == 1)
+            {
+                var ware = cargoItems.First().Name;
+                return $"{totalAmount:#,##0} ({ware})";
+            }
+            else
+            {
+                return $"{totalAmount:#,##0} ({count} wares)";
+            }
         }
 
         return string.Empty;
@@ -83,6 +107,10 @@ internal class ShipBrowserListItem
         }
     }
 
+    private const string ModificationBasic = "〉";
+    private const string ModificationEnhanced = "〉〉";
+    private const string ModificationExceptional = "〉〉〉";
+
     private static string GetModifications(IShipModel source)
     {
         var basicModifications = 0;
@@ -98,15 +126,36 @@ internal class ShipBrowserListItem
 
         if (exceptionModifications > 0)
         {
-            returnValue += $"{exceptionModifications} Exceptional, ";
+            returnValue += ModificationExceptional;
+
+            if (exceptionModifications > 1)
+            {
+                returnValue += $" ({exceptionModifications})";
+            }
+
+            returnValue += ", ";
         }
+
         if (enhancedModifications > 0)
         {
-            returnValue += $"{enhancedModifications} Enhanced, ";
+            returnValue += ModificationEnhanced;
+
+            if (enhancedModifications > 1)
+            {
+                returnValue += $" ({enhancedModifications})";
+            }
+
+            returnValue += ", ";
         }
+
         if (basicModifications > 0)
         {
-            returnValue += $"{basicModifications} Basic";
+            returnValue += ModificationBasic;
+
+            if (basicModifications > 1)
+            {
+                returnValue += $" ({basicModifications})";
+            }
         }
 
         return returnValue.Trim(' ', ',');
@@ -160,7 +209,12 @@ internal class ShipBrowserListItem
     /// <summary>
     /// Gets the owner acronym of the ship.
     /// </summary>
-    internal string OwnerAcronym => Ship.Owner.Acronym;
+    internal string OwnerAcronym { get; private set; }
+
+    /// <summary>
+    /// Gets the sector the ship is in.
+    /// </summary>
+    internal ISectorModel? Sector { get; private set; }
 
     /// <summary>
     /// Gets the ship.
