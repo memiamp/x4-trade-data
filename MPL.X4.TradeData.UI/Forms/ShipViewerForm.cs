@@ -8,9 +8,12 @@ namespace MPL.X4.TradeData.UI.Forms;
 /// </summary>
 internal partial class ShipViewerForm : Form
 {
+    #region Constructors
+
     private ShipViewerForm()
     {
         InitializeComponent();
+        Initialise();
     }
 
     /// <summary>
@@ -37,11 +40,16 @@ internal partial class ShipViewerForm : Form
         RotationRollTextBox.Text = ship.Ship.Transform.Rotation.Roll.ToString("0");
         RotationYawTextBox.Text = ship.Ship.Transform.Rotation.Yaw.ToString("0");
         SectorTextBox.Text = ship.Location;
+        Text = $"Ship Viewer: {ship.Name} ({ship.Ship.Code})";
 
         LoadCargo(ship.Ship.Cargo);
         LoadModifications(ship.Ship);
     }
-    
+
+    #endregion
+
+    #region Methods
+
     private static ListViewItem GenerateListViewItem(ICargoItemModel source)
     {
         var returnValue = new ListViewItem(source.Name);
@@ -67,6 +75,11 @@ internal partial class ShipViewerForm : Form
         returnValue.Tag = source;
 
         return returnValue;
+    }
+
+    private void Initialise()
+    {
+        OkButton.Click += OkButton_Click;
     }
 
     private void LoadCargo(ICargoItemModelList items)
@@ -112,10 +125,21 @@ internal partial class ShipViewerForm : Form
     private static string MapQuality(ModificationQuality source)
         => source switch
         {
-            ModificationQuality.Basic => "〉",
-            ModificationQuality.Enhanced => "〉〉",
-            ModificationQuality.Exceptional => "〉〉〉",
-            ModificationQuality.Paint => "P",
+            ModificationQuality.Basic => Constants.ShipModifications.QualityBasic,
+            ModificationQuality.Enhanced => Constants.ShipModifications.QualityEnhanced,
+            ModificationQuality.Exceptional => Constants.ShipModifications.QualityExceptional,
+            ModificationQuality.Paint => Constants.ShipModifications.QualityPaint,
             _ => string.Empty
         };
+
+    #endregion
+
+    #region Event Handlers
+
+    private void OkButton_Click(object? sender, EventArgs e)
+    {
+        Close();
+    }
+
+    #endregion
 }

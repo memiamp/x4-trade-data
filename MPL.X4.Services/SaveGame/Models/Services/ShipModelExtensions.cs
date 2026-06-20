@@ -21,4 +21,38 @@ public static class ShipModelExtensions
             }
         }
     }
+
+    /// <summary>
+    /// Gets the count of modification qualities for the specified <paramref name="source"/>.
+    /// </summary>
+    /// <param name="source">An <see cref="IShipModel"/> that is the source to evaluate.</param>
+    /// <returns>A <see cref="Tuple{T1, T2, T3}"/> of <see cref="int"/> indicating the number of basic, enhanced, and exceptional, qualities.</returns>
+    public static (int Basic, int Enhanced, int Exceptional) GetModificationQualityCount(this IShipModel source)
+    {
+        var basic = 0;
+        var enhanced = 0;
+        var exceptional = 0;
+
+        source.EngineModification.GetModificationQuality(ref basic, ref enhanced, ref exceptional);
+        source.PaintModification.GetModificationQuality(ref basic, ref enhanced, ref exceptional);
+        source.ShieldModification.GetModificationQuality(ref basic, ref enhanced, ref exceptional);
+        source.ShipModification.GetModificationQuality(ref basic, ref enhanced, ref exceptional);
+        source.WeaponModifications.GetModificationQuality(ref basic, ref enhanced, ref exceptional);
+
+        return (basic, enhanced, exceptional);
+    }
+
+    /// <summary>
+    /// Gets an indication of whether the specified <paramref name="source"/> has any ship modifications.
+    /// </summary>
+    /// <param name="source">An <see cref="IShipModel"/> that is the source to evaluate.</param>
+    /// <param name="includePaintModification">A <see cref="bool"/> indicating whether to include paint modifications in the evaluation.  Default is <see langword="false"/>.</param>
+    /// <returns>A <see cref="bool"/> indicating the result.</returns>
+    public static bool HasModifications(this IShipModel source, bool includePaintModification = false)
+        => source.EngineModification is not null ||
+           source.ShieldModification is not null ||
+           source.ShipModification is not null ||
+           source.WeaponModifications.Any() ||
+           includePaintModification &&
+           source.PaintModification is not null;
 }

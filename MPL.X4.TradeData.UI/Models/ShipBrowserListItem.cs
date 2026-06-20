@@ -1,4 +1,5 @@
 ﻿using MPL.X4.SaveGame.Models;
+using MPL.X4.SaveGame.Models.Services;
 
 namespace MPL.X4.TradeData.UI.Models;
 
@@ -37,7 +38,7 @@ internal class ShipBrowserListItem
         Cargo = GetCargo(ship);
         Class = GetClass(ship);
         HasCargo = ship.Cargo.Any();
-        HasModifications = GetHasModifications(ship);
+        HasModifications = ship.HasModifications();
         Modifications = GetModifications(ship);
         Name = ship.Name ?? ship.Model;
         OwnerAcronym = string.IsNullOrWhiteSpace(Ship.Owner.Acronym) ? Ship.Owner.Name : Ship.Owner.Acronym;
@@ -81,80 +82,43 @@ internal class ShipBrowserListItem
             _ => "Unknown"
         };
 
-    private static bool GetHasModifications(IShipModel source, bool includePaintModification = false)
-        => source.EngineModification is not null ||
-           source.ShieldModification is not null ||
-           source.ShipModification is not null ||
-           source.WeaponModifications.Any() ||
-           includePaintModification &&
-           source.PaintModification is not null;
-
-    private static void GetModificationQuality(IModificationModel? source, ref int basic, ref int enhanced, ref int exceptional)
-    {
-        if (source?.Quality == ModificationQuality.Basic)
-            basic++;
-        else if (source?.Quality == ModificationQuality.Enhanced)
-            enhanced++;
-        else if (source?.Quality == ModificationQuality.Exceptional)
-            exceptional++;
-    }
-
-    private static void GetModificationQuality(IEnumerable<IModificationModel> source, ref int basic, ref int enhanced, ref int exceptional)
-    {
-        foreach (var item in source)
-        {
-            GetModificationQuality(item, ref basic, ref enhanced, ref exceptional);
-        }
-    }
-
-    private const string ModificationBasic = "〉";
-    private const string ModificationEnhanced = "〉〉";
-    private const string ModificationExceptional = "〉〉〉";
-
     private static string GetModifications(IShipModel source)
     {
-        var basicModifications = 0;
-        var enhancedModifications = 0;
-        var exceptionModifications = 0;
         var returnValue = string.Empty;
 
-        GetModificationQuality(source.EngineModification, ref basicModifications, ref enhancedModifications, ref exceptionModifications);
-        GetModificationQuality(source.PaintModification, ref basicModifications, ref enhancedModifications, ref exceptionModifications);
-        GetModificationQuality(source.ShieldModification, ref basicModifications, ref enhancedModifications, ref exceptionModifications);
-        GetModificationQuality(source.ShipModification, ref basicModifications, ref enhancedModifications, ref exceptionModifications);
-        GetModificationQuality(source.WeaponModifications, ref basicModifications, ref enhancedModifications, ref exceptionModifications);
+        var (basic, enhanced, exceptional) = source.GetModificationQualityCount();
 
-        if (exceptionModifications > 0)
+        if (exceptional > 0)
         {
-            returnValue += ModificationExceptional;
+            returnValue += Constants.ShipModifications.QualityExceptional;
 
-            if (exceptionModifications > 1)
+            if (exceptional > 1)
             {
-                returnValue += $" ({exceptionModifications})";
+                returnValue += $" ({exceptional})";
             }
 
             returnValue += ", ";
         }
 
-        if (enhancedModifications > 0)
+        if (enhanced > 0)
         {
-            returnValue += ModificationEnhanced;
+            returnValue += Constants.ShipModifications.QualityEnhanced;
 
-            if (enhancedModifications > 1)
+            if (enhanced > 1)
             {
-                returnValue += $" ({enhancedModifications})";
+                returnValue += $" ({enhanced})";
             }
 
             returnValue += ", ";
         }
 
-        if (basicModifications > 0)
+        if (basic > 0)
         {
-            returnValue += ModificationBasic;
+            returnValue += Constants.ShipModifications.QualityBasic;
 
-            if (basicModifications > 1)
+            if (basic > 1)
             {
-                returnValue += $" ({basicModifications})";
+                returnValue += $" ({basic})";
             }
         }
 

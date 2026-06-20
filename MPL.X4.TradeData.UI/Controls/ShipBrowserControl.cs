@@ -17,7 +17,7 @@ internal partial class ShipBrowserControl : UserControl
     private const string WareAny = "Any";
     private const string ValueProperty = "Value";
 
-    private readonly ListViewColumnSorter _columnSorter = new();
+    private readonly ShipListViewColumnSorter _columnSorter = new();
     private readonly int LocationColumnWidth;
     private readonly int OwnerColumnWidth; 
 

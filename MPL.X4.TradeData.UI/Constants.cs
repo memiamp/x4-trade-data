@@ -62,6 +62,19 @@ internal static class Constants
     }
 
     /// <summary>
+    /// A class containing ship modification constants.
+    /// </summary>
+    internal static class ShipModifications
+    {
+        internal const string ModificationSymbol = "〉";
+
+        internal const string QualityBasic = ModificationSymbol;
+        internal const string QualityEnhanced = $"{ModificationSymbol}{ModificationSymbol}";
+        internal const string QualityExceptional = $"{ModificationSymbol}{ModificationSymbol}{ModificationSymbol}";
+        internal const string QualityPaint = "P";
+    }
+
+    /// <summary>
     /// A class containing special item type constants.
     /// </summary>
     internal static class SpecialItemTypes
