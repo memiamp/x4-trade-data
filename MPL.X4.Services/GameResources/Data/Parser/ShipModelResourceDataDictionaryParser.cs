@@ -11,8 +11,8 @@ namespace MPL.X4.GameResources.Data.Parser;
 /// <param name="dataParser">An <see cref="IDataParser"/> that is the data parser to use.</param>
 /// <param name="logger">An <see cref="ILogger{TCategoryName}"/> that is the logger to use.</param>
 internal class ShipModelResourceDataDictionaryParser(
-                                                    IDataParser dataParser,
-                                                    ILogger<ShipModelResourceDataDictionaryParser> logger)
+                                                     IDataParser dataParser,
+                                                     ILogger<ShipModelResourceDataDictionaryParser> logger)
     : DataParserBase<IShipModelResourceDataDictionary>(dataParser, logger)
 {
     private static readonly IEnumerable<string> _shipClasses = [
@@ -24,7 +24,11 @@ internal class ShipModelResourceDataDictionaryParser(
 
     private protected override async Task<IShipModelResourceDataDictionary> OnParse(IXmlReaderWrapper reader)
     {
-        var returnValue = new ShipModelResourceDataDictionary();
+        var aliases = new DictionaryCollection<string, string>();
+        var returnValue = new ShipModelResourceDataDictionary
+        {
+             Aliases = aliases
+        };
 
         while (await reader.ReadAsync())
         {
@@ -35,18 +39,26 @@ internal class ShipModelResourceDataDictionaryParser(
                 // Skip non-ship classes
                 if (_shipClasses.Contains(shipClass))
                 {
-                    using var subtree = await reader.ReadSubtree();
-
-                    var name = await ReadName(subtree);
-                    if (!string.IsNullOrWhiteSpace(name))
+                    // Check for aliases
+                    if (reader.TryGetAttribute(Constants.XmlDataFile.AttributeName.Alias, out string? alias))
                     {
-                        var data = new MacroNameResourceData
-                        {
-                            Id = macro.ToLower(),
-                            NameResource = TextResourceReference.Parse(name)
-                        };
+                        aliases.Add(macro, alias);
+                    }
+                    else
+                    {
+                        using var subtree = await reader.ReadSubtree();
 
-                        returnValue[data.Id] = data;
+                        var name = await ReadName(subtree);
+                        if (!string.IsNullOrWhiteSpace(name))
+                        {
+                            var data = new MacroNameResourceData
+                            {
+                                Id = macro.ToLower(),
+                                NameResource = TextResourceReference.Parse(name)
+                            };
+                            
+                            returnValue[data.Id] = data;
+                        }
                     }
                 }
             }

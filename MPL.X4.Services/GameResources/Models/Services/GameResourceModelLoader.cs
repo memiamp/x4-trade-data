@@ -36,7 +36,7 @@ internal class GameResourceModelLoader(
 
         var sectorNames = modelParser.Parse<IMacroNameResourceDataDictionary, IMacroNameModelList>(data.SectorNames);
 
-        var shipModels = modelParser.Parse<IMacroNameResourceDataDictionary, IMacroNameModelList>(data.ShipModels);
+        var shipModels = modelParser.Parse<IShipModelResourceDataDictionary, IMacroNameModelList>(data.ShipModels);
 
         var wares = modelParser.Parse<IWareDataDictionary, IWareModelList>(data.Wares);
 

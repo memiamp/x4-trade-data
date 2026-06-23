@@ -114,6 +114,7 @@ public static class Constants
     {
         public static class AttributeName
         {
+            public const string Alias = "alias";
             public const string Amount = "amount";
             public const string Average = "average";
             public const string BaseName = "basename";

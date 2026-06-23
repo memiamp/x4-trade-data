@@ -140,9 +140,9 @@ internal class GameResourceDataParser(
         return returnValue;
     }
 
-    async Task<IMacroNameResourceDataDictionary> IGameResourceDataParser.ReadShipModels(IXmlReaderWrapper reader)
+    async Task<IShipModelResourceDataDictionary> IGameResourceDataParser.ReadShipModels(IXmlReaderWrapper reader)
     {
-        IMacroNameResourceDataDictionary returnValue = new MacroNameResourceDataDictionary();
+        IShipModelResourceDataDictionary? returnValue = null;
 
         while (await reader.ReadAsync())
         {
@@ -155,6 +155,13 @@ internal class GameResourceDataParser(
                 break;
             }
         }
+
+        if (returnValue is null)
+            Console.WriteLine("YTO");
+        returnValue ??= new ShipModelResourceDataDictionary()
+        {
+            Aliases = new DictionaryCollection<string, string>()
+        };
 
         logger.LogDebug("{Count} ship models parsed", returnValue.Count);
 

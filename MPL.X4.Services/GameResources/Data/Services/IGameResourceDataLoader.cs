@@ -88,8 +88,8 @@ public interface IGameResourceDataLoader
     /// Loads ship models from entries in the specified <paramref name="index"/>.
     /// </summary>
     /// <param name="index">An <see cref="IEnumerable{ICatalogIndex}"/> that is the catalog file index.</param>
-    /// <returns>A <see cref="Task{TResult}"/> representing the asynchronous operation.  An <see cref="IMacroNameResourceDataDictionary"/> that is the result.</returns>
-    Task<IMacroNameResourceDataDictionary> LoadShipModelsFromIndex(IEnumerable<ICatalogIndex> index);
+    /// <returns>A <see cref="Task{TResult}"/> representing the asynchronous operation.  An <see cref="IShipModelResourceDataDictionary"/> that is the result.</returns>
+    Task<IShipModelResourceDataDictionary> LoadShipModelsFromIndex(IEnumerable<ICatalogIndex> index);
 
     /// <summary>
     /// Loads text resource data from catalogs in the specified <paramref name="catalogsFilePath"/>.

@@ -230,9 +230,13 @@ internal class GameResourceDataLoader(
         return await ((IGameResourceDataLoader)this).LoadShipModelsFromIndex(entries);
     }
 
-    async Task<IMacroNameResourceDataDictionary> IGameResourceDataLoader.LoadShipModelsFromIndex(IEnumerable<ICatalogIndex> index)
+    async Task<IShipModelResourceDataDictionary> IGameResourceDataLoader.LoadShipModelsFromIndex(IEnumerable<ICatalogIndex> index)
     {
-        MacroNameResourceDataDictionary returnValue = [];
+        var aliases = new DictionaryCollection<string, string>();
+        var returnValue = new ShipModelResourceDataDictionary
+        {
+            Aliases = aliases
+        };
         
         logger.LogInformation("Loading ship models from supplied index");
 
@@ -243,6 +247,7 @@ internal class GameResourceDataLoader(
 
             var data = await resourceDataParser.ReadShipModels(reader);
 
+            aliases.Merge(data.Aliases);
             returnValue.Merge(data);
         }
 

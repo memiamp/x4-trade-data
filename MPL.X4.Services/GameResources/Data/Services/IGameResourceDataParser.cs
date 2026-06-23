@@ -46,8 +46,8 @@ public interface IGameResourceDataParser
     /// Parses the ship models from the specified <paramref name="reader"/>.
     /// </summary>
     /// <param name="reader">An <see cref="IXmlReaderWrapper"/> containing the resource data to parse.</param>
-    /// <returns>A <see cref="Task{TResult}"/> representing the asynchronous operation.  An <see cref="IMacroNameResourceDataDictionary"/> containing the result.</returns>
-    Task<IMacroNameResourceDataDictionary> ReadShipModels(IXmlReaderWrapper reader);
+    /// <returns>A <see cref="Task{TResult}"/> representing the asynchronous operation.  An <see cref="IShipModelResourceDataDictionary"/> containing the result.</returns>
+    Task<IShipModelResourceDataDictionary> ReadShipModels(IXmlReaderWrapper reader);
 
     /// <summary>
     /// Reads text resource data from the specified <paramref name="reader"/>.

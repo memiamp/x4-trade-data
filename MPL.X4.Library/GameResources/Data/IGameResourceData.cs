@@ -33,7 +33,7 @@ public interface IGameResourceData
     /// <summary>
     /// Gets ship model data.
     /// </summary>
-    IMacroNameResourceDataDictionary ShipModels { get; }
+    IShipModelResourceDataDictionary ShipModels { get; }
 
     /// <summary>
     /// Gets text resource data.

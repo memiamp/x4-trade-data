@@ -3,6 +3,10 @@
 /// <summary>
 /// An interface that defines the behaviour of a dictionary of ship model resources.
 /// </summary>
-internal interface IShipModelResourceDataDictionary : IMacroNameResourceDataDictionary
+public interface IShipModelResourceDataDictionary : IMacroNameResourceDataDictionary
 {
+    /// <summary>
+    /// Gets macro aliases that are defined for this macro name resource data.
+    /// </summary>
+    IDictionaryCollection<string, string> Aliases { get; }
 }

@@ -43,6 +43,45 @@ public static class ShipModelExtensions
     }
 
     /// <summary>
+    /// Gets all modifications for the specified <paramref name="source"/>.
+    /// </summary>
+    /// <param name="source">An <see cref="IShipModel"/> that is the source to evaluate.</param>
+    /// <param name="includePaintModification">A <see cref="bool"/> indicating whether to include paint modifications in the evaluation.  Default is <see langword="false"/>.</param>
+    /// <returns>An <see cref="IEnumerable{T}"/> of type <see cref="IModificationModel"/> that is the result.</returns>
+    public static IEnumerable<IModificationModel> GetModifications(this IShipModel source, bool includePaintModification = false)
+    {
+        List<IModificationModel> returnValue = [];
+
+        if (source.EngineModification is not null)
+        {
+            returnValue.Add(source.EngineModification);
+        }
+
+        if (source.ShieldModification is not null)
+        {
+            returnValue.Add(source.ShieldModification);
+        }
+
+        if (source.ShipModification is not null)
+        {
+            returnValue.Add(source.ShipModification);
+        }
+
+        if (includePaintModification &&
+            source.PaintModification is not null)
+        {
+            returnValue.Add(source.PaintModification);
+        }
+
+        foreach (var item in source.WeaponModifications)
+        {
+            returnValue.Add(item);
+        }
+
+        return returnValue;
+    }
+
+    /// <summary>
     /// Gets an indication of whether the specified <paramref name="source"/> has any ship modifications.
     /// </summary>
     /// <param name="source">An <see cref="IShipModel"/> that is the source to evaluate.</param>

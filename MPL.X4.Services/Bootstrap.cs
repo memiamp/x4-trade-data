@@ -70,6 +70,7 @@ public static class Bootstrap
         servicesCollection.AddTransient<IModelParser<IOffsetDataDictionary, IOffsetModelReference>, OffsetModelReferenceParser>();
         servicesCollection.AddTransient<IModelParser<IMacroNameResourceData, IMacroNameModel>, MacroNameModelParser>();
         servicesCollection.AddTransient<IModelParser<IMacroNameResourceDataDictionary, IMacroNameModelList>, MacroNameModelListParser>();
+        servicesCollection.AddTransient<IModelParser<IShipModelResourceDataDictionary, IMacroNameModelList>, ShipModelListParser>();
         servicesCollection.AddTransient<IModelParser<ITextResourcePageDictionary, ITextResourceModelList>, TextResourceModelListParser>();
         servicesCollection.AddTransient<IModelParser<IWareData, IWareModel>, WareModelParser>();
         servicesCollection.AddTransient<IModelParser<IWareDataDictionary, IWareModelList>, WareModelListParser>();

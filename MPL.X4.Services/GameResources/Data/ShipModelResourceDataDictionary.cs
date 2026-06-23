@@ -5,4 +5,5 @@
 /// </summary>
 internal class ShipModelResourceDataDictionary : MacroNameResourceDataDictionary, IShipModelResourceDataDictionary
 {
+    public required IDictionaryCollection<string, string> Aliases { get; init; }
 }

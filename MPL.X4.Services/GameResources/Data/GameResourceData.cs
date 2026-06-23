@@ -15,7 +15,7 @@ internal class GameResourceData : IGameResourceData
 
     public required IMacroNameResourceDataDictionary SectorNames { get; init; }
 
-    public required IMacroNameResourceDataDictionary ShipModels { get; init; }
+    public required IShipModelResourceDataDictionary ShipModels { get; init; }
 
     public required ITextResourcePageDictionary Text { get; init; }
 
