@@ -32,8 +32,17 @@ internal partial class SpecialItemControl : UserControl
 
     private void DoRefresh()
     {
-        NoItemsLabel.Visible = !(_dataProvider?.HasSaveGame == true);
-        SpecialItemListView.Visible = _dataProvider?.HasSaveGame == true;
+        var hasItems = _dataProvider?.HasSaveGame == true;
+
+        NoItemsLabel.Visible = !hasItems;
+    
+        AbandonedShipCheckBox.Visible = hasItems;
+        BuildStorageAbandonedCheckBox.Visible = hasItems;
+        BuildStorageTopCheckBox.Visible = hasItems;
+        BuildStorageTopNumericUpDown.Visible = hasItems;
+        LockboxCheckBox.Visible = hasItems;
+
+        SpecialItemListView.Visible = hasItems;
     }
 
     private static ListViewItem GenerateListViewItem(ISpecialItem source)

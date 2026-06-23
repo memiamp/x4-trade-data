@@ -43,11 +43,20 @@ internal partial class SectorListControl : UserControl
     {
         LoadItems();
 
-        var displayNoItems = _items.Any() == false;
+        var hasItems = _items.Any();
 
-        SectorListView.Visible = !displayNoItems;
-        ViewSectorButton.Visible = !displayNoItems;
-        NoItemsLabel.Visible = displayNoItems;
+        NoItemsLabel.Visible = !hasItems;
+
+        AbandonedShipsCheckBox.Visible = hasItems;
+        BuildStorageCheckBox.Visible = hasItems;
+        DropsCheckBox.Visible = hasItems;
+        LockboxesCheckBox.Visible = hasItems;
+
+        SectorOwnerComboBox.Visible = hasItems;
+        SectorOwnerLabel.Visible = hasItems;
+
+        SectorListView.Visible = hasItems;
+        ViewSectorButton.Visible = hasItems;
 
         DoRefreshSectorItem();
     }

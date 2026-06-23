@@ -38,12 +38,8 @@
             SectorListView_Drops = new ColumnHeader();
             SectorList_BuildStorages = new ColumnHeader();
             NoItemsLabel = new Label();
-            SectorOwnerComboBox = new ComboBox();
-            SectorOwnerLabel = new Label();
-            AbandonedShipsCheckBox = new CheckBox();
-            LockboxesCheckBox = new CheckBox();
-            DropsCheckBox = new CheckBox();
-            BuildStorageCheckBox = new CheckBox();
+            TradePartnerComboBox = new ComboBox();
+            TradePartnerLabel = new Label();
             SuspendLayout();
             // 
             // TradeLogListView
@@ -109,75 +105,31 @@
             NoItemsLabel.Text = "No trade log is currently loaded.";
             NoItemsLabel.TextAlign = ContentAlignment.MiddleCenter;
             // 
-            // SectorOwnerComboBox
+            // TradePartnerComboBox
             // 
-            SectorOwnerComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
-            SectorOwnerComboBox.FormattingEnabled = true;
-            SectorOwnerComboBox.Location = new Point(87, 3);
-            SectorOwnerComboBox.Name = "SectorOwnerComboBox";
-            SectorOwnerComboBox.Size = new Size(175, 23);
-            SectorOwnerComboBox.TabIndex = 1;
+            TradePartnerComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
+            TradePartnerComboBox.FormattingEnabled = true;
+            TradePartnerComboBox.Location = new Point(85, 3);
+            TradePartnerComboBox.Name = "TradePartnerComboBox";
+            TradePartnerComboBox.Size = new Size(175, 23);
+            TradePartnerComboBox.TabIndex = 1;
             // 
-            // SectorOwnerLabel
+            // TradePartnerLabel
             // 
-            SectorOwnerLabel.AutoSize = true;
-            SectorOwnerLabel.Location = new Point(0, 6);
-            SectorOwnerLabel.Name = "SectorOwnerLabel";
-            SectorOwnerLabel.Size = new Size(81, 15);
-            SectorOwnerLabel.TabIndex = 0;
-            SectorOwnerLabel.Text = "Sector Owner:";
-            // 
-            // AbandonedShipsCheckBox
-            // 
-            AbandonedShipsCheckBox.AutoSize = true;
-            AbandonedShipsCheckBox.Location = new Point(268, 5);
-            AbandonedShipsCheckBox.Name = "AbandonedShipsCheckBox";
-            AbandonedShipsCheckBox.Size = new Size(118, 19);
-            AbandonedShipsCheckBox.TabIndex = 2;
-            AbandonedShipsCheckBox.Text = "Abandoned ships";
-            AbandonedShipsCheckBox.UseVisualStyleBackColor = true;
-            // 
-            // LockboxesCheckBox
-            // 
-            LockboxesCheckBox.AutoSize = true;
-            LockboxesCheckBox.Location = new Point(562, 5);
-            LockboxesCheckBox.Name = "LockboxesCheckBox";
-            LockboxesCheckBox.Size = new Size(82, 19);
-            LockboxesCheckBox.TabIndex = 5;
-            LockboxesCheckBox.Text = "Lockboxes";
-            LockboxesCheckBox.UseVisualStyleBackColor = true;
-            // 
-            // DropsCheckBox
-            // 
-            DropsCheckBox.AutoSize = true;
-            DropsCheckBox.Location = new Point(499, 5);
-            DropsCheckBox.Name = "DropsCheckBox";
-            DropsCheckBox.Size = new Size(57, 19);
-            DropsCheckBox.TabIndex = 4;
-            DropsCheckBox.Text = "Drops";
-            DropsCheckBox.UseVisualStyleBackColor = true;
-            // 
-            // BuildStorageCheckBox
-            // 
-            BuildStorageCheckBox.AutoSize = true;
-            BuildStorageCheckBox.Location = new Point(392, 5);
-            BuildStorageCheckBox.Name = "BuildStorageCheckBox";
-            BuildStorageCheckBox.Size = new Size(101, 19);
-            BuildStorageCheckBox.TabIndex = 3;
-            BuildStorageCheckBox.Text = "Build Storages";
-            BuildStorageCheckBox.UseVisualStyleBackColor = true;
+            TradePartnerLabel.AutoSize = true;
+            TradePartnerLabel.Location = new Point(0, 6);
+            TradePartnerLabel.Name = "TradePartnerLabel";
+            TradePartnerLabel.Size = new Size(79, 15);
+            TradePartnerLabel.TabIndex = 0;
+            TradePartnerLabel.Text = "Trade Partner:";
             // 
             // TradeLogViewerControl
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             Controls.Add(NoItemsLabel);
-            Controls.Add(BuildStorageCheckBox);
-            Controls.Add(DropsCheckBox);
-            Controls.Add(LockboxesCheckBox);
-            Controls.Add(AbandonedShipsCheckBox);
-            Controls.Add(SectorOwnerLabel);
-            Controls.Add(SectorOwnerComboBox);
+            Controls.Add(TradePartnerLabel);
+            Controls.Add(TradePartnerComboBox);
             Controls.Add(TradeLogListView);
             Name = "TradeLogViewerControl";
             Size = new Size(985, 535);
@@ -195,13 +147,9 @@
         private ColumnHeader SectorListView_Ships;
         private ColumnHeader SectorListView_Stations;
         private Label NoItemsLabel;
-        private ComboBox SectorOwnerComboBox;
-        private Label SectorOwnerLabel;
-        private CheckBox AbandonedShipsCheckBox;
-        private CheckBox LockboxesCheckBox;
+        private ComboBox TradePartnerComboBox;
+        private Label TradePartnerLabel;
         private ColumnHeader SectorListView_Drops;
-        private CheckBox DropsCheckBox;
         private ColumnHeader SectorList_BuildStorages;
-        private CheckBox BuildStorageCheckBox;
     }
 }

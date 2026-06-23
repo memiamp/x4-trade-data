@@ -15,59 +15,44 @@
         /// </summary>
         private void InitializeComponent()
         {
-            LayoutControl = new TabControl();
-            TradesTab = new TabPage();
-            TradeControl = new MPL.X4.TradeData.UI.Controls.TradeControl();
+            MainTabControl = new TabControl();
             SectorListTab = new TabPage();
             SectorListControl = new MPL.X4.TradeData.UI.Controls.SectorListControl();
             ShipTab = new TabPage();
             ShipControl = new MPL.X4.TradeData.UI.Controls.ShipBrowserControl();
             SpecialItemsTab = new TabPage();
             SpecialItemControl = new MPL.X4.TradeData.UI.Controls.SpecialItemControl();
+            TradesTab = new TabPage();
+            TradeControl = new MPL.X4.TradeData.UI.Controls.TradeControl();
+            TradeLogTab = new TabPage();
+            TradeLogViewerControl = new MPL.X4.TradeData.UI.Controls.TradeLogViewerControl();
             menuStrip1 = new MenuStrip();
             FileMenu = new ToolStripMenuItem();
             FileMenu_Exit = new ToolStripMenuItem();
             ToolMenu = new ToolStripMenuItem();
             ToolMenu_Options = new ToolStripMenuItem();
-            LayoutControl.SuspendLayout();
-            TradesTab.SuspendLayout();
+            MainTabControl.SuspendLayout();
             SectorListTab.SuspendLayout();
             ShipTab.SuspendLayout();
             SpecialItemsTab.SuspendLayout();
+            TradesTab.SuspendLayout();
+            TradeLogTab.SuspendLayout();
             menuStrip1.SuspendLayout();
             SuspendLayout();
             // 
-            // LayoutControl
+            // MainTabControl
             // 
-            LayoutControl.Controls.Add(TradesTab);
-            LayoutControl.Controls.Add(SectorListTab);
-            LayoutControl.Controls.Add(ShipTab);
-            LayoutControl.Controls.Add(SpecialItemsTab);
-            LayoutControl.Dock = DockStyle.Fill;
-            LayoutControl.Location = new Point(0, 24);
-            LayoutControl.Name = "LayoutControl";
-            LayoutControl.SelectedIndex = 0;
-            LayoutControl.Size = new Size(1080, 537);
-            LayoutControl.TabIndex = 0;
-            // 
-            // TradesTab
-            // 
-            TradesTab.Controls.Add(TradeControl);
-            TradesTab.Location = new Point(4, 24);
-            TradesTab.Name = "TradesTab";
-            TradesTab.Padding = new Padding(3);
-            TradesTab.Size = new Size(1072, 509);
-            TradesTab.TabIndex = 0;
-            TradesTab.Text = "Trades";
-            TradesTab.UseVisualStyleBackColor = true;
-            // 
-            // TradeControl
-            // 
-            TradeControl.Dock = DockStyle.Fill;
-            TradeControl.Location = new Point(3, 3);
-            TradeControl.Name = "TradeControl";
-            TradeControl.Size = new Size(1066, 503);
-            TradeControl.TabIndex = 0;
+            MainTabControl.Controls.Add(SectorListTab);
+            MainTabControl.Controls.Add(ShipTab);
+            MainTabControl.Controls.Add(SpecialItemsTab);
+            MainTabControl.Controls.Add(TradesTab);
+            MainTabControl.Controls.Add(TradeLogTab);
+            MainTabControl.Dock = DockStyle.Fill;
+            MainTabControl.Location = new Point(0, 24);
+            MainTabControl.Name = "MainTabControl";
+            MainTabControl.SelectedIndex = 0;
+            MainTabControl.Size = new Size(1080, 537);
+            MainTabControl.TabIndex = 0;
             // 
             // SectorListTab
             // 
@@ -126,6 +111,44 @@
             SpecialItemControl.Size = new Size(1066, 503);
             SpecialItemControl.TabIndex = 0;
             // 
+            // TradesTab
+            // 
+            TradesTab.Controls.Add(TradeControl);
+            TradesTab.Location = new Point(4, 24);
+            TradesTab.Name = "TradesTab";
+            TradesTab.Padding = new Padding(3);
+            TradesTab.Size = new Size(1072, 509);
+            TradesTab.TabIndex = 0;
+            TradesTab.Text = "Trades";
+            TradesTab.UseVisualStyleBackColor = true;
+            // 
+            // TradeControl
+            // 
+            TradeControl.Dock = DockStyle.Fill;
+            TradeControl.Location = new Point(3, 3);
+            TradeControl.Name = "TradeControl";
+            TradeControl.Size = new Size(1066, 503);
+            TradeControl.TabIndex = 0;
+            // 
+            // TradeLogTab
+            // 
+            TradeLogTab.Controls.Add(TradeLogViewerControl);
+            TradeLogTab.Location = new Point(4, 24);
+            TradeLogTab.Name = "TradeLogTab";
+            TradeLogTab.Padding = new Padding(3);
+            TradeLogTab.Size = new Size(1072, 509);
+            TradeLogTab.TabIndex = 4;
+            TradeLogTab.Text = "Trade Log";
+            TradeLogTab.UseVisualStyleBackColor = true;
+            // 
+            // TradeLogViewerControl
+            // 
+            TradeLogViewerControl.Dock = DockStyle.Fill;
+            TradeLogViewerControl.Location = new Point(3, 3);
+            TradeLogViewerControl.Name = "TradeLogViewerControl";
+            TradeLogViewerControl.Size = new Size(1066, 503);
+            TradeLogViewerControl.TabIndex = 0;
+            // 
             // menuStrip1
             // 
             menuStrip1.Items.AddRange(new ToolStripItem[] { FileMenu, ToolMenu });
@@ -166,18 +189,19 @@
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1080, 561);
-            Controls.Add(LayoutControl);
+            Controls.Add(MainTabControl);
             Controls.Add(menuStrip1);
             MainMenuStrip = menuStrip1;
             MinimumSize = new Size(1096, 600);
             Name = "MainForm";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "MPL X4 Trade Data";
-            LayoutControl.ResumeLayout(false);
-            TradesTab.ResumeLayout(false);
+            MainTabControl.ResumeLayout(false);
             SectorListTab.ResumeLayout(false);
             ShipTab.ResumeLayout(false);
             SpecialItemsTab.ResumeLayout(false);
+            TradesTab.ResumeLayout(false);
+            TradeLogTab.ResumeLayout(false);
             menuStrip1.ResumeLayout(false);
             menuStrip1.PerformLayout();
             ResumeLayout(false);
@@ -186,7 +210,7 @@
 
         #endregion
 
-        private TabControl LayoutControl;
+        private TabControl MainTabControl;
         private TabPage TradesTab;
         private TabPage SpecialItemsTab;
         private MenuStrip menuStrip1;
@@ -200,5 +224,7 @@
         private ToolStripMenuItem ToolMenu_Options;
         private TabPage ShipTab;
         private Controls.ShipBrowserControl ShipControl;
+        private TabPage TradeLogTab;
+        private Controls.TradeLogViewerControl TradeLogViewerControl;
     }
 }

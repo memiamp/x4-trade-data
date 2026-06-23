@@ -4,11 +4,15 @@ using MPL.X4.SaveGame.Models;
 namespace MPL.X4.TradeData.UI.Controls;
 
 /// <summary>
-/// A class that implements a sector list control for the application.
+/// A class that implements a trade log viewer control for the application.
 /// </summary>
 internal partial class TradeLogViewerControl : UserControl
 {
     #region Declarations
+
+    private const string NameProperty = "Name";
+    private const string TradePartnerAny = "Any";
+    private const string ValueProperty = "Value";
 
     private IEnumerable<ITradeLogEntryModel> _items = [];
 
@@ -29,46 +33,61 @@ internal partial class TradeLogViewerControl : UserControl
 
     #region Methods
 
-    private void DoRefresh()
+    private void DoFilterData()
     {
-        var displayNoItems = _items.Any() == false;
+        var filteredItems = _items;
 
-        TradeLogListView.Visible = !displayNoItems;
-        NoItemsLabel.Visible = displayNoItems;
+        if (TradePartnerComboBox.SelectedValue is ITradePartnerModel model)
+        {
+            filteredItems = filteredItems.Where(x => x.Buyer == model || x.Seller == model);
+        }
+
+        var orderedItems = filteredItems
+                                        .OrderBy(x => x.TradeAge)
+                                        .Select(GenerateListViewItem);
+
+        TradeLogListView.BeginUpdate();
+
+        TradeLogListView.Items.Clear();
+        TradeLogListView.Items.AddRange([.. orderedItems]);
+
+        TradeLogListView.EndUpdate();
+
+        DoRefresh();
     }
 
-    private static ListViewItem GenerateListViewItem(ISectorModel source)
+    private void DoRefresh()
     {
-        var backColor = source.Owner?.Colour is not null
-                                                         ? source.Owner.Colour.Colour
-                                                         : Constants.Colours.Unset;
+        var hasItems = _items.Any();
 
-        var owner = string.IsNullOrWhiteSpace(source.Owner?.Name)
-                                                                  ? Constants.Owner.Unowned
-                                                                  : source.Owner.Name;
+        NoItemsLabel.Visible = !hasItems;
 
-        var returnValue = new ListViewItem(source.Name)
-        {
-            BackColor = backColor
-        };
+        TradeLogListView.Visible = hasItems;
 
-        returnValue.SubItems.Add(owner);
-        returnValue.SubItems.Add(source.Ships.Count(x => x.CanBeCaptured).ToString());
-        returnValue.SubItems.Add(source.Lockboxes.Count.ToString());
-        returnValue.SubItems.Add(source.Ships.Count.ToString());
-        returnValue.SubItems.Add(source.Stations.Count.ToString());
-        returnValue.SubItems.Add(source.CollectableDrops.Count.ToString());
-        returnValue.SubItems.Add(source.BuildStorages.Count.ToString());
+        TradePartnerComboBox.Visible = hasItems;
+        TradePartnerLabel.Visible = hasItems;
+    }
+
+    private static ListViewItem GenerateListViewItem(ITradeLogEntryModel source)
+    {
+        var returnValue = new ListViewItem(source.Buyer.Name);
+
+        returnValue.SubItems.Add(source.Buyer.Type.ToString());
+        returnValue.SubItems.Add(source.Seller.Name);
+        returnValue.SubItems.Add(source.Seller.Type.ToString());
+        returnValue.SubItems.Add(source.Name);
+        returnValue.SubItems.Add(source.Price.ToString());
+        returnValue.SubItems.Add(source.TradeAge.ToString());
 
         returnValue.Tag = source;
 
         return returnValue;
     }
 
-    private ISectorModel? GetSelectedItem()
+    private ITradeLogEntryModel? GetSelectedItem()
     {
         if (TradeLogListView.SelectedItems.Count == 1 &&
-            TradeLogListView.SelectedItems[0].Tag is ISectorModel returnValue)
+            TradeLogListView.SelectedItems[0].Tag is ITradeLogEntryModel returnValue)
         {
             return returnValue;
         }
@@ -78,116 +97,57 @@ internal partial class TradeLogViewerControl : UserControl
 
     private void Initialise()
     {
-        // Defaults
-        AbandonedShipsCheckBox.Checked = false;
-        BuildStorageCheckBox.Checked = false;
-        DropsCheckBox.Checked = false;
-        LockboxesCheckBox.Checked = false;
-
         // Controls
-        SectorOwnerComboBox.DisplayMember = "Name";
-        SectorOwnerComboBox.ValueMember = "Value";
+        TradePartnerComboBox.DisplayMember = NameProperty;
+        TradePartnerComboBox.ValueMember = ValueProperty;
 
         // Event wireup
-        //AbandonedShipsCheckBox.CheckedChanged += AbandonedShipsCheckBox_CheckedChanged;
-        //BuildStorageCheckBox.CheckedChanged += BuildStorageCheckBox_CheckedChanged;
-        //DropsCheckBox.CheckedChanged += DropsCheckBox_CheckedChanged;
         Load += TradeLogViewerControl_Load;
-        //LockboxesCheckBox.CheckedChanged += LockboxesCheckBox_CheckedChanged;
-        //TradeLogListView.DoubleClick += SectorListView_DoubleClick;
-        //TradeLogListView.SelectedIndexChanged += SectorListView_SelectedIndexChanged;
-        //SectorOwnerComboBox.SelectedIndexChanged += SectorOwnerComboBox_SelectedIndexChanged;
-        //ViewSectorButton.Click += ViewSectorButton_Click;
+        TradePartnerComboBox.SelectedValueChanged += TradePartnerComboBox_SelectedValueChanged;
 
         DoRefresh();
     }
 
-    private void LoadItems()
+    private void LoadData()
     {
-        //var filteredItems = _items;
+        LoadTradePartners();
+    }
 
-        //if (SectorOwnerComboBox.SelectedValue is IFactionModel faction)
-        //{
-        //    filteredItems = filteredItems.Where(x => x.Owner == faction);
-        //}
+    private void LoadTradePartners()
+    {
+        var data = _items
+                          .Select(x => x.Buyer)
+                          .Concat(_items.Select(x => x.Seller))
+                          .Distinct()
+                          .Select(x => new
+                          {
+                              Name = $"{x.Name} ({x.Type})",
+                              Value = (ITradePartnerModel?)x
+                          })
+                          .OrderBy(x => x.Name)
+                          .Prepend(new
+                          {
+                              Name = TradePartnerAny,
+                              Value = (ITradePartnerModel?)null
+                          })
+                          .ToList();
 
-        //if (AbandonedShipsCheckBox.Checked)
-        //{
-        //    filteredItems = filteredItems.Where(x => x.Ships.Any(x => x.CanBeCaptured));
-        //}
-
-        //if (BuildStorageCheckBox.Checked)
-        //{
-        //    filteredItems = filteredItems.Where(x => x.BuildStorages.Count > 0);
-        //}
-
-        //if (DropsCheckBox.Checked)
-        //{
-        //    filteredItems = filteredItems.Where(x => x.CollectableDrops.Count > 0);
-        //}
-
-        //if (LockboxesCheckBox.Checked)
-        //{
-        //    filteredItems = filteredItems.Where(x => x.Lockboxes.Count > 0);
-        //}
-
-        //var orderedItems = _items
-        //                         .OrderBy(x => x.Name)
-        //                         .Select(GenerateListViewItem);
-
-        TradeLogListView.BeginUpdate();
-
-        TradeLogListView.Items.Clear();
-        //TradeLogListView.Items.AddRange([.. orderedItems]);
-
-        TradeLogListView.EndUpdate();
-
-        DoRefresh();
+        TradePartnerComboBox.DataSource = data;
     }
 
     #endregion
 
     #region Event Handlers
 
-    //private void AbandonedShipsCheckBox_CheckedChanged(object? sender, EventArgs e)
-    //{
-    //    DoRefresh();
-    //}
-
-    //private void BuildStorageCheckBox_CheckedChanged(object? sender, EventArgs e)
-    //{
-    //    DoRefresh();
-    //}
-
-    //private void DropsCheckBox_CheckedChanged(object? sender, EventArgs e)
-    //{
-    //    DoRefresh();
-    //}
-
-    //private void LockboxesCheckBox_CheckedChanged(object? sender, EventArgs e)
-    //{
-    //    DoRefresh();
-    //}
-
-    //private void SectorListView_DoubleClick(object? sender, EventArgs e)
-    //{
-    //    OnViewSectorRequest();
-    //}
-
-    //private void SectorListView_SelectedIndexChanged(object? sender, EventArgs e)
-    //{
-    //    DoRefreshSectorItem();
-    //}
-
     private void TradeLogViewerControl_Load(object? sender, EventArgs e)
     {
         DoRefresh();
     }
 
-    //private void SectorOwnerComboBox_SelectedIndexChanged(object? sender, EventArgs e)
-    //{
-    //    DoRefresh();
-    //}
+    private void TradePartnerComboBox_SelectedValueChanged(object? sender, EventArgs e)
+    {
+        DoFilterData();
+    }
 
     #endregion
 
@@ -207,7 +167,7 @@ internal partial class TradeLogViewerControl : UserControl
         set
         {
             _items = value;
-            LoadItems();
+            LoadData();
         }
     }
 

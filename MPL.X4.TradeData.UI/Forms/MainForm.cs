@@ -133,6 +133,7 @@ internal partial class MainForm : Form
         UpdateShipControl();
         UpdateSpecialItemsControl();
         UpdateTradeControl();
+        UpdateTradeLogControl();
     }
 
     private void ShowSectorView(ISectorModel sector)
@@ -200,6 +201,18 @@ internal partial class MainForm : Form
         else
         {
             TradeControl.Items = [];
+        }
+    }
+
+    private void UpdateTradeLogControl()
+    {
+        if (_saveGame?.EconomyLog.TradeLog is not null)
+        {
+            TradeLogViewerControl.TradeLog = _saveGame.EconomyLog.TradeLog;
+        }
+        else
+        {
+            TradeLogViewerControl.TradeLog = [];
         }
     }
 

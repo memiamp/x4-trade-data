@@ -133,10 +133,32 @@ internal partial class ShipBrowserControl : UserControl
         ShipListView_Owner.Width = OwnerComboBox.SelectedValue is null ? OwnerColumnWidth : 0;
 
         NoItemsLabel.Visible = !hasItems;
+
         AbandonedCheckBox.Visible = hasItems;
         CargoCheckBox.Visible = hasItems;
         ModificationCheckBox.Visible = hasItems;
+
+        ClassComboBox.Visible = hasItems;
+        ClassLabel.Visible = hasItems;
+
+        LocationNameComboBox.Visible = hasItems;
+        LocationNameLabel.Visible = hasItems;
+
+        ModelComboBox.Visible = hasItems;
+        ModelLabel.Visible = hasItems;
+
+        ModificationComboBox.Visible = hasItems;
+        ModificationLabel.Visible = hasItems;
+
+        OwnerComboBox.Visible = hasItems;
+        OwnerLabel.Visible = hasItems;
+
         ShipListView.Visible = hasItems;
+
+        ViewShipButton.Visible = hasItems;
+
+        WareComboBox.Visible = hasItems;
+        WareLabel.Visible = hasItems;
 
         DoRefreshShipItem();
     }
