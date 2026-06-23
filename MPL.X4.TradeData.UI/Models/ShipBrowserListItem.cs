@@ -1,5 +1,6 @@
 ﻿using MPL.X4.SaveGame.Models;
 using MPL.X4.SaveGame.Models.Services;
+using MPL.X4.TradeData.UI.Services;
 
 namespace MPL.X4.TradeData.UI.Models;
 
@@ -17,7 +18,7 @@ internal class ShipBrowserListItem
                                  ISectorModel sector,
                                  IShipModel ship)
         : this(
-               string.IsNullOrWhiteSpace(sector.Name) ? "Unknown Sector" : sector.Name,
+               string.IsNullOrWhiteSpace(sector.Name) ? Constants.Sectors.Unknown : sector.Name,
                ship)
     {
         Sector = sector;
@@ -36,7 +37,7 @@ internal class ShipBrowserListItem
         Ship = ship;
 
         Cargo = GetCargo(ship);
-        Class = GetClass(ship);
+        Class = IMapper.Map(ship.Class);
         HasCargo = ship.Cargo.Any();
         HasModifications = ship.HasModifications();
         Modifications = GetModifications(ship);
@@ -70,17 +71,6 @@ internal class ShipBrowserListItem
 
         return string.Empty;
     }
-
-    private static string GetClass(IShipModel source)
-        => source.Class switch
-        {
-            ShipClass.ExtraLarge => Constants.ShipClass.ExtraLarge,
-            ShipClass.ExtraSmall => Constants.ShipClass.ExtraSmall,
-            ShipClass.Large => Constants.ShipClass.Large,
-            ShipClass.Medium => Constants.ShipClass.Medium,
-            ShipClass.Small => Constants.ShipClass.Small,
-            _ => "Unknown"
-        };
 
     private static string GetModifications(IShipModel source)
     {

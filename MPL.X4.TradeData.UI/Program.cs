@@ -35,6 +35,7 @@ internal static class Program
 
         // Local services
         services.AddSingleton<IGameDataService, GameDataService>();
+        services.AddTransient<IMapper, Mapper>();
         services.AddTransient<ISaveGameFileSystemMonitor, SaveGameFileSystemMonitor>();
         services.AddTransient<ISpecialItemDataProvider, SpecialItemDataProvider>();
         

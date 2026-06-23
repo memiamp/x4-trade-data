@@ -49,6 +49,12 @@
             WareComboBox = new ComboBox();
             WareLabel = new Label();
             ViewShipButton = new Button();
+            ModificationComboBox = new ComboBox();
+            ModificationLabel = new Label();
+            ModelLabel = new Label();
+            ModelComboBox = new ComboBox();
+            ClassLabel = new Label();
+            ClassComboBox = new ComboBox();
             SuspendLayout();
             // 
             // ShipListView
@@ -56,10 +62,10 @@
             ShipListView.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             ShipListView.Columns.AddRange(new ColumnHeader[] { ShipListView_Class, ShipListView_Model, ShipListView_Owner, ShipListView_Location, ShipListView_Cargo, ShipListView_Modifications, ShipListView_X, ShipListView_Y, ShipListView_Z });
             ShipListView.FullRowSelect = true;
-            ShipListView.Location = new Point(0, 31);
+            ShipListView.Location = new Point(0, 61);
             ShipListView.Name = "ShipListView";
-            ShipListView.Size = new Size(997, 333);
-            ShipListView.TabIndex = 10;
+            ShipListView.Size = new Size(997, 303);
+            ShipListView.TabIndex = 16;
             ShipListView.UseCompatibleStateImageBehavior = false;
             ShipListView.View = View.Details;
             // 
@@ -151,56 +157,56 @@
             // LocationNameLabel
             // 
             LocationNameLabel.AutoSize = true;
-            LocationNameLabel.Location = new Point(498, 6);
+            LocationNameLabel.Location = new Point(648, 35);
             LocationNameLabel.Name = "LocationNameLabel";
             LocationNameLabel.Size = new Size(56, 15);
-            LocationNameLabel.TabIndex = 6;
+            LocationNameLabel.TabIndex = 14;
             LocationNameLabel.Text = "Location:";
             // 
             // LocationNameComboBox
             // 
             LocationNameComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
             LocationNameComboBox.FormattingEnabled = true;
-            LocationNameComboBox.Location = new Point(560, 3);
+            LocationNameComboBox.Location = new Point(710, 32);
             LocationNameComboBox.Name = "LocationNameComboBox";
             LocationNameComboBox.Size = new Size(200, 23);
-            LocationNameComboBox.TabIndex = 7;
+            LocationNameComboBox.TabIndex = 15;
             // 
             // OwnerLabel
             // 
             OwnerLabel.AutoSize = true;
-            OwnerLabel.Location = new Point(266, 6);
+            OwnerLabel.Location = new Point(416, 35);
             OwnerLabel.Name = "OwnerLabel";
             OwnerLabel.Size = new Size(45, 15);
-            OwnerLabel.TabIndex = 4;
+            OwnerLabel.TabIndex = 12;
             OwnerLabel.Text = "Owner:";
             // 
             // OwnerComboBox
             // 
             OwnerComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
             OwnerComboBox.FormattingEnabled = true;
-            OwnerComboBox.Location = new Point(317, 3);
+            OwnerComboBox.Location = new Point(467, 32);
             OwnerComboBox.Name = "OwnerComboBox";
             OwnerComboBox.Size = new Size(175, 23);
-            OwnerComboBox.TabIndex = 5;
+            OwnerComboBox.TabIndex = 13;
             // 
             // WareComboBox
             // 
             WareComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
             WareComboBox.FormattingEnabled = true;
-            WareComboBox.Location = new Point(809, 3);
+            WareComboBox.Location = new Point(314, 3);
             WareComboBox.Name = "WareComboBox";
             WareComboBox.Size = new Size(175, 23);
-            WareComboBox.TabIndex = 9;
+            WareComboBox.TabIndex = 5;
             // 
             // WareLabel
             // 
             WareLabel.AutoSize = true;
-            WareLabel.Location = new Point(766, 6);
+            WareLabel.Location = new Point(266, 6);
             WareLabel.Name = "WareLabel";
-            WareLabel.Size = new Size(37, 15);
-            WareLabel.TabIndex = 8;
-            WareLabel.Text = "Ware:";
+            WareLabel.Size = new Size(42, 15);
+            WareLabel.TabIndex = 4;
+            WareLabel.Text = "Cargo:";
             // 
             // ViewShipButton
             // 
@@ -208,14 +214,74 @@
             ViewShipButton.Location = new Point(904, 370);
             ViewShipButton.Name = "ViewShipButton";
             ViewShipButton.Size = new Size(90, 23);
-            ViewShipButton.TabIndex = 11;
+            ViewShipButton.TabIndex = 17;
             ViewShipButton.Text = "View Ship";
             ViewShipButton.UseVisualStyleBackColor = true;
+            // 
+            // ModificationComboBox
+            // 
+            ModificationComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
+            ModificationComboBox.FormattingEnabled = true;
+            ModificationComboBox.Location = new Point(579, 3);
+            ModificationComboBox.Name = "ModificationComboBox";
+            ModificationComboBox.Size = new Size(175, 23);
+            ModificationComboBox.TabIndex = 7;
+            // 
+            // ModificationLabel
+            // 
+            ModificationLabel.AutoSize = true;
+            ModificationLabel.Location = new Point(495, 8);
+            ModificationLabel.Name = "ModificationLabel";
+            ModificationLabel.Size = new Size(78, 15);
+            ModificationLabel.TabIndex = 6;
+            ModificationLabel.Text = "Modification:";
+            // 
+            // ModelLabel
+            // 
+            ModelLabel.AutoSize = true;
+            ModelLabel.Location = new Point(161, 35);
+            ModelLabel.Name = "ModelLabel";
+            ModelLabel.Size = new Size(44, 15);
+            ModelLabel.TabIndex = 10;
+            ModelLabel.Text = "Model:";
+            // 
+            // ModelComboBox
+            // 
+            ModelComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
+            ModelComboBox.FormattingEnabled = true;
+            ModelComboBox.Location = new Point(211, 32);
+            ModelComboBox.Name = "ModelComboBox";
+            ModelComboBox.Size = new Size(200, 23);
+            ModelComboBox.TabIndex = 11;
+            // 
+            // ClassLabel
+            // 
+            ClassLabel.AutoSize = true;
+            ClassLabel.Location = new Point(3, 35);
+            ClassLabel.Name = "ClassLabel";
+            ClassLabel.Size = new Size(37, 15);
+            ClassLabel.TabIndex = 8;
+            ClassLabel.Text = "Class:";
+            // 
+            // ClassComboBox
+            // 
+            ClassComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
+            ClassComboBox.FormattingEnabled = true;
+            ClassComboBox.Location = new Point(46, 32);
+            ClassComboBox.Name = "ClassComboBox";
+            ClassComboBox.Size = new Size(109, 23);
+            ClassComboBox.TabIndex = 9;
             // 
             // ShipBrowserControl
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
+            Controls.Add(ClassLabel);
+            Controls.Add(ClassComboBox);
+            Controls.Add(ModelLabel);
+            Controls.Add(ModelComboBox);
+            Controls.Add(ModificationComboBox);
+            Controls.Add(ModificationLabel);
             Controls.Add(ViewShipButton);
             Controls.Add(WareComboBox);
             Controls.Add(WareLabel);
@@ -256,5 +322,11 @@
         private ComboBox WareComboBox;
         private Label WareLabel;
         private Button ViewShipButton;
+        private ComboBox ModificationComboBox;
+        private Label ModificationLabel;
+        private Label ModelLabel;
+        private ComboBox ModelComboBox;
+        private Label ClassLabel;
+        private ComboBox ClassComboBox;
     }
 }

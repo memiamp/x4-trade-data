@@ -1,5 +1,6 @@
 ﻿using MPL.X4.SaveGame.Models;
 using MPL.X4.TradeData.UI.Models;
+using MPL.X4.TradeData.UI.Services;
 
 namespace MPL.X4.TradeData.UI.Forms;
 
@@ -70,7 +71,7 @@ internal partial class ShipViewerForm : Form
         }
         var returnValue = new ListViewItem(source.Type.ToString());
         returnValue.SubItems.Add(name);
-        returnValue.SubItems.Add(MapQuality(source.Quality));
+        returnValue.SubItems.Add(IMapper.Map(source.Quality));
 
         returnValue.Tag = source;
 
@@ -121,16 +122,6 @@ internal partial class ShipViewerForm : Form
 
         ModificationsListView.EndUpdate();
     }
-
-    private static string MapQuality(ModificationQuality source)
-        => source switch
-        {
-            ModificationQuality.Basic => Constants.ShipModifications.QualityBasic,
-            ModificationQuality.Enhanced => Constants.ShipModifications.QualityEnhanced,
-            ModificationQuality.Exceptional => Constants.ShipModifications.QualityExceptional,
-            ModificationQuality.Paint => Constants.ShipModifications.QualityPaint,
-            _ => string.Empty
-        };
 
     #endregion
 

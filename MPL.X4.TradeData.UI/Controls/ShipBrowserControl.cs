@@ -1,7 +1,10 @@
 ﻿using System.ComponentModel;
 using MPL.X4.GameResources.Models;
+using MPL.X4.SaveGame.Models;
+using MPL.X4.SaveGame.Models.Services;
 using MPL.X4.TradeData.UI.Forms;
 using MPL.X4.TradeData.UI.Models;
+using MPL.X4.TradeData.UI.Services;
 
 namespace MPL.X4.TradeData.UI.Controls;
 
@@ -12,14 +15,18 @@ internal partial class ShipBrowserControl : UserControl
 {
     #region Declarations
 
+    private const string ClassAny = "Any";
     private const string LocationAny = "Any";
+    private const string ModelAny = "Any";
+    private const string ModificationAny = "Any";
+    private const string NameProperty = "Name";
     private const string OwnerAny = "Any";
     private const string WareAny = "Any";
     private const string ValueProperty = "Value";
 
     private readonly ShipListViewColumnSorter _columnSorter = new();
     private readonly int LocationColumnWidth;
-    private readonly int OwnerColumnWidth; 
+    private readonly int OwnerColumnWidth;
 
     private IEnumerable<ShipBrowserListItem> _items = [];
 
@@ -62,15 +69,33 @@ internal partial class ShipBrowserControl : UserControl
                 sourceItems = sourceItems.Where(x => x.HasCargo);
             }
 
+            if (ClassComboBox.SelectedValue is ShipClass shipClass)
+            {
+                sourceItems = sourceItems.Where(x => x.Ship.Class == shipClass);
+            }
+
             if (LocationNameComboBox.SelectedValue is string location &&
                 location != LocationAny)
             {
                 sourceItems = sourceItems.Where(x => x.Location == location);
             }
 
+            if (ModelComboBox.SelectedValue is string model &&
+                model != ModelAny)
+            {
+                sourceItems = sourceItems.Where(x => x.Model == model);
+            }
+
             if (ModificationCheckBox.Checked)
             {
                 sourceItems = sourceItems.Where(x => x.HasModifications);
+            }
+
+            if (ModificationComboBox.SelectedValue is IModificationModel modification)
+            {
+                sourceItems = sourceItems.Where(x => x.HasModifications &&
+                                                     x.Ship.GetModifications().Any(y => y.Type == modification.Type &&
+                                                                                        y.Name == modification.Name));
             }
 
             if (OwnerComboBox.SelectedValue is IFactionModel owner)
@@ -159,16 +184,23 @@ internal partial class ShipBrowserControl : UserControl
 
         AbandonedCheckBox.Checked = true;
         CargoCheckBox.Checked = false;
+        ClassComboBox.DisplayMember = NameProperty;
+        ClassComboBox.ValueMember = ValueProperty;
         ModificationCheckBox.Checked = false;
-        OwnerComboBox.DisplayMember = nameof(IFactionModel.Name);
+        ModificationComboBox.DisplayMember = NameProperty;
+        ModificationComboBox.ValueMember = ValueProperty;
+        OwnerComboBox.DisplayMember = NameProperty;
         OwnerComboBox.ValueMember = ValueProperty;
 
         // Event wireup
         Load += SpecialItemControl_Load;
         AbandonedCheckBox.CheckedChanged += AbandonedCheckBox_CheckedChanged;
         CargoCheckBox.CheckedChanged += CargoCheckBox_CheckedChanged;
+        ClassComboBox.SelectedValueChanged += ClassComboBox_SelectedValueChanged;
         LocationNameComboBox.SelectedValueChanged += LocationNameComboBox_SelectedValueChanged;
+        ModelComboBox.SelectedValueChanged += ModelComboBox_SelectedValueChanged;
         ModificationCheckBox.CheckedChanged += ModificationCheckBox_CheckedChanged;
+        ModificationComboBox.SelectedValueChanged += ModificationComboBox_SelectedValueChanged;
         OwnerComboBox.SelectedValueChanged += OwnerComboBox_SelectedValueChanged;
         ShipListView.ColumnClick += ShipListView_ColumnClick;
         ShipListView.DoubleClick += ShipListView_DoubleClick;
@@ -179,9 +211,32 @@ internal partial class ShipBrowserControl : UserControl
         DoRefresh();
     }
 
+    private void LoadClasses()
+    {
+        var data = _items
+                          .Select(x => x.Ship.Class)
+                          .Distinct()
+                          .Select(x => new
+                          {
+                              Name = IMapper.Map(x),
+                              Value = (ShipClass?)x
+                          })
+                          .OrderBy(x => x.Name)
+                          .Prepend(new
+                          {
+                              Name = ClassAny,
+                              Value = (ShipClass?)null
+                          })
+                          .ToList();
+        ClassComboBox.DataSource = data;
+    }
+
     private void LoadData()
     {
+        LoadClasses();
         LoadLocations();
+        LoadModels();
+        LoadModifications();
         LoadOwners();
         LoadWares();
     }
@@ -196,6 +251,41 @@ internal partial class ShipBrowserControl : UserControl
                          .ToList();
 
         LocationNameComboBox.DataSource = data;
+    }
+
+    private void LoadModels()
+    {
+        var data = _items
+                         .Select(x => x.Model)
+                         .Distinct()
+                         .Order()
+                         .Prepend(ModelAny)
+                         .ToList();
+
+        ModelComboBox.DataSource = data;
+    }
+
+    private void LoadModifications()
+    {
+        var data = _items
+                         .SelectMany(x => x.Ship.GetModifications())
+                         .DistinctBy(x => x.Name)
+                         .Select(x => new
+                         {
+                             Name = string.IsNullOrWhiteSpace(x.Name)
+                                        ? Constants.ShipModifications.Unknown
+                                        : $"{x.Name} {IMapper.Map(x.Quality)}",
+                             Value = (IModificationModel?)x
+                         })
+                         .OrderBy(x => x.Name)
+                         .Prepend(new
+                         {
+                             Name = ModificationAny,
+                             Value = (IModificationModel?)null
+                         })
+                         .ToList();
+
+        ModificationComboBox.DataSource = data;
     }
 
     private void LoadOwners()
@@ -258,12 +348,27 @@ internal partial class ShipBrowserControl : UserControl
         DoFilterData();
     }
 
+    private void ClassComboBox_SelectedValueChanged(object? sender, EventArgs e)
+    {
+        DoFilterData();
+    }
+
     private void LocationNameComboBox_SelectedValueChanged(object? sender, EventArgs e)
     {
         DoFilterData();
     }
 
+    private void ModelComboBox_SelectedValueChanged(object? sender, EventArgs e)
+    {
+        DoFilterData();
+    }
+
     private void ModificationCheckBox_CheckedChanged(object? sender, EventArgs e)
+    {
+        DoFilterData();
+    }
+
+    private void ModificationComboBox_SelectedValueChanged(object? sender, EventArgs e)
     {
         DoFilterData();
     }

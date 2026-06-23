@@ -47,6 +47,8 @@ internal static class Constants
             "True Sight",
             "Unholy Retribution"
         ];
+
+        internal static string Unknown = "Unknown Sector";
     }
 
     /// <summary>
@@ -72,6 +74,8 @@ internal static class Constants
         internal const string QualityEnhanced = $"{ModificationSymbol}{ModificationSymbol}";
         internal const string QualityExceptional = $"{ModificationSymbol}{ModificationSymbol}{ModificationSymbol}";
         internal const string QualityPaint = "P";
+
+        internal static string Unknown = "Unknown";
     }
 
     /// <summary>
