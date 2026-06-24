@@ -50,7 +50,7 @@
             TradeLogListView.Location = new Point(0, 32);
             TradeLogListView.Name = "TradeLogListView";
             TradeLogListView.Size = new Size(985, 503);
-            TradeLogListView.TabIndex = 6;
+            TradeLogListView.TabIndex = 3;
             TradeLogListView.UseCompatibleStateImageBehavior = false;
             TradeLogListView.View = View.Details;
             // 
@@ -96,12 +96,12 @@
             // 
             // NoItemsLabel
             // 
-            NoItemsLabel.Dock = DockStyle.Bottom;
+            NoItemsLabel.Dock = DockStyle.Top;
             NoItemsLabel.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            NoItemsLabel.Location = new Point(0, 505);
+            NoItemsLabel.Location = new Point(0, 0);
             NoItemsLabel.Name = "NoItemsLabel";
             NoItemsLabel.Size = new Size(985, 30);
-            NoItemsLabel.TabIndex = 8;
+            NoItemsLabel.TabIndex = 0;
             NoItemsLabel.Text = "No trade log is currently loaded.";
             NoItemsLabel.TextAlign = ContentAlignment.MiddleCenter;
             // 
@@ -112,7 +112,7 @@
             TradePartnerComboBox.Location = new Point(85, 3);
             TradePartnerComboBox.Name = "TradePartnerComboBox";
             TradePartnerComboBox.Size = new Size(175, 23);
-            TradePartnerComboBox.TabIndex = 1;
+            TradePartnerComboBox.TabIndex = 2;
             // 
             // TradePartnerLabel
             // 
@@ -120,17 +120,17 @@
             TradePartnerLabel.Location = new Point(0, 6);
             TradePartnerLabel.Name = "TradePartnerLabel";
             TradePartnerLabel.Size = new Size(79, 15);
-            TradePartnerLabel.TabIndex = 0;
+            TradePartnerLabel.TabIndex = 1;
             TradePartnerLabel.Text = "Trade Partner:";
             // 
             // TradeLogViewerControl
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            Controls.Add(NoItemsLabel);
             Controls.Add(TradePartnerLabel);
             Controls.Add(TradePartnerComboBox);
             Controls.Add(TradeLogListView);
+            Controls.Add(NoItemsLabel);
             Name = "TradeLogViewerControl";
             Size = new Size(985, 535);
             ResumeLayout(false);

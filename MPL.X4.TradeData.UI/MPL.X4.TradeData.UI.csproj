@@ -25,6 +25,9 @@
     <Compile Update="Controls\TradeLogViewerControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Update="Forms\TradeLogAnalyserForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Update="MapIcons.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>

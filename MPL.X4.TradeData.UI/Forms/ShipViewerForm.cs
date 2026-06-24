@@ -20,6 +20,7 @@ internal partial class ShipViewerForm : Form
     /// <summary>
     /// Creates a new instance of the <see cref="ShipViewerForm"/> with the specified parameters.
     /// </summary>
+    /// <param name="ship">A <see cref="ShipBrowserListItem"/> that is the ship to view.</param>
     internal ShipViewerForm(
                             ShipBrowserListItem ship)
 

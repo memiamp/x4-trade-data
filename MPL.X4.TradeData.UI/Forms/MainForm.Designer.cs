@@ -31,6 +31,8 @@
             FileMenu_Exit = new ToolStripMenuItem();
             ToolMenu = new ToolStripMenuItem();
             ToolMenu_Options = new ToolStripMenuItem();
+            ToolMenu_TradeLogAnalysis = new ToolStripMenuItem();
+            ToolMenu_Separator = new ToolStripSeparator();
             MainTabControl.SuspendLayout();
             SectorListTab.SuspendLayout();
             ShipTab.SuspendLayout();
@@ -173,7 +175,7 @@
             // 
             // ToolMenu
             // 
-            ToolMenu.DropDownItems.AddRange(new ToolStripItem[] { ToolMenu_Options });
+            ToolMenu.DropDownItems.AddRange(new ToolStripItem[] { ToolMenu_TradeLogAnalysis, ToolMenu_Separator, ToolMenu_Options });
             ToolMenu.Name = "ToolMenu";
             ToolMenu.Size = new Size(46, 20);
             ToolMenu.Text = "&Tools";
@@ -181,8 +183,19 @@
             // ToolMenu_Options
             // 
             ToolMenu_Options.Name = "ToolMenu_Options";
-            ToolMenu_Options.Size = new Size(125, 22);
+            ToolMenu_Options.Size = new Size(180, 22);
             ToolMenu_Options.Text = "&Options...";
+            // 
+            // ToolMenu_TradeLogAnalysis
+            // 
+            ToolMenu_TradeLogAnalysis.Name = "ToolMenu_TradeLogAnalysis";
+            ToolMenu_TradeLogAnalysis.Size = new Size(180, 22);
+            ToolMenu_TradeLogAnalysis.Text = "&Trade Log Analysis...";
+            // 
+            // ToolMenu_Separator
+            // 
+            ToolMenu_Separator.Name = "ToolMenu_Separator";
+            ToolMenu_Separator.Size = new Size(177, 6);
             // 
             // MainForm
             // 
@@ -226,5 +239,7 @@
         private Controls.ShipBrowserControl ShipControl;
         private TabPage TradeLogTab;
         private Controls.TradeLogViewerControl TradeLogViewerControl;
+        private ToolStripMenuItem ToolMenu_TradeLogAnalysis;
+        private ToolStripSeparator ToolMenu_Separator;
     }
 }

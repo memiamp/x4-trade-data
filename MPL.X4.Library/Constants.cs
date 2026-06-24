@@ -84,6 +84,14 @@ public static class Constants
     }
 
     /// <summary>
+    /// Constants relating to factions.
+    /// </summary>
+    public static class Factions
+    {
+        public const string PlayerFactionName = "Player";
+    }
+
+    /// <summary>
     /// Constants relating to file extensions
     /// </summary>
     public static class FileExtensions

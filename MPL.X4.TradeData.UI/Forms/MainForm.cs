@@ -80,6 +80,7 @@ internal partial class MainForm : Form
         _saveGameFileSystemMonitor.SaveGameFileUpdated += SaveGameFileSystemMonitor_SaveGameFileUpdated;
         SpecialItemControl.DataProvider = _specialItemDataProvider;
         ToolMenu_Options.Click += ToolMenu_Options_Click;
+        ToolMenu_TradeLogAnalysis.Click += ToolMenu_TradeLogAnalysis_Click;
 
         _debugForm.Show();
     }
@@ -238,6 +239,15 @@ internal partial class MainForm : Form
     private void ToolMenu_Options_Click(object? sender, EventArgs e)
     {
         _optionsForm.ShowDialog();
+    }
+
+    private void ToolMenu_TradeLogAnalysis_Click(object? sender, EventArgs e)
+    {
+        if (_saveGame?.EconomyLog?.TradeLog is not null)
+        {
+            var dialog = new TradeLogAnalyserForm(_saveGame.EconomyLog.TradeLog);
+            dialog.ShowDialog();
+        }
     }
 
     #endregion

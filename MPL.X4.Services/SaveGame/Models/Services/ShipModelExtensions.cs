@@ -1,4 +1,6 @@
-﻿namespace MPL.X4.SaveGame.Models.Services;
+﻿using MPL.X4.GameResources.Models.Services;
+
+namespace MPL.X4.SaveGame.Models.Services;
 
 /// <summary>
 /// A class that implements extensions methods to an <see cref="IShipModel"/>.
@@ -94,4 +96,12 @@ public static class ShipModelExtensions
            source.WeaponModifications.Any() ||
            includePaintModification &&
            source.PaintModification is not null;
+
+    /// <summary>
+    /// Gets an indication of whether the specified <paramref name="source"/> is player-owned.
+    /// </summary>
+    /// <param name="source">A nullable <see cref="IShipModel"/> that is the source to evaluate.</param>
+    /// <returns>A <see cref="bool"/> indicating the result.</returns>
+    public static bool IsPlayerOwned(this IShipModel source)
+        => source.Owner.IsPlayerOwned();
 }
