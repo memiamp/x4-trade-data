@@ -50,7 +50,7 @@ internal abstract class ListViewColumnSorter<T> : IComparer
     /// <param name="y">A <see cref="string"/> that is the second item to compare.</param>
     /// <returns>An <see cref="int"/> that is the result.</returns>
     private protected int CompareValue(string x, string y)
-        => GetOrderedResult(String.Compare(x, y, StringComparison.OrdinalIgnoreCase));
+        => GetOrderedResult(string.Compare(x, y, StringComparison.OrdinalIgnoreCase));
 
     /// <summary>
     /// Gets the value of the current sort column from the specified <paramref name="item"/>.
@@ -92,8 +92,8 @@ internal abstract class ListViewColumnSorter<T> : IComparer
 
     int IComparer.Compare(object? x, object? y)
     {
-        if (x is ListViewItem itemX && itemX.Tag is T tagX &&
-            y is ListViewItem itemY && itemY.Tag is T tagY)
+        if (x is ListViewItem { Tag: T tagX } itemX &&
+            y is ListViewItem { Tag: T tagY } itemY)
         {
             return OnCompare(tagX, tagY, itemX, itemY);
         }

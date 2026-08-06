@@ -155,7 +155,7 @@ internal partial class MainForm : Form
     private void UpdateSectorListControl()
     {
         SectorListControl.Items = _saveGame?.Universe.Sectors.Any() == true
-            ? _saveGame.Universe.Sectors
+            ? _saveGame.Universe.Sectors.Select(x => new SectorListItem(x))
             : [];
     }
 

@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel;
 using MPL.X4.GameResources.Models;
 using MPL.X4.SaveGame.Models;
+using MPL.X4.TradeData.UI.Models;
 
 namespace MPL.X4.TradeData.UI.Controls;
 
@@ -11,7 +12,9 @@ internal partial class SectorListControl : UserControl
 {
     #region Declarations
 
-    private IEnumerable<ISectorModel> _items = [];
+    private readonly SectorListViewColumnSorter _columnSorter = new();
+
+    private IEnumerable<SectorListItem> _items = [];
 
     #endregion
 
@@ -51,6 +54,8 @@ internal partial class SectorListControl : UserControl
         BuildStorageCheckBox.Visible = hasItems;
         DropsCheckBox.Visible = hasItems;
         LockboxesCheckBox.Visible = hasItems;
+        ShipwreckCheckBox.Visible = hasItems;
+        StationWreckCheckBox.Visible = hasItems;
 
         SectorOwnerComboBox.Visible = hasItems;
         SectorOwnerLabel.Visible = hasItems;
@@ -66,44 +71,32 @@ internal partial class SectorListControl : UserControl
         ViewSectorButton.Enabled = GetSelectedItem() is not null;
     }
 
-    private static ListViewItem GenerateListViewItem(ISectorModel source)
+    private static ListViewItem GenerateListViewItem(SectorListItem source)
     {
-        var backColor = source.Owner?.Colour is not null
-                                                         ? source.Owner.Colour.Colour
-                                                         : Constants.Colours.Unset;
-
-        var owner = string.IsNullOrWhiteSpace(source.Owner?.Name)
-                                                                  ? Constants.Owner.Unowned
-                                                                  : source.Owner.Name;
-
         var returnValue = new ListViewItem(source.Name)
         {
-            BackColor = backColor
+            BackColor = source.BackColour
         };
 
-        returnValue.SubItems.Add(owner);
-        returnValue.SubItems.Add(source.Ships.Count(x => x.CanBeCaptured).ToString());
-        returnValue.SubItems.Add(source.Lockboxes.Count.ToString());
-        returnValue.SubItems.Add(source.Ships.Count.ToString());
-        returnValue.SubItems.Add(source.Stations.Count.ToString());
-        returnValue.SubItems.Add(source.CollectableDrops.Count.ToString());
-        returnValue.SubItems.Add(source.BuildStorages.Count.ToString());
+        returnValue.SubItems.Add(source.OwnerName);
+        returnValue.SubItems.Add(source.AbandonedShipCount);
+        returnValue.SubItems.Add(source.BuildStorageCount);
+        returnValue.SubItems.Add(source.DropCount);
+        returnValue.SubItems.Add(source.LockboxCount);
+        returnValue.SubItems.Add(source.ShipCount);
+        returnValue.SubItems.Add(source.ShipwreckCount);
+        returnValue.SubItems.Add(source.StationCount);
+        returnValue.SubItems.Add(source.StationWreckCount);
 
         returnValue.Tag = source;
 
         return returnValue;
     }
 
-    private ISectorModel? GetSelectedItem()
-    {
-        if (SectorListView.SelectedItems.Count == 1 &&
-            SectorListView.SelectedItems[0].Tag is ISectorModel returnValue)
-        {
-            return returnValue;
-        }
-
-        return null;
-    }
+    private SectorListItem? GetSelectedItem()
+        => SectorListView.SelectedItems is [{ Tag: SectorListItem returnValue }]
+               ? returnValue
+               : null;
 
     private void Initialise()
     {
@@ -112,8 +105,11 @@ internal partial class SectorListControl : UserControl
         BuildStorageCheckBox.Checked = false;
         DropsCheckBox.Checked = false;
         LockboxesCheckBox.Checked = false;
+        ShipwreckCheckBox.Checked = false;
+        StationWreckCheckBox.Checked = false;
 
         // Controls
+        SectorListView.ListViewItemSorter = _columnSorter;
         SectorOwnerComboBox.DisplayMember = "Name";
         SectorOwnerComboBox.ValueMember = "Value";
 
@@ -123,9 +119,12 @@ internal partial class SectorListControl : UserControl
         DropsCheckBox.CheckedChanged += DropsCheckBox_CheckedChanged;
         Load += SpecialItemControl_Load;
         LockboxesCheckBox.CheckedChanged += LockboxesCheckBox_CheckedChanged;
+        SectorListView.ColumnClick += SectorListView_ColumnClick;
         SectorListView.DoubleClick += SectorListView_DoubleClick;
         SectorListView.SelectedIndexChanged += SectorListView_SelectedIndexChanged;
         SectorOwnerComboBox.SelectedIndexChanged += SectorOwnerComboBox_SelectedIndexChanged;
+        ShipwreckCheckBox.CheckedChanged += ShipwreckCheckBox_CheckedChanged;
+        StationWreckCheckBox.CheckedChanged += StationWreckCheckBox_CheckedChanged;
         ViewSectorButton.Click += ViewSectorButton_Click;
 
         DoRefresh();
@@ -138,10 +137,10 @@ internal partial class SectorListControl : UserControl
                              .Distinct()
                              .Select(x => new
                              {
-                                 Name = string.IsNullOrWhiteSpace(x.Name)
-                                                                          ? Constants.Owner.Unowned
-                                                                          : x.Name,
-                                 Value = (IFactionModel?)x
+                                 Name = string.IsNullOrWhiteSpace(x?.Name)
+                                                                           ? Constants.Owner.Unowned
+                                                                           : x.Name,
+                                 Value = x
                              })
                              .OrderBy(x => x.Name)
                              .Prepend(new
@@ -160,27 +159,37 @@ internal partial class SectorListControl : UserControl
 
         if (SectorOwnerComboBox.SelectedValue is IFactionModel faction)
         {
-            filteredItems = filteredItems.Where(x => x.Owner == faction);
+            filteredItems = filteredItems.Where(x => x.Sector.Owner == faction);
         }
 
         if (AbandonedShipsCheckBox.Checked)
         {
-            filteredItems = filteredItems.Where(x => x.Ships.Any(x => x.CanBeCaptured));
+            filteredItems = filteredItems.Where(x => x.AbandonedShipCount > 0);
         }
 
         if (BuildStorageCheckBox.Checked)
         {
-            filteredItems = filteredItems.Where(x => x.BuildStorages.Count > 0);
+            filteredItems = filteredItems.Where(x => x.BuildStorageCount > 0);
         }
 
         if (DropsCheckBox.Checked)
         {
-            filteredItems = filteredItems.Where(x => x.CollectableDrops.Count > 0);
+            filteredItems = filteredItems.Where(x => x.DropCount > 0);
         }
 
         if (LockboxesCheckBox.Checked)
         {
-            filteredItems = filteredItems.Where(x => x.Lockboxes.Count > 0);
+            filteredItems = filteredItems.Where(x => x.LockboxCount > 0);
+        }
+
+        if (ShipwreckCheckBox.Checked)
+        {
+            filteredItems = filteredItems.Where(x => x.ShipwreckCount > 0);
+        }
+
+        if (StationWreckCheckBox.Checked)
+        {
+            filteredItems = filteredItems.Where(x => x.StationWreckCount > 0);
         }
 
         var orderedItems = filteredItems
@@ -200,7 +209,7 @@ internal partial class SectorListControl : UserControl
         var sector = GetSelectedItem();
         if (sector is not null)
         {
-            OnViewSectorRequest(sector);
+            OnViewSectorRequest(sector.Sector);
         }
         else
         {
@@ -208,7 +217,7 @@ internal partial class SectorListControl : UserControl
         }
     }
 
-    private void OnViewSectorRequest(ISectorModel sector)
+    private void OnViewSectorRequest(ISectorModel? sector)
     {
         if (sector is not null)
         {
@@ -240,6 +249,23 @@ internal partial class SectorListControl : UserControl
         DoRefresh();
     }
 
+    private void SectorListView_ColumnClick(object? sender, ColumnClickEventArgs e)
+    {
+        if (e.Column == _columnSorter.SortColumn)
+        {
+            _columnSorter.SortOrder = _columnSorter.SortOrder == SortOrder.Ascending
+                ? SortOrder.Descending
+                : SortOrder.Ascending;
+        }
+        else
+        {
+            _columnSorter.SortColumn = e.Column;
+            _columnSorter.SortOrder = SortOrder.Ascending;
+        }
+
+        SectorListView.Sort();
+    }
+
     private void SectorListView_DoubleClick(object? sender, EventArgs e)
     {
         OnViewSectorRequest();
@@ -260,6 +286,16 @@ internal partial class SectorListControl : UserControl
         DoRefresh();
     }
 
+    private void ShipwreckCheckBox_CheckedChanged(object? sender, EventArgs e)
+    {
+        DoRefresh();
+    }
+
+    private void StationWreckCheckBox_CheckedChanged(object? sender, EventArgs e)
+    {
+        DoRefresh();
+    }
+
     private void ViewSectorButton_Click(object? sender, EventArgs e)
     {
         OnViewSectorRequest();
@@ -273,13 +309,9 @@ internal partial class SectorListControl : UserControl
     /// Gets or sets the items to be displayed in the control.
     /// </summary>
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    internal IEnumerable<ISectorModel> Items
+    internal IEnumerable<SectorListItem> Items
     {
-        get
-        {
-            return _items;
-        }
-
+        get => _items;
         set
         {
             _items = value;

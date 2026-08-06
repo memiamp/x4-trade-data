@@ -55,6 +55,7 @@
             ModelComboBox = new ComboBox();
             ClassLabel = new Label();
             ClassComboBox = new ComboBox();
+            WreckCheckBox = new CheckBox();
             SuspendLayout();
             // 
             // ShipListView
@@ -194,7 +195,7 @@
             // 
             WareComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
             WareComboBox.FormattingEnabled = true;
-            WareComboBox.Location = new Point(314, 3);
+            WareComboBox.Location = new Point(377, 3);
             WareComboBox.Name = "WareComboBox";
             WareComboBox.Size = new Size(175, 23);
             WareComboBox.TabIndex = 5;
@@ -202,7 +203,7 @@
             // WareLabel
             // 
             WareLabel.AutoSize = true;
-            WareLabel.Location = new Point(266, 6);
+            WareLabel.Location = new Point(329, 6);
             WareLabel.Name = "WareLabel";
             WareLabel.Size = new Size(42, 15);
             WareLabel.TabIndex = 4;
@@ -222,7 +223,7 @@
             // 
             ModificationComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
             ModificationComboBox.FormattingEnabled = true;
-            ModificationComboBox.Location = new Point(579, 3);
+            ModificationComboBox.Location = new Point(642, 3);
             ModificationComboBox.Name = "ModificationComboBox";
             ModificationComboBox.Size = new Size(175, 23);
             ModificationComboBox.TabIndex = 7;
@@ -230,7 +231,7 @@
             // ModificationLabel
             // 
             ModificationLabel.AutoSize = true;
-            ModificationLabel.Location = new Point(495, 8);
+            ModificationLabel.Location = new Point(558, 8);
             ModificationLabel.Name = "ModificationLabel";
             ModificationLabel.Size = new Size(78, 15);
             ModificationLabel.TabIndex = 6;
@@ -272,10 +273,21 @@
             ClassComboBox.Size = new Size(109, 23);
             ClassComboBox.TabIndex = 9;
             // 
+            // WreckCheckBox
+            // 
+            WreckCheckBox.AutoSize = true;
+            WreckCheckBox.Location = new Point(266, 5);
+            WreckCheckBox.Name = "WreckCheckBox";
+            WreckCheckBox.Size = new Size(59, 19);
+            WreckCheckBox.TabIndex = 18;
+            WreckCheckBox.Text = "Wreck";
+            WreckCheckBox.UseVisualStyleBackColor = true;
+            // 
             // ShipBrowserControl
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
+            Controls.Add(WreckCheckBox);
             Controls.Add(ClassLabel);
             Controls.Add(ClassComboBox);
             Controls.Add(ModelLabel);
@@ -328,5 +340,6 @@
         private ComboBox ModelComboBox;
         private Label ClassLabel;
         private ComboBox ClassComboBox;
+        private CheckBox WreckCheckBox;
     }
 }

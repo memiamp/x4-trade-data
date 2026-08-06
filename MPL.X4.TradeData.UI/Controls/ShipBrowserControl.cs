@@ -109,6 +109,11 @@ internal partial class ShipBrowserControl : UserControl
                 sourceItems = sourceItems.Where(x => x.Ship.Cargo.Any(x => x.Name == ware));
             }
 
+            if (WreckCheckBox.Checked)
+            {
+                sourceItems = sourceItems.Where(x => x.Ship.IsWreck);
+            }
+
             items = sourceItems
                                .OrderBy(x => x.Name)
                                .ThenBy(x => x.OwnerAcronym)
@@ -213,6 +218,7 @@ internal partial class ShipBrowserControl : UserControl
         ModificationComboBox.ValueMember = ValueProperty;
         OwnerComboBox.DisplayMember = NameProperty;
         OwnerComboBox.ValueMember = ValueProperty;
+        WreckCheckBox.Checked = false;
 
         // Event wireup
         Load += SpecialItemControl_Load;
@@ -229,6 +235,7 @@ internal partial class ShipBrowserControl : UserControl
         ShipListView.SelectedIndexChanged += ShipListView_SelectedIndexChanged;
         ViewShipButton.Click += ViewShipButton_Click;
         WareComboBox.SelectedValueChanged += WareComboBox_SelectedValueChanged;
+        WreckCheckBox.CheckedChanged += WreckCheckBox_CheckedChanged;
 
         DoRefresh();
     }
@@ -438,6 +445,11 @@ internal partial class ShipBrowserControl : UserControl
     }
 
     private void WareComboBox_SelectedValueChanged(object? sender, EventArgs e)
+    {
+        DoFilterData();
+    }
+
+    private void WreckCheckBox_CheckedChanged(object? sender, EventArgs e)
     {
         DoFilterData();
     }

@@ -36,7 +36,9 @@
             SectorListView_Ships = new ColumnHeader();
             SectorListView_Stations = new ColumnHeader();
             SectorListView_Drops = new ColumnHeader();
-            SectorList_BuildStorages = new ColumnHeader();
+            SectorListView_BuildStorages = new ColumnHeader();
+            SectorListView_Shipwrecks = new ColumnHeader();
+            SectorListView_StationWrecks = new ColumnHeader();
             ViewSectorButton = new Button();
             NoItemsLabel = new Label();
             SectorOwnerComboBox = new ComboBox();
@@ -45,12 +47,14 @@
             LockboxesCheckBox = new CheckBox();
             DropsCheckBox = new CheckBox();
             BuildStorageCheckBox = new CheckBox();
+            ShipwreckCheckBox = new CheckBox();
+            StationWreckCheckBox = new CheckBox();
             SuspendLayout();
             // 
             // SectorListView
             // 
             SectorListView.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            SectorListView.Columns.AddRange(new ColumnHeader[] { SectorListView_Name, SectorListView_Owner, SectorListView_AbandonedShips, SectorListView_LockBoxes, SectorListView_Ships, SectorListView_Stations, SectorListView_Drops, SectorList_BuildStorages });
+            SectorListView.Columns.AddRange(new ColumnHeader[] { SectorListView_Name, SectorListView_Owner, SectorListView_AbandonedShips, SectorListView_BuildStorages, SectorListView_Drops, SectorListView_LockBoxes, SectorListView_Ships, SectorListView_Shipwrecks, SectorListView_Stations, SectorListView_StationWrecks });
             SectorListView.FullRowSelect = true;
             SectorListView.Location = new Point(0, 32);
             SectorListView.Name = "SectorListView";
@@ -94,10 +98,20 @@
             SectorListView_Drops.Text = "Drops";
             SectorListView_Drops.TextAlign = HorizontalAlignment.Right;
             // 
-            // SectorList_BuildStorages
+            // SectorListView_BuildStorages
             // 
-            SectorList_BuildStorages.Text = "Build Storages";
-            SectorList_BuildStorages.TextAlign = HorizontalAlignment.Right;
+            SectorListView_BuildStorages.Text = "Build Storages";
+            SectorListView_BuildStorages.TextAlign = HorizontalAlignment.Right;
+            // 
+            // SectorListView_Shipwrecks
+            // 
+            SectorListView_Shipwrecks.Text = "Shipwrecks";
+            SectorListView_Shipwrecks.TextAlign = HorizontalAlignment.Right;
+            // 
+            // SectorListView_StationWrecks
+            // 
+            SectorListView_StationWrecks.Text = "Station Wrecks";
+            SectorListView_StationWrecks.TextAlign = HorizontalAlignment.Right;
             // 
             // ViewSectorButton
             // 
@@ -178,10 +192,32 @@
             BuildStorageCheckBox.Text = "Build Storages";
             BuildStorageCheckBox.UseVisualStyleBackColor = true;
             // 
+            // ShipwreckCheckBox
+            // 
+            ShipwreckCheckBox.AutoSize = true;
+            ShipwreckCheckBox.Location = new Point(650, 5);
+            ShipwreckCheckBox.Name = "ShipwreckCheckBox";
+            ShipwreckCheckBox.Size = new Size(85, 19);
+            ShipwreckCheckBox.TabIndex = 9;
+            ShipwreckCheckBox.Text = "Shipwrecks";
+            ShipwreckCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // StationWreckCheckBox
+            // 
+            StationWreckCheckBox.AutoSize = true;
+            StationWreckCheckBox.Location = new Point(741, 5);
+            StationWreckCheckBox.Name = "StationWreckCheckBox";
+            StationWreckCheckBox.Size = new Size(104, 19);
+            StationWreckCheckBox.TabIndex = 10;
+            StationWreckCheckBox.Text = "Station Wrecks";
+            StationWreckCheckBox.UseVisualStyleBackColor = true;
+            // 
             // SectorListControl
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
+            Controls.Add(StationWreckCheckBox);
+            Controls.Add(ShipwreckCheckBox);
             Controls.Add(BuildStorageCheckBox);
             Controls.Add(DropsCheckBox);
             Controls.Add(LockboxesCheckBox);
@@ -214,7 +250,11 @@
         private CheckBox LockboxesCheckBox;
         private ColumnHeader SectorListView_Drops;
         private CheckBox DropsCheckBox;
-        private ColumnHeader SectorList_BuildStorages;
+        private ColumnHeader SectorListView_BuildStorages;
         private CheckBox BuildStorageCheckBox;
+        private ColumnHeader SectorListView_Shipwrecks;
+        private CheckBox ShipwreckCheckBox;
+        private CheckBox StationWreckCheckBox;
+        private ColumnHeader SectorListView_StationWrecks;
     }
 }
